@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "755028020379",
+    "project_id": "tehine-d69bf",
+    "storage_bucket": "tehine-d69bf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:755028020379:android:34c5c4ab5d91a9cd178a3e",
+        "android_client_info": {
+          "package_name": "com.tehine"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAC8ztXW8YEpYNAcf0SZaPJs_JgH0WI6PA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
