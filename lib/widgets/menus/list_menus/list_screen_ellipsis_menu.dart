@@ -8,6 +8,7 @@ import '../../../providers/contact_provider.dart';
 import '../../../providers/list_provider.dart';
 import '../../../providers/load_data_from_device_on_start.dart';
 import '../../../providers/user_info_provider.dart';
+import 'clone_list_menu.dart';
 
 void listScreenEllipsisMenu(BuildContext context, ref) {
   final RenderBox overlay =
@@ -23,29 +24,56 @@ void listScreenEllipsisMenu(BuildContext context, ref) {
       value: 2,
     ),
     PopupMenuItem(
-      child: Text('Select Contacts'),
+      child: Text('Clone List'),
       value: 3,
+    ),
+    PopupMenuItem(
+      child: Text('Select Contacts'),
+      value: 4,
     ),
   ];
 
-  List<PopupMenuEntry<dynamic>> Selectable = [
+  List<PopupMenuEntry<dynamic>> SelectableMultipleSelected = [
     PopupMenuItem(
       child: Text('Delete Selected Contacts'),
-      value: 4,
-    ),
-    PopupMenuItem(
-      child: Text('Share Selected Contacts'),
       value: 5,
     ),
     PopupMenuItem(
-      child: Text('Add Selected Contacts To List'),
+      child: Text('Share Selected Contacts'),
       value: 6,
     ),
+    PopupMenuItem(
+      child: Text('Add Selected Contacts To List'),
+      value: 7,
+    ),
   ];
+
+  List<PopupMenuEntry<dynamic>> SelectableSingleSelected = [
+    PopupMenuItem(
+      child: Text('Delete Selected Contact'),
+      value: 5,
+    ),
+    PopupMenuItem(
+      child: Text('Share Selected Contact'),
+      value: 6,
+    ),
+    PopupMenuItem(
+      child: Text('Add Selected Contact To List'),
+      value: 7,
+    ),
+  ];
+
   List<PopupMenuEntry<dynamic>> itemsToShow = [];
-  ref.read(isSelectable)
-      ? itemsToShow = Selectable
-      : itemsToShow = notSelectable;
+
+  if (ref.read(isSelectable)) {
+    if (ref.read(selectedContacts.notifier).state.length > 1) {
+      itemsToShow = SelectableMultipleSelected;
+    } else {
+      itemsToShow = SelectableSingleSelected;
+    }
+  } else {
+    itemsToShow = notSelectable;
+  }
 
   showMenu(
     context: context,
@@ -64,18 +92,18 @@ void listScreenEllipsisMenu(BuildContext context, ref) {
     color: Color(0xFFF5F5F5),
   ).then((value) async {
     if (value != null) {
-      if (value == 3) {
+      if (value == 4) {
         String selectedContactPhoneNumber =
             ref.read(selectedContact.notifier).state;
 
         ref.read(isSelectable.notifier).state = true;
         print(ref.read(isSelectable.notifier).state);
       }
-      if (value == 2) {
-    
-  
+      if (value == 3) {
+        cloneListMenu(context, ref);
       }
-      if (value == 6) {
+
+      if (value == 7) {
         selectableListScreenEllipsisMenu(context, ref);
       }
     }
@@ -115,7 +143,7 @@ void selectableListScreenEllipsisMenu(BuildContext context, WidgetRef ref) {
             style:
                 TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[850]),
           ),
-          enabled: false, 
+          enabled: false,
         ),
         ...filteredListItems.map((String listItem) {
           return PopupMenuItem(

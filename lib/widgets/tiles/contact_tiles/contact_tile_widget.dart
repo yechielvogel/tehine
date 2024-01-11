@@ -10,7 +10,6 @@ import '../../../providers/user_info_provider.dart';
 
 import '../../menus/list_menus/contact_tile_ellips_menu.dart';
 
-
 class ContactTileWidget extends ConsumerStatefulWidget {
   final ContactModel contact;
   late Offset tapPosition = Offset.zero;
@@ -127,45 +126,45 @@ class _ContactTileWidgetState extends ConsumerState<ContactTileWidget> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    right: 8.0,
-                  ),
-                  child: SizedBox(
-                    width: 30,
-                    height: 30,
-                    child: InkWell(
-                      onTapDown: (TapDownDetails details) {
-                        setState(() {
-                          widget.tapPosition = details.globalPosition;
-                        });
-                        print('tap position${widget.tapPosition}');
-                      },
-                      child: Container(
-                        width: 25,
-                        height: 25,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.grey[850],
-                        ),
-                        child: IconButton(
-                          icon: Icon(
-                            CupertinoIcons.ellipsis,
-                            color: Colors.white,
-                            size: 15,
-                          ),
-                          onPressed: () async {
-                            contactTileEllipsisMenu(context, ref,
-                                widget.contact, widget.tapPosition);
-                            // Handle ellipsis button tap
-                            // ref.refresh(listFromSharedPrefranceProvider.future);
-                            // ref.read(listProvider);
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.only(
+                //     right: 8.0,
+                //   ),
+                //   child: SizedBox(
+                //     width: 30,
+                //     height: 30,
+                //     child: InkWell(
+                //       onTapDown: (TapDownDetails details) {
+                //         setState(() {
+                //           widget.tapPosition = details.globalPosition;
+                //         });
+                //         print('tap position${widget.tapPosition}');
+                //       },
+                //       child: Container(
+                //         width: 25,
+                //         height: 25,
+                //         decoration: BoxDecoration(
+                //           shape: BoxShape.circle,
+                //           color: Colors.grey[850],
+                //         ),
+                //         child: IconButton(
+                //           icon: Icon(
+                //             CupertinoIcons.ellipsis,
+                //             color: Colors.white,
+                //             size: 15,
+                //           ),
+                //           onPressed: () async {
+                //             contactTileEllipsisMenu(context, ref,
+                //                 widget.contact, widget.tapPosition);
+                //             // Handle ellipsis button tap
+                //             // ref.refresh(listFromSharedPrefranceProvider.future);
+                //             // ref.read(listProvider);
+                //           },
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

@@ -38,7 +38,10 @@ void listScreenAddMenu(BuildContext context, WidgetRef ref) {
       await showDialog(
           context: context,
           builder: (BuildContext context) {
-            return ListScreenAddListPopUpForm();
+            return ListScreenAddListPopUpForm(onSave: (String savedName) {
+                // Handle the saved name here, if needed
+                print('Saved Name: $savedName');
+              });
           });
     }
     if (value == 2) {

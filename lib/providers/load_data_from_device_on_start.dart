@@ -81,7 +81,7 @@ Future<List<ContactModel>?> loadContactsFromSP() async {
 }
 
 // Save contacts to SharedPreferences
-void saveContactsToSP(List<ContactModel> contacts) async {
+Future<void> saveContactsToSP(List<ContactModel> contacts) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   // Remove duplicates based on phone number

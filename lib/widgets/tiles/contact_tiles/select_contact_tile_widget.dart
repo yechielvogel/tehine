@@ -9,7 +9,6 @@ import '../../../providers/contact_provider.dart';
 import '../../../providers/load_data_from_device_on_start.dart';
 import '../../../providers/user_info_provider.dart';
 
-
 class SelectContactTileWidget extends ConsumerStatefulWidget {
   final ContactModel contact;
 
@@ -43,13 +42,12 @@ class _SelectContactTileWidgetState
     return Row(children: [
       Checkbox(
         shape: CircleBorder(),
-        checkColor: Colors.white,
+        checkColor: Color(0xFFF5F5F5),
         fillColor: MaterialStateProperty.resolveWith(getColor),
         value: ref.read(selectedContacts).contains(widget.contact),
         onChanged: (bool? value) {
           setState(() {
             if (value!) {
-              print('did work');
               // If checkbox is checked, add contact to the list
               //could be a problem
               ref.read(selectedContacts).add(widget.contact);
@@ -57,7 +55,6 @@ class _SelectContactTileWidgetState
             } else {
               // If checkbox is unchecked, remove contact from the list
               ref.read(selectedContacts).remove(widget.contact);
-              print('did not work');
             }
             ref.read(selectedContact.notifier).state =
                 widget.contact.phoneNumber;
@@ -65,7 +62,7 @@ class _SelectContactTileWidgetState
         },
       ),
       // Hero(
-      //   tag: 'contactHeroTag_${widget.contact.phoneNumber}',    
+      //   tag: 'contactHeroTag_${widget.contact.phoneNumber}',
       //   child: Padding(
       //     padding: const EdgeInsets.only(top: 6, bottom: 6, right: 8, left: 8),
       //     child: SelectContactTileWidget(
@@ -79,7 +76,7 @@ class _SelectContactTileWidgetState
           // contactTileEllipsisMenu(context, ref, widget.contact);
         },
         child: Container(
-          width: 329,
+          width: 338.5,
           decoration: BoxDecoration(
             boxShadow: [
               // BoxShadow(
@@ -104,7 +101,6 @@ class _SelectContactTileWidgetState
             // key: Key(widget.contact.firstName),
             onDismissed: (direction) async {
               if (direction == DismissDirection.endToStart) {
-
                 for (ContactModel selectedContact in localSelectedContacts) {
                   deleteContactFromSP(selectedContact);
                   deleteContactsFromUserAccountToAt(

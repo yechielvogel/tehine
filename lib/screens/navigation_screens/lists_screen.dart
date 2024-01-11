@@ -54,15 +54,13 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
         //   contact: contact,
         //   isChecked: true,
         // );
-        print(contactWidget);
       } else {
         contactWidget = ContactTileWidget(contact: contact);
       }
       bool isChecked = false;
-      print(contactWidget);
 
       contactWidgets.add(Padding(
-        padding: const EdgeInsets.only(top: 6, bottom: 6, right: 8, left: 8),
+        padding: const EdgeInsets.only(top: 6, bottom: 6,),
         child: contactWidget,
       ));
     }

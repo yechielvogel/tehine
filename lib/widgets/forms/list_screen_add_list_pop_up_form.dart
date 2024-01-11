@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
 import '../../providers/list_provider.dart';
 import '../../providers/load_data_from_device_on_start.dart';
 
 class ListScreenAddListPopUpForm extends ConsumerStatefulWidget {
-  const ListScreenAddListPopUpForm({Key? key}) : super(key: key);
+    final void Function(String) onSave;
+  const ListScreenAddListPopUpForm({
+    required this.onSave,
+    Key? key}) : super(key: key);
 
   @override
   ConsumerState createState() => _ListScreenAddListPopUpFormState();
@@ -14,7 +16,18 @@ class ListScreenAddListPopUpForm extends ConsumerStatefulWidget {
 
 class _ListScreenAddListPopUpFormState
     extends ConsumerState<ListScreenAddListPopUpForm> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? selectedName;
+
+  String? nameValidator(String? val) {
+    if (val!.isEmpty) {
+      return 'Enter Name';
+    } else if (val.contains(',')) {
+      return 'Name should not contain a comma';
+    } else {
+      return null; // Validation passed
+    }
+  }
 
   void dispose() {
     super.dispose();
@@ -35,78 +48,94 @@ class _ListScreenAddListPopUpFormState
           style: TextStyle(color: Colors.grey[850]),
         ),
       ),
-      content: Container(
-        height: 135,
-        child: Column(
-          children: [
-            TextFormField(
-              cursorColor: Colors.grey[850],
-              decoration: InputDecoration(
-                hintText: 'Name',
-                hintStyle: TextStyle(color: Colors.grey[850]),
-                fillColor: Color(0xFFF5F5F5),
-                filled: true,
-                enabledBorder: OutlineInputBorder(
+      content: Form(
+        key: _formKey,
+        child: Container(
+          height: 170,
+          child: Column(
+            children: [
+              TextFormField(
+                cursorColor: Colors.grey[850],
+                decoration: InputDecoration(
+                  focusedErrorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide(
+                          color: Colors.grey[850] ?? Colors.grey, width: 3.0)),
+                  errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                     borderSide: BorderSide(
-                        color: Colors.grey[850] ?? Colors.grey, width: 3.0)),
-                focusedBorder: OutlineInputBorder(
+                        color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                  ),
+                  hintText: 'Name',
+                  hintStyle: TextStyle(color: Colors.grey[850]),
+                  fillColor: Color(0xFFF5F5F5),
+                  filled: true,
+                  enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                     borderSide: BorderSide(
-                        color: Colors.grey[850] ?? Colors.grey, width: 3.0)),
+                        color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                  ),
+                  errorStyle: TextStyle(
+                    color: Colors.grey[850],
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(
+                        color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                  ),
+                ),
+                style: TextStyle(color: Colors.grey[850]),
+                validator: nameValidator,
+                onChanged: (val) {
+                  newListName = val;
+                },
               ),
-              style: TextStyle(color: Colors.grey[850]),
-              validator: (val) => val!.isEmpty ? 'Enter Name' : null,
-              onChanged: (val) {
-                newListName = val;
-              },
-            ),
-            SizedBox(height: 10),
-            DropdownButtonFormField<String>(
-              value: selectedName,
-              onChanged: (value) {
-                setState(() {
-                  selectedName = value;
-                });
-              },
-              decoration: InputDecoration(
-                hintText: 'Select Category',
-                hintStyle: TextStyle(color: Colors.grey[850]),
-                fillColor: Color(0xFFF5F5F5),
-                filled: true,
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide(
-                      color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+              SizedBox(height: 25),
+              DropdownButtonFormField<String>(
+                value: selectedName,
+                onChanged: (value) {
+                  setState(() {
+                    selectedName = value;
+                  });
+                },
+                decoration: InputDecoration(
+                  hintText: 'Select Category',
+                  hintStyle: TextStyle(color: Colors.grey[850]),
+                  fillColor: Color(0xFFF5F5F5),
+                  filled: true,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(
+                        color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(
+                        color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                  ),
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide(
-                      color: Colors.grey[850] ?? Colors.grey, width: 3.0),
-                ),
+                style: TextStyle(color: Colors.grey[850]),
+                items: [
+                  DropdownMenuItem<String>(
+                    value: 'Option 1',
+                    child: Text('Wedding'),
+                  ),
+                  DropdownMenuItem<String>(
+                    value: 'Option 2',
+                    child: Text('Bar Mitzvah'),
+                  ),
+                  DropdownMenuItem<String>(
+                    value: 'Option 2',
+                    child: Text('Engagement'),
+                  ),
+                  DropdownMenuItem<String>(
+                    value: 'Option 2',
+                    child: Text("Bris Milah"),
+                  ),
+                ],
               ),
-              style: TextStyle(color: Colors.grey[850]),
-              items: [
-                DropdownMenuItem<String>(
-                  value: 'Option 1',
-                  child: Text('Wedding'),
-                ),
-                DropdownMenuItem<String>(
-                  value: 'Option 2',
-                  child: Text('Bar Mitzvah'),
-                ),
-                DropdownMenuItem<String>(
-                  value: 'Option 2',
-                  child: Text('Engagement'),
-                ),
-                DropdownMenuItem<String>(
-                  value: 'Option 2',
-                  child: Text("Bris Milah"),
-                ),
-                
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       actions: [
@@ -119,16 +148,20 @@ class _ListScreenAddListPopUpFormState
               ),
             ),
             onPressed: () async {
-              final currentList = [
-                ...await ref.read(listFromSharedPrefranceProvider.future)
-              ];
-              currentList.add(newListName!);
+              if (_formKey.currentState!.validate()) {
+                // Form is valid, proceed with saving
+                final currentList = [
+                  ...await ref.read(listFromSharedPrefranceProvider.future),
+                ];
+                currentList.add(newListName!);
 
-              ref.read(listProvider.notifier).state = [...currentList];
-              saveListToSP(currentList);
-              await ref.read(listProvider);
-              await ref.refresh(listFromSharedPrefranceProvider);
-              Navigator.pop(context);
+                ref.read(listProvider.notifier).state = [...currentList];
+                saveListToSP(currentList);
+                 widget.onSave(newListName!);
+                await ref.read(listProvider);
+                await ref.refresh(listFromSharedPrefranceProvider);
+                Navigator.pop(context);
+              }
             },
             child: Text(
               'Save',

@@ -7,11 +7,11 @@ import '../../../models/contact_model.dart';
 import '../../../providers/contact_provider.dart';
 import '../../../providers/list_provider.dart';
 import '../../../providers/load_data_from_device_on_start.dart';
-import '../../../providers/user_info_provider.dart';
+import '../../../providers/user_info_provider.dart';   
 
 void contactTileEllipsisMenu(BuildContext context, WidgetRef ref,
     ContactModel contact, Offset tapPosition) {
-  final RenderBox overlay =
+  final RenderBox overlay =    
       Overlay.of(context).context.findRenderObject() as RenderBox;
   List<ContactModel> processedContacts = [];
 
