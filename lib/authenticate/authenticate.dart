@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:tehine/screens/authenticate_screens/sign_up_screen.dart';
-import 'package:tehine/screens/authenticate_screens/login_screen.dart';
+import 'package:tehine/screens/authenticate_screens/register_screen.dart';
+import 'package:tehine/screens/authenticate_screens/sign_in_screen.dart';
 
 class Authenticate extends StatefulWidget {
   const Authenticate({super.key});

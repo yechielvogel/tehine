@@ -1,16 +1,19 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:io';
 
+import '../api/receive/get_all_contacts_from_at.dart';
+import '../shared/globals.dart' as globals;
+import '../api/send/upload_user_info_at.dart';
 import '../models/users_model.dart';
 
-final authProvider = Provider((ref) => AuthService(ref.read));
+final authProvider = Provider((ref) => AuthService());
+
+// final userStreamProvider = StreamProvider<Users?>((ref) {
+//   return ref.watch(authProvider).user;
+// });
 
 class AuthService {
-   final  _read;
-
-  AuthService(this._read);
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Users? _userFromFirebaseUser(
@@ -22,9 +25,10 @@ class AuthService {
   }
 
   Stream<Users?> get user {
-    return _auth
-        .authStateChanges()
-        .map((User? user) => _userFromFirebaseUser(user));
+    return _auth.authStateChanges().map((User? user) {
+      print('Auth state changed: $user');
+      return _userFromFirebaseUser(user);
+    });
   }
 
   //sign in anon
@@ -40,7 +44,14 @@ class AuthService {
   }
 
   //sign in with email and password
-  Future signInWithEmailAndPassword(String email, String password) async {
+  Future signInWithEmailAndPassword(String email, String password, ref, context) async {
+    String device = '';
+    if (Platform.isIOS) {
+      device = 'IOS';
+    } else if (Platform.isAndroid) {
+      device = 'Android';
+    } else      
+      device = 'Unknown';
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(
         email: email,
@@ -48,6 +59,13 @@ class AuthService {
       );
       User? user = result.user;
       print(user);
+
+      // send login details to airtable
+      await getAllDataFromAtOnStart(context);
+      updateUserDeviceInfoToAt(user?.uid, device);
+      uploadUserLoginRecordsToAt(user?.uid, user?.email, user?.displayName,
+          DateTime.now().toString(), device, globals.version);
+
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());
@@ -56,18 +74,33 @@ class AuthService {
   }
 
   // register with email and password
-  Future registerWithEmailAndPassword(
-      String email, String password, name) async {
+  Future registerWithEmailAndPassword(String email, String password,
+      displayName, phoneNumber, firstName, lastName) async {
+    DateTime dateNotString = DateTime.now();
+    String dateCreated = dateNotString.toString();
+    String device = '';
+    if (Platform.isIOS) {
+      device = 'IOS';
+    } else if (Platform.isAndroid) {
+      device = 'Android';
+    } else
+      device = 'Unknown';
+
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       User? user = result.user;
-      await user!.updateDisplayName(name);
+      await user!.updateDisplayName(displayName);
+      uploadUserInfoToAt(user.uid, firstName, lastName, user.email, phoneNumber,
+          dateCreated, device, globals.version);
+      // userInfoAt(user.uid, user.displayName);
 
       // Reload the user to get the updated information.
       await user!.reload();
-      name = _auth.currentUser!.displayName;
+      displayName = _auth.currentUser!.displayName;
       user = _auth.currentUser;
+      phoneNumber = _auth.currentUser!.phoneNumber;
+
       // await DatabaseService(uid: user!.uid).updateUserData('yes');
       return _userFromFirebaseUser(user);
     } catch (e) {
@@ -85,27 +118,22 @@ class AuthService {
       return null;
     }
 
-    // delete account
   }
   // delete account
 
   Future<void> deleteUserAccount() async {
     try {
       await FirebaseAuth.instance.currentUser!.delete();
-      // await deleteAllHachlata();
     } on FirebaseAuthException catch (e) {
       print(e.toString());
 
       if (e.code == "requires-recent-login") {
         await _reauthenticateAndDelete();
-        // await deleteAllHachlata();
       } else {
-        // Handle other Firebase exceptions
       }
     } catch (e) {
       print(e.toString());
 
-      // Handle general exception
     }
   }
 
@@ -124,7 +152,6 @@ class AuthService {
 
       await FirebaseAuth.instance.currentUser?.delete();
     } catch (e) {
-      // Handle exceptions
     }
   }
 
@@ -138,11 +165,10 @@ class AuthService {
 //         return userData['name'] as String?;
 //       }
 //     }
-//     return null; // User document not found or 'name' not present
+//     return null; 
 //   } catch (e) {
 //     print(e.toString());
 //     return null;
 //   }
 // }
-Stream<User?> get authStateChanges => _auth.authStateChanges();
 }
