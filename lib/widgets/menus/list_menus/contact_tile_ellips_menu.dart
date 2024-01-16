@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../api/send/upload_contacts_at.dart';
+import '../../../api/contacts/upload_contacts.dart';
 import '../../../models/contact_model.dart';
 import '../../../providers/contact_provider.dart';
 import '../../../providers/list_provider.dart';
 import '../../../providers/load_data_from_device_on_start.dart';
-import '../../../providers/user_info_provider.dart';   
+import '../../../providers/user_provider.dart';   
 
 void contactTileEllipsisMenu(BuildContext context, WidgetRef ref,
     ContactModel contact, Offset tapPosition) {

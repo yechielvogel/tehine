@@ -2,15 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../api/send/upload_contacts_at.dart';
+import '../../../api/contacts/upload_contacts.dart';
 import '../../../models/contact_model.dart';
 import '../../../providers/contact_provider.dart';
 import '../../../providers/list_provider.dart';
 import '../../../providers/load_data_from_device_on_start.dart';
-import '../../../providers/user_info_provider.dart';
+import '../../../providers/user_provider.dart';
 import 'clone_list_menu.dart';
 
 void listScreenEllipsisMenu(BuildContext context, ref) {
+  List<ContactModel> contacts = ref.read(selectedContacts);
+
   final RenderBox overlay =
       Overlay.of(context).context.findRenderObject() as RenderBox;
 
@@ -47,7 +49,7 @@ void listScreenEllipsisMenu(BuildContext context, ref) {
       value: 7,
     ),
   ];
-
+     
   List<PopupMenuEntry<dynamic>> SelectableSingleSelected = [
     PopupMenuItem(
       child: Text('Delete Selected Contact'),
@@ -105,6 +107,23 @@ void listScreenEllipsisMenu(BuildContext context, ref) {
 
       if (value == 7) {
         selectableListScreenEllipsisMenu(context, ref);
+      }
+      if (value == 5) {
+        // await deleteContactFromSP(contacts);    
+
+        for (ContactModel contact in contacts) {
+          await deleteContactsFromUserAccountToAt(
+              ref.read(userStreamProvider).value.uid,
+              contact.firstName,
+              contact.lastName,
+              contact.phoneNumber,
+              contact.email,
+              contact.lists,
+              '');
+        }
+        ref.refresh(contactsFromSharedPrefProvider);
+        ref.read(selectedContacts.notifier).state = [];
+        ref.read(isSelectable.notifier).state = false;
       }
     }
   });

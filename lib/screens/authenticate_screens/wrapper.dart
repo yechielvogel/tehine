@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
-import 'package:tehine/api/receive/get_user_info_at.dart';
+import 'package:tehine/api/user/get_user_info_at.dart';
 import 'package:tehine/shared/loading.dart';
 
-import '../../api/send/upload_user_info_at.dart';
+import '../../api/user/upload_user_info_at.dart';
 import '../../authenticate/auth.dart';
 import '../../authenticate/authenticate.dart';
 import '../../models/users_model.dart';
-import '../../providers/user_info_provider.dart';
+import '../../providers/user_provider.dart';
 import '../navigation_screens/navigation_screen.dart';
 
 import 'package:flutter/material.dart';

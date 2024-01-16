@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../../api/send/upload_contacts_at.dart';
+import '../../../api/contacts/upload_contacts.dart';
 import '../../../providers/contact_provider.dart';
 import '../../../providers/list_provider.dart';
-import '../../../providers/user_info_provider.dart';
+import '../../../providers/user_provider.dart';
 import '../../forms/list_screen_add_list_pop_up_form.dart';
 
 void listScreenAddMenu(BuildContext context, WidgetRef ref) {

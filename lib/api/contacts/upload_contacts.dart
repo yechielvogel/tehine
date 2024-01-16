@@ -18,7 +18,7 @@ Future<void> uploadContactsFromDevice(String? uid, ref) async {
   for (var contact in contactList) {
     String firstName = contact.givenName ?? '';
     String lastName = contact.familyName ?? '';
-    String email = ''; 
+    String email = '';
     Object address = contact.postalAddresses ?? '';
     List lists = ['All'];
     String phoneNumber = '';
@@ -43,12 +43,11 @@ Future<void> uploadContactsFromDevice(String? uid, ref) async {
         email: email,
         phoneNumber: phoneNumber,
         lists: ['All'],
-
       ),
     );
     saveContactsToSP(processedContacts);
     await uploadContactsToAt(
-      null, 
+      null,
       firstName,
       lastName,
       phoneNumber,
@@ -183,9 +182,11 @@ Future<void> updateContactsListsToAt(
 
 // This function deletes contacts from the users account in airtable
 
+// This need refactoring don't need the uid twice.
+
 Future<void> deleteContactsFromUserAccountToAt(
     String? uid,
-    String? title,
+    // String? title,
     String? firstName,
     String? lastName,
     String phoneNumber,
@@ -233,6 +234,7 @@ Future<void> deleteContactsFromUserAccountToAt(
         );
 
         if (updateResponse.statusCode == 200) {
+         
           print('Data updated successfully');
           print(updateResponse.body);
         } else {
@@ -240,6 +242,7 @@ Future<void> deleteContactsFromUserAccountToAt(
               'Failed to update data. Status code: ${updateResponse.statusCode}');
           print(updateResponse.body);
         }
+        
       } else {
         print('Record with UID $uid not found.');
       }
@@ -247,7 +250,11 @@ Future<void> deleteContactsFromUserAccountToAt(
       print('Failed to query data. Status code: ${queryResponse.statusCode}');
       print(queryResponse.body);
     }
-  } catch (error) {
+  } 
+  
+  
+  catch (error) {
     print('Error: $error');
   }
+  
 }

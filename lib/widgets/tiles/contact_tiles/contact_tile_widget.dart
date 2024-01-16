@@ -2,11 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../api/send/upload_contacts_at.dart';
+import '../../../api/contacts/upload_contacts.dart';
 import '../../../models/contact_model.dart';
 
+import '../../../providers/contact_provider.dart';
 import '../../../providers/load_data_from_device_on_start.dart';
-import '../../../providers/user_info_provider.dart';
+import '../../../providers/user_provider.dart';
 
 import '../../menus/list_menus/contact_tile_ellips_menu.dart';
 
@@ -26,21 +27,13 @@ class ContactTileWidget extends ConsumerStatefulWidget {
 class _ContactTileWidgetState extends ConsumerState<ContactTileWidget> {
   @override
   Widget build(BuildContext context) {
+    List<ContactModel> contactToDelete = [];
+    contactToDelete.add(widget.contact);
     return GestureDetector(
-      onLongPress: () {
-        // contactTileEllipsisMenu(context, ref, widget.contact);
-      },
+      onLongPress: () {},
       child: Container(
         width: 380,
         decoration: BoxDecoration(
-          boxShadow: [
-            // BoxShadow(
-            //   color: Colors.grey.withOpacity(0.5),
-            //   spreadRadius: 5,
-            //   blurRadius: 3,
-            //   offset: Offset(0, 4),
-            // ),
-          ],
           borderRadius: BorderRadius.circular(20),
           color: Color(0xFFF5F5F5),
         ),
@@ -58,13 +51,14 @@ class _ContactTileWidgetState extends ConsumerState<ContactTileWidget> {
               deleteContactFromSP(widget.contact);
               deleteContactsFromUserAccountToAt(
                   ref.read(userStreamProvider).value!.uid,
-                  '',
                   widget.contact.firstName,
                   widget.contact.lastName,
                   widget.contact.phoneNumber,
                   widget.contact.email,
                   widget.contact.lists,
                   '');
+              ref.refresh(contactsFromSharedPrefProvider);
+              ref.read(contactsProvider);
             }
           },
           background: Container(

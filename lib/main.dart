@@ -16,7 +16,7 @@ void main() async {
   // ThemeProvider themeProvider = ThemeProvider();
 
   runApp(ProviderScope(
-    child: MyApp(),
+    child: MyApp(),   
   ));
   // WidgetsBinding.instance.addObserver(
   //   AppLifecycleObserver(themeProvider: themeProvider),

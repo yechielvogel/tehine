@@ -52,4 +52,5 @@ class ContactModel {
       lists: lists ?? this.lists,
     );
   }
-}
+  
+}    

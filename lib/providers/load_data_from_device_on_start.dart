@@ -92,19 +92,17 @@ Future<void> saveContactsToSP(List<ContactModel> contacts) async {
 
   List<ContactModel> uniqueContacts = uniqueContactsMap.values.toList();
 
-  List<String> contactsJson =
+  List<String> contactsJson =    
       uniqueContacts.map((contact) => json.encode(contact.toJson())).toList();
 
   prefs.setStringList('Contacts', contactsJson);
 }
 
-void deleteContactFromSP(ContactModel contact) async {
+Future<void> deleteContactFromSP(ContactModel contact) async {    
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  List<String> contactsJson = prefs.getStringList('Contacts') ?? [];
-  List<ContactModel> contacts = contactsJson
-      .map((jsonString) => ContactModel.fromJson(json.decode(jsonString)))
-      .toList();
+  List<String>? contactsJson = prefs.getStringList('Contacts');
+  List<ContactModel> contacts = contactsJson?.map((jsonString) => ContactModel.fromJson(json.decode(jsonString))).toList() as List<ContactModel>? ?? [];
 
   // Remove the contact from the list
   contacts.removeWhere(
@@ -116,3 +114,5 @@ void deleteContactFromSP(ContactModel contact) async {
       contacts.map((contact) => json.encode(contact.toJson())).toList();
   prefs.setStringList('Contacts', updatedContactsJson);
 }
+
+

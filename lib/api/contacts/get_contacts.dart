@@ -8,13 +8,16 @@ import '../../models/contact_model.dart';
 import '../../providers/contact_provider.dart';
 import '../../providers/list_provider.dart';
 import '../../providers/load_data_from_device_on_start.dart';
-import '../../providers/user_info_provider.dart';
+import '../../providers/user_provider.dart';
+import '../../screens/navigation_screens/lists_screen.dart';
 
-Future<void> getAllContactsFromAT() async {
+// This function will get all contacts from the Tehine data base
+
+Future<void> getAllContactsFromAT(ref) async {
   final String airtableApiKey =
       'patS6BGUI9SY8OcFJ.fd3c067a6f9874f1847fddf6a21815d8b54dac5ed1b0340dae533856d0c9437a';
   final String airtableApiEndpoint =
-      'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Users';
+      'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Contacts';
   final Uri uri = Uri.parse('$airtableApiEndpoint');
 
   try {
@@ -29,17 +32,37 @@ Future<void> getAllContactsFromAT() async {
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
 
-      // Check if 'records' key exists and it's a non-empty list
       if (responseData.containsKey('records') &&
           responseData['records'] is List &&
           responseData['records'].isNotEmpty) {
-  
         List<ContactModel> contacts =
             responseData['records'].map<ContactModel>((record) {
-          return ContactModel.fromJson(record['fields']);
+          ContactModel contact = ContactModel.fromJson(record['fields']);
+
+          contact.firstName = record['fields']['First Name'] ?? '';
+          contact.lastName = record['fields']['Last Name'] ?? '';
+          contact.phoneNumber = record['fields']['Phone'] ?? '';
+          contact.phoneNumber = record['fields']['Phone'] ?? '';
+          contact.email = record['fields']['Email'] ?? '';
+          String listsString = record['fields']['Lists'] ?? '';
+          List<String> splitList = listsString
+              .split(',')
+              .map((item) => item.trim())
+              .where((item) => item.isNotEmpty)
+              .toList();
+
+          contact.lists = splitList;
+          // This will save the lists to shared preference so we could get all lists
+          saveListToSP(splitList);
+          print('Original listsString: $listsString');
+          print('After splitting: $splitList');
+          return contact;
         }).toList();
-      } else {
-      }
+        ref.read(filteredContactsProvider.notifier).state = contacts;
+     (ref.read(filteredContactsProvider.notifier).state as List<ContactModel>).sort(
+  (ContactModel a, ContactModel b) => a.lastName.compareTo(b.lastName)
+);
+      } else {}
     } else {
       print('Failed to fetch data. Status code: ${response.statusCode}');
       print(response.body);
@@ -67,7 +90,8 @@ Future<void> getAllDataFromAtOnStart(BuildContext context) async {
   if (!isThereAnyContactsDataOnDevice) {
     print('Line 90 there is no data on device');
     // search airtable
-    await loadContactsAndListsFromAT(ref.read(userStreamProvider).value!.uid, context);
+    await loadContactsAndListsFromAT(
+        ref.read(userStreamProvider).value!.uid, context);
     print('should run refresh');
 
     ref.refresh(contactsFromSharedPrefProvider);
@@ -81,7 +105,7 @@ logs in from a new device
 Future<void> loadContactsAndListsFromAT(userId, BuildContext context) async {
   final ref = ProviderScope.containerOf(context);
   final String airtableApiKey =
-      'patS6BGUI9SY8OcFJ.fd3c067a6f9874f1847fddf6a21815d8b54dac5ed1b0340dae533856d0c9437a';
+      'patS6BGUI9SY8OcFJ.fd3c067a6f9874f1847fddf6a21ed1b0340dae533856d0c9437a';
   final String airtableApiEndpoint =
       'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Contacts';
   final Uri uri = Uri.parse(
@@ -104,7 +128,6 @@ Future<void> loadContactsAndListsFromAT(userId, BuildContext context) async {
         List<ContactModel> contacts =
             responseData['records'].map<ContactModel>((record) {
           ContactModel contact = ContactModel.fromJson(record['fields']);
-
 
           contact.firstName = record['fields']['First Name'] ?? '';
           contact.lastName = record['fields']['Last Name'] ?? '';

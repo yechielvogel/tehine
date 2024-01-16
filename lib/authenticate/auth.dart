@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:io';
 
-import '../api/receive/get_all_contacts_from_at.dart';
+import '../api/contacts/get_contacts.dart';
 import '../shared/globals.dart' as globals;
-import '../api/send/upload_user_info_at.dart';
+import '../api/user/upload_user_info_at.dart';
 import '../models/users_model.dart';
 
 final authProvider = Provider((ref) => AuthService());
