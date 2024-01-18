@@ -36,14 +36,12 @@ List<ContactModel> filterContacts(String query, ref) {
   return ref
       .read(filteredContactsProvider)
       .where((contact) =>
-          contact.firstName.toLowerCase().contains(query.toLowerCase()) ||
-          contact.lastName.toLowerCase().contains(query.toLowerCase()) ||
-
-          // Add additional fields for searching if needed
-          contact.phoneNumber.toLowerCase().contains(query.toLowerCase()) ||
-          contact.email.toLowerCase().contains(query.toLowerCase()) ||
-          contact.firstName.toLowerCase().contains(query.toLowerCase()) ||
-          contact.lastName.toLowerCase().contains(query.toLowerCase()))
+              contact.firstName.toLowerCase().contains(query.toLowerCase()) ||
+              contact.lastName.toLowerCase().contains(query.toLowerCase()) ||
+              // Add additional fields for searching if needed
+              contact.phoneNumber.toLowerCase().contains(query.toLowerCase())
+          // contact.email.toLowerCase().contains(query.toLowerCase()) ||
+          )
       .toList();
 }
 
@@ -59,14 +57,23 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
               padding: const EdgeInsets.only(right: 8, left: 8, bottom: 8),
               child: TextFormField(
                 onChanged: (query) {
+                  print("onChanged: $query");
                   // Handle search query changes
                   performSearch(query, ref);
+                  ref.read(filteredContactsProvider.notifier);
                   if (query.isEmpty) {
                     // If the query is empty, reset the list of filtered contacts
-                    ref.read(filteredContactsProvider);
+                    ref.read(filteredContactsProvider.notifier).state =
+                        ref.read(contactsProvider);
                   }
                 },
-                cursorColor: Theme.of(context).colorScheme.background,
+                onSaved: (query) {
+                  // Perform search when the user removes a letter (backspace)
+                  performSearch(query!, ref);
+                },
+                onFieldSubmitted: (query) => performSearch(query, ref),
+                // cursorColor: Theme.of(context).colorScheme.background,
+                cursorColor: Colors.grey[850],
                 decoration: InputDecoration(
                   focusedErrorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
@@ -113,7 +120,7 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    for (int index = 0;
+                    for (int index = 0;   
                         index < ref.watch(listProvider).length;
                         index++)
                       ChoiceChip(
@@ -132,7 +139,9 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
                           ),
                         ),
                         selected: ref.watch(selectedListProvider) ==
-                            ref.watch(listProvider)[index],
+                            (ref.watch(listProvider)[index] == -1
+                                ? ref.watch(listProvider).first
+                                : ref.watch(listProvider)[index]),
                         onSelected: (selected) async {
                           if (selected) {
                             ref.read(selectedListProvider.notifier).state =

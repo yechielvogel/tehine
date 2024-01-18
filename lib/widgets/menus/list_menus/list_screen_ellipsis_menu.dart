@@ -10,69 +10,87 @@ import '../../../providers/load_data_from_device_on_start.dart';
 import '../../../providers/user_provider.dart';
 import 'clone_list_menu.dart';
 
+// Need to refactor the code here make functions for the items at the bottom of the page.
+
 void listScreenEllipsisMenu(BuildContext context, ref) {
   List<ContactModel> contacts = ref.read(selectedContacts);
+  List<ContactModel> contactsInList = ref.read(contactsProvider);
+  List<ContactModel> contactsCopy = List.from(contactsInList);
+  List<ContactModel> processedContacts = [];
+  List<ContactModel> unchangedContacts = [];
 
   final RenderBox overlay =
       Overlay.of(context).context.findRenderObject() as RenderBox;
 
   List<PopupMenuEntry<dynamic>> notSelectable = [
-    PopupMenuItem(
-      child: Text('Delete List'),
-      value: 1,
-    ),
-    PopupMenuItem(
-      child: Text('Share List'),
-      value: 2,
-    ),
-    PopupMenuItem(
-      child: Text('Clone List'),
-      value: 3,
-    ),
+    if (ref.read(selectedListProvider) != 'All' &&
+        ref.read(selectedListProvider) != 'Tehine')
+      PopupMenuItem(
+        child: Text('Delete List'),
+        value: 1,
+      ),
+    if (ref.read(selectedListProvider) != 'Tehine')
+      PopupMenuItem(
+        child: Text('Share List'),
+        value: 2,
+      ),
+    if (ref.read(selectedListProvider) != 'Tehine')
+      PopupMenuItem(
+        child: Text('Clone List'),
+        value: 3,
+      ),
     PopupMenuItem(
       child: Text('Select Contacts'),
       value: 4,
     ),
   ];
 
-  List<PopupMenuEntry<dynamic>> SelectableMultipleSelected = [
+  List<PopupMenuEntry<dynamic>> selectable = [
+    if (ref.read(selectedListProvider) == 'All') // Check the condition
+      PopupMenuItem(
+        child: Text('Delete'),
+        value: 5,
+      ),
+    if (ref.read(selectedListProvider) != 'Tehine' &&
+        ref.read(selectedListProvider) != 'All')
+      PopupMenuItem(
+        child: Text('Remove'),
+        value: 8,
+      ),
     PopupMenuItem(
-      child: Text('Delete Selected Contacts'),
-      value: 5,
-    ),
-    PopupMenuItem(
-      child: Text('Share Selected Contacts'),
+      child: Text('Share'),
       value: 6,
     ),
     PopupMenuItem(
-      child: Text('Add Selected Contacts To List'),
+      child: Text('Add To List'),
       value: 7,
     ),
   ];
-     
-  List<PopupMenuEntry<dynamic>> SelectableSingleSelected = [
-    PopupMenuItem(
-      child: Text('Delete Selected Contact'),
-      value: 5,
-    ),
-    PopupMenuItem(
-      child: Text('Share Selected Contact'),
-      value: 6,
-    ),
-    PopupMenuItem(
-      child: Text('Add Selected Contact To List'),
-      value: 7,
-    ),
-  ];
+
+  // List<PopupMenuEntry<dynamic>> selectableSingleSelected = [
+  //   if (ref.read(selectedListProvider) != 'Tehine') // Check the condition
+  //     PopupMenuItem(
+  //       child: Text('Delete Selected Contact'),
+  //       value: 5,
+  //     ),
+  //   PopupMenuItem(
+  //     child: Text('Share Selected Contact'),
+  //     value: 6,
+  //   ),
+  //   PopupMenuItem(
+  //     child: Text('Add Selected Contact To List'),
+  //     value: 7,
+  //   ),
+  // ];
 
   List<PopupMenuEntry<dynamic>> itemsToShow = [];
 
   if (ref.read(isSelectable)) {
-    if (ref.read(selectedContacts.notifier).state.length > 1) {
-      itemsToShow = SelectableMultipleSelected;
-    } else {
-      itemsToShow = SelectableSingleSelected;
-    }
+    // if (ref.read(selectedContacts.notifier).state.length > 1) {
+    itemsToShow = selectable;
+    // } else {
+    //   itemsToShow = selectableSingleSelected;
+    // }
   } else {
     itemsToShow = notSelectable;
   }
@@ -94,6 +112,61 @@ void listScreenEllipsisMenu(BuildContext context, ref) {
     color: Color(0xFFF5F5F5),
   ).then((value) async {
     if (value != null) {
+      if (value == 1) {
+        for (ContactModel contact in contactsCopy) {
+          // Check if the lists have been modified
+          if (contact.lists.contains('${ref.read(selectedListProvider)}')) {
+            ContactModel updatedContact = ContactModel(
+              firstName: contact.firstName,
+              lastName: contact.lastName,
+              email: contact.email,
+              phoneNumber: contact.phoneNumber,
+              lists: [...contact.lists]
+                ..remove('${ref.read(selectedListProvider)}'),
+            );
+
+            processedContacts.add(updatedContact);
+            await updateContactsListsToAt(
+              ref.read(userStreamProvider).value!.uid,    
+              '',
+              updatedContact.firstName,
+              updatedContact.lastName,
+              updatedContact.phoneNumber,
+              updatedContact.email,
+              updatedContact.lists,
+              ref.read(userStreamProvider).value!.uid,
+            );
+
+            print(updatedContact.lists.toString());
+          } else {
+            unchangedContacts.add(contact);
+          }
+        }
+        List<ContactModel> allContacts = [
+          ...processedContacts,
+          ...unchangedContacts
+        ];
+        await saveContactsToSP(allContacts);
+
+        // ref.read(selectedListProvider.notifier).state = 'All';
+        List<String> currentList = ref.read(listProvider.notifier).state;
+        String selectedList = ref.read(selectedListProvider);
+
+        // Check if the selected list exists before removing
+        if (currentList.contains(selectedList)) {
+          currentList.remove(selectedList);
+
+          // Update the selected list to a valid state
+          ref.read(selectedListProvider.notifier).state =
+              currentList.isNotEmpty ? currentList[1] : null;
+
+          ref.read(listProvider.notifier).state = currentList;
+          removeListFromSP(selectedList, ref);
+          ref.refresh(listFromSharedPrefranceProvider);
+          ref.refresh(contactsFromSharedPrefProvider);
+          ref.read(selectedContacts.notifier).state = <ContactModel>[];
+        }
+      }
       if (value == 4) {
         String selectedContactPhoneNumber =
             ref.read(selectedContact.notifier).state;
@@ -109,21 +182,59 @@ void listScreenEllipsisMenu(BuildContext context, ref) {
         selectableListScreenEllipsisMenu(context, ref);
       }
       if (value == 5) {
-        // await deleteContactFromSP(contacts);    
-
         for (ContactModel contact in contacts) {
+          print('Type of contact.lists: ${contacts.runtimeType}');
+          ContactModel contactsToDelete = ContactModel(
+            firstName: contact.firstName,
+            lastName: contact.lastName,
+            email: contact.email,
+            phoneNumber: contact.phoneNumber,
+            lists: contact.lists,
+          );
+          print('this is the type${contacts.runtimeType}');
           await deleteContactsFromUserAccountToAt(
               ref.read(userStreamProvider).value.uid,
-              contact.firstName,
-              contact.lastName,
-              contact.phoneNumber,
-              contact.email,
-              contact.lists,
+              contactsToDelete.firstName,
+              contactsToDelete.lastName,
+              contactsToDelete.phoneNumber,
+              contactsToDelete.email,
+              contactsToDelete.lists,
               '');
+          await deleteContactFromSP(contact);
         }
         ref.refresh(contactsFromSharedPrefProvider);
-        ref.read(selectedContacts.notifier).state = [];
+        ref.read(selectedContacts.notifier).state = <ContactModel>[];
         ref.read(isSelectable.notifier).state = false;
+      }
+      if (value == 8) {
+        for (ContactModel contact in contacts) {
+          ContactModel updatedContact = ContactModel(
+            firstName: contact.firstName,
+            lastName: contact.lastName,
+            email: contact.email,
+            phoneNumber: contact.phoneNumber,
+            lists: [...contact.lists]
+              ..remove('${ref.read(selectedListProvider)}'),
+          );
+
+          processedContacts = ref.read(contactsProvider);
+          processedContacts.add(updatedContact);
+          saveContactsToSP(processedContacts);
+          updateContactsListsToAt(
+            ref.read(userStreamProvider).value!.uid,
+            '',
+            updatedContact.firstName,
+            updatedContact.lastName,
+            updatedContact.phoneNumber,
+            updatedContact.email,
+            updatedContact.lists,
+            ref.read(userStreamProvider).value!.uid,
+          );
+          ref.refresh(contactsFromSharedPrefProvider);
+          ref.read(selectedContacts.notifier).state = <ContactModel>[];
+          ref.read(isSelectable.notifier).state = false;
+          print(updatedContact.lists.toString());
+        }
       }
     }
   });

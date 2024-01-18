@@ -192,7 +192,7 @@ Future<void> deleteContactsFromUserAccountToAt(
     String phoneNumber,
     String email,
     // Object address,
-    List? lists,
+    List<String>? lists,
     String? addedByUser) async {
   final String airtableApiKey =
       'patS6BGUI9SY8OcFJ.fd3c067a6f9874f1847fddf6a21815d8b54dac5ed1b0340dae533856d0c9437a';
@@ -234,7 +234,6 @@ Future<void> deleteContactsFromUserAccountToAt(
         );
 
         if (updateResponse.statusCode == 200) {
-         
           print('Data updated successfully');
           print(updateResponse.body);
         } else {
@@ -242,7 +241,6 @@ Future<void> deleteContactsFromUserAccountToAt(
               'Failed to update data. Status code: ${updateResponse.statusCode}');
           print(updateResponse.body);
         }
-        
       } else {
         print('Record with UID $uid not found.');
       }
@@ -250,11 +248,7 @@ Future<void> deleteContactsFromUserAccountToAt(
       print('Failed to query data. Status code: ${queryResponse.statusCode}');
       print(queryResponse.body);
     }
-  } 
-  
-  
-  catch (error) {
+  } catch (error) {
     print('Error: $error');
   }
-  
 }
