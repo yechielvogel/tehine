@@ -127,7 +127,7 @@ void listScreenEllipsisMenu(BuildContext context, ref) {
 
             processedContacts.add(updatedContact);
             await updateContactsListsToAt(
-              ref.read(userStreamProvider).value!.uid,    
+              ref.read(userStreamProvider).value!.uid,
               '',
               updatedContact.firstName,
               updatedContact.lastName,

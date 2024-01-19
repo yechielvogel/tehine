@@ -59,9 +59,10 @@ Future<void> getAllContactsFromAT(ref) async {
           return contact;
         }).toList();
         ref.read(filteredContactsProvider.notifier).state = contacts;
-     (ref.read(filteredContactsProvider.notifier).state as List<ContactModel>).sort(
-  (ContactModel a, ContactModel b) => a.lastName.compareTo(b.lastName)
-);
+        (ref.read(filteredContactsProvider.notifier).state
+                as List<ContactModel>)
+            .sort((ContactModel a, ContactModel b) =>
+                a.lastName.compareTo(b.lastName));
       } else {}
     } else {
       print('Failed to fetch data. Status code: ${response.statusCode}');
@@ -102,15 +103,79 @@ Future<void> getAllDataFromAtOnStart(BuildContext context) async {
 logs in from a new device 
 */
 
+// Future<void> loadContactsAndListsFromAT(userId, BuildContext context) async {
+//   final ref = ProviderScope.containerOf(context);
+//    final String airtableApiKey =
+//        'patS6BGUI9SY8OcFJ.fd3c067a6f9874f1847fddf6a21815d8b54dac5ed1b0340dae533856d0c9437a';
+//    final String airtableApiEndpoint =
+//        'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Contacts';
+//   final Uri uri = Uri.parse(
+//       '$airtableApiEndpoint?filterByFormula=SEARCH("${Uri.encodeComponent(userId!)}", {Added By User})');
+//   try {
+//     final http.Response response = await http.get(
+//       uri,
+//       headers: {
+//         'Authorization': 'Bearer $airtableApiKey',
+//         'Content-Type': 'application/json',
+//       },
+//     );
+
+//     if (response.statusCode == 200) {
+//       final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+//       if (responseData.containsKey('records') &&
+//           responseData['records'] is List &&
+//           responseData['records'].isNotEmpty) {
+//         List<ContactModel> contacts =
+//             responseData['records'].map<ContactModel>((record) {
+//           ContactModel contact = ContactModel.fromJson(record['fields']);
+
+//           contact.firstName = record['fields']['First Name'] ?? '';
+//           contact.lastName = record['fields']['Last Name'] ?? '';
+//           contact.phoneNumber = record['fields']['Phone'] ?? '';
+//           contact.phoneNumber = record['fields']['Phone'] ?? '';
+//           contact.email = record['fields']['Email'] ?? '';
+//           String listsString = record['fields']['Lists'] ?? '';
+//           List<String> splitList = listsString
+//               .split(',')
+//               .map((item) => item.trim())
+//               .where((item) => item.isNotEmpty)
+//               .toList();
+//           contact.lists = splitList;
+//           // This will save the lists to shared preference so we could get all lists
+//           saveListToSP(splitList);
+//           print('Original listsString: $listsString');
+//           print('After splitting: $splitList');
+//           return contact;
+//         }).toList();
+
+//         // Save all contacts to shared preferences after processing
+//         saveContactsToSP(contacts);
+//         ref.refresh(listFromSharedPrefranceProvider);
+//       } else {
+//         print('No contacts found for the user');
+//       }
+//     } else {
+//       print('Failed to fetch data. Status code: ${response.statusCode}');
+//       print(response.body);
+//     }
+//   } catch (e) {
+//     print('Error: $e');
+//   }
+// }
+
+// this should be working should double check test a few times.
+
 Future<void> loadContactsAndListsFromAT(userId, BuildContext context) async {
   final ref = ProviderScope.containerOf(context);
   final String airtableApiKey =
-      'patS6BGUI9SY8OcFJ.fd3c067a6f9874f1847fddf6a21ed1b0340dae533856d0c9437a';
+      'patS6BGUI9SY8OcFJ.fd3c067a6f9874f1847fddf6a21815d8b54dac5ed1b0340dae533856d0c9437a';
   final String airtableApiEndpoint =
-      'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Contacts';
-  final Uri uri = Uri.parse(
-      '$airtableApiEndpoint?filterByFormula=SEARCH("${Uri.encodeComponent(userId!)}", {Added By User})');
+      'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Saved%20Contacts';
+
   try {
+    final Uri uri = Uri.parse(
+        '$airtableApiEndpoint?filterByFormula=SEARCH("${Uri.encodeComponent(userId!)}", {Saved By User})');
     final http.Response response = await http.get(
       uri,
       headers: {
@@ -125,28 +190,13 @@ Future<void> loadContactsAndListsFromAT(userId, BuildContext context) async {
       if (responseData.containsKey('records') &&
           responseData['records'] is List &&
           responseData['records'].isNotEmpty) {
-        List<ContactModel> contacts =
-            responseData['records'].map<ContactModel>((record) {
-          ContactModel contact = ContactModel.fromJson(record['fields']);
+        List<ContactModel> contacts = [];
 
-          contact.firstName = record['fields']['First Name'] ?? '';
-          contact.lastName = record['fields']['Last Name'] ?? '';
-          contact.phoneNumber = record['fields']['Phone'] ?? '';
-          contact.phoneNumber = record['fields']['Phone'] ?? '';
-          contact.email = record['fields']['Email'] ?? '';
-          String listsString = record['fields']['Lists'] ?? '';
-          List<String> splitList = listsString
-              .split(',')
-              .map((item) => item.trim())
-              .where((item) => item.isNotEmpty)
-              .toList();
-          contact.lists = splitList;
-          // This will save the lists to shared preference so we could get all lists
-          saveListToSP(splitList);
-          print('Original listsString: $listsString');
-          print('After splitting: $splitList');
-          return contact;
-        }).toList();
+        for (var record in responseData['records']) {
+          // Use an asynchronous function inside the loop
+          ContactModel contact = await mapRecordToContact(record);
+          contacts.add(contact);
+        }
 
         // Save all contacts to shared preferences after processing
         saveContactsToSP(contacts);
@@ -161,4 +211,56 @@ Future<void> loadContactsAndListsFromAT(userId, BuildContext context) async {
   } catch (e) {
     print('Error: $e');
   }
+}
+
+// Asynchronous function to map a record to a ContactModel
+Future<ContactModel> mapRecordToContact(dynamic record) async {
+  ContactModel contact = ContactModel.fromJson(record['fields']);
+
+  // Fetch additional details from linked "Contacts" table
+  if (record['fields']['Contact Link'] != null) {
+    String contactLink = record['fields']['Contact Link'][0];
+    final Uri contactUri = Uri.parse(
+        'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Contacts/$contactLink');
+
+    final http.Response contactResponse = await http.get(
+      contactUri,
+      headers: {
+        'Authorization':
+            'Bearer patS6BGUI9SY8OcFJ.fd3c067a6f9874f1847fddf6a21815d8b54dac5ed1b0340dae533856d0c9437a',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (contactResponse.statusCode == 200) {
+      Map<String, dynamic> contactFields =
+          jsonDecode(contactResponse.body)['fields'];
+
+      contact.firstName = contactFields['First Name'] ?? '';
+      contact.lastName = contactFields['Last Name'] ?? '';
+      contact.phoneNumber = contactFields['Phone'] ?? '';
+      contact.email = contactFields['Email'] ?? '';
+    } else {
+      print(
+          'Failed to fetch additional contact details. Status code: ${contactResponse.statusCode}');
+      print(contactResponse.body);
+    }
+  }
+
+  // Extract lists from "Saved Contacts" table
+  String listsString = record['fields']['Lists'] ?? '';
+  List<String> splitList = listsString
+      .split(',')
+      .map((item) => item.trim())
+      .where((item) => item.isNotEmpty)
+      .toList();
+  contact.lists = splitList;
+
+  // This will save the lists to shared preference so we could get all lists
+  saveListToSP(splitList);
+
+  print('Original listsString: $listsString');
+  print('After splitting: $splitList');
+
+  return contact;
 }

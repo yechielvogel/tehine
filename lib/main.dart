@@ -10,7 +10,7 @@ import 'Themes/theme_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  ThemeProvider themeProvider = ThemeProvider();
+  ThemeProvider themeProvider = ThemeProvider();    
   await themeProvider.loadSettings();
 
   // ThemeProvider themeProvider = ThemeProvider();

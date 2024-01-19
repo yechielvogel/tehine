@@ -69,7 +69,6 @@ Future<void> uploadContactsToAt(
     String? lastName,
     String phoneNumber,
     String email,
-    // Object address,
     List? lists,
     String? addedByUser) async {
   final String airtableApiKey =
@@ -78,18 +77,15 @@ Future<void> uploadContactsToAt(
       'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Contacts';
   String listsAsString = lists!.join(', ');
   final Map<String, dynamic> data = {
-    // 'Title': title,
     'First Name': firstName,
     'Last Name': lastName,
     'Phone': phoneNumber,
     'Email': email,
-    // 'Address': address,
-    "Lists": listsAsString,
     'Added By User': addedByUser,
   };
 
   final Uri uri = Uri.parse(airtableApiEndpoint);
-  final http.Response response = await http.post(
+  final http.Response response = await http.post(    
     uri,
     headers: {
       'Authorization': 'Bearer $airtableApiKey',
@@ -103,8 +99,51 @@ Future<void> uploadContactsToAt(
   if (response.statusCode == 200) {
     print('Data uploaded successfully');
     print(response.body);
+
+    // Step 2: Save the contact for the user in the "Saved Contacts" table
+    final Map<String, dynamic> responseData = jsonDecode(response.body);
+    String contactID = responseData['id']; // Access the ID returned by Airtable
+
+    // Call the function to save the contact for the user in the "Saved Contacts" table
+    saveContactToSavedTable(contactID, addedByUser!, listsAsString);
   } else {
     print('Failed to upload data. Status code: ${response.statusCode}');
+    print(response.body);
+  }
+}
+
+// This function saves contacts to saved contacts in airtable
+
+Future<void> saveContactToSavedTable(
+    String contactID, String savedByID, String lists) async {
+  final String airtableApiKey =
+      'patS6BGUI9SY8OcFJ.fd3c067a6f9874f1847fddf6a21815d8b54dac5ed1b0340dae533856d0c9437a';
+  final String airtableApiEndpoint =
+      'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Saved%20Contacts'; // Use the correct endpoint for the "Saved Contacts" table
+
+  final Map<String, dynamic> requestData = {
+    'fields': {
+      'Contact Link': [contactID],
+      'Saved By User': savedByID,
+      'Lists': lists,
+    },
+  };
+
+  final Uri uri = Uri.parse(airtableApiEndpoint);
+  final http.Response response = await http.post(
+    uri,
+    headers: {
+      'Authorization': 'Bearer $airtableApiKey',
+      'Content-Type': 'application/json',
+    },
+    body: jsonEncode(requestData),
+  );
+
+  if (response.statusCode == 200) {
+    print('Contact saved in "Saved Contacts" table successfully');
+    print(response.body);
+  } else {
+    print('Failed to save contact. Status code: ${response.statusCode}');
     print(response.body);
   }
 }
@@ -118,17 +157,17 @@ Future<void> updateContactsListsToAt(
     String? lastName,
     String phoneNumber,
     String email,
-    // Object address,
     List? lists,
     String? addedByUser) async {
   final String airtableApiKey =
       'patS6BGUI9SY8OcFJ.fd3c067a6f9874f1847fddf6a21815d8b54dac5ed1b0340dae533856d0c9437a';
   final String airtableApiEndpoint =
-      'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Contacts';
+      'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Saved%20Contacts';
 
   try {
     final Uri uri = Uri.parse(
-        '$airtableApiEndpoint?filterByFormula=AND({Added By User}="${uid}", {Phone}="$phoneNumber", {Email}="$email", {First Name}="$firstName", {Last Name}="$lastName")');
+        '$airtableApiEndpoint?filterByFormula=AND({Saved By User}="${uid}", {First Name (from Contact Link)}="$firstName", {Last Name (from Contact Link)}="$lastName", {Phone (from Contact Link)}="$phoneNumber")');
+
     final http.Response queryResponse = await http.get(
       uri,
       headers: {
@@ -186,22 +225,20 @@ Future<void> updateContactsListsToAt(
 
 Future<void> deleteContactsFromUserAccountToAt(
     String? uid,
-    // String? title,
     String? firstName,
     String? lastName,
     String phoneNumber,
     String email,
-    // Object address,
     List<String>? lists,
     String? addedByUser) async {
   final String airtableApiKey =
       'patS6BGUI9SY8OcFJ.fd3c067a6f9874f1847fddf6a21815d8b54dac5ed1b0340dae533856d0c9437a';
   final String airtableApiEndpoint =
-      'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Contacts';
+      'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Saved%20Contacts';
 
   try {
     final Uri uri = Uri.parse(
-        '$airtableApiEndpoint?filterByFormula=AND({Added By User}="${uid}", {Phone}="$phoneNumber", {Email}="$email", {First Name}="$firstName", {Last Name}="$lastName")');
+        '$airtableApiEndpoint?filterByFormula=AND({Saved By User}="${uid}", {Phone (from Contact Link)}="$phoneNumber", {Email (from Contact Link)}="$email", {First Name (from Contact Link)}="$firstName", {Last Name (from Contact Link)}="$lastName")');
     final http.Response queryResponse = await http.get(
       uri,
       headers: {
@@ -211,35 +248,26 @@ Future<void> deleteContactsFromUserAccountToAt(
     );
 
     if (queryResponse.statusCode == 200) {
-      String listsAsString = lists!.join(', ');
       final List<dynamic> records = jsonDecode(queryResponse.body)['records'];
 
       if (records.isNotEmpty) {
         final String recordId = records[0]['id'];
 
-        final Uri updateUri = Uri.parse('$airtableApiEndpoint/$recordId');
-        final Map<String, dynamic> data = {
-          'fields': {
-            "Added By User": addedByUser,
-          },
-        };
-
-        final http.Response updateResponse = await http.patch(
-          updateUri,
+        final Uri deleteUri = Uri.parse('$airtableApiEndpoint/$recordId');
+        final http.Response deleteResponse = await http.delete(
+          deleteUri,
           headers: {
             'Authorization': 'Bearer $airtableApiKey',
-            'Content-Type': 'application/json',
           },
-          body: jsonEncode(data),
         );
 
-        if (updateResponse.statusCode == 200) {
-          print('Data updated successfully');
-          print(updateResponse.body);
+        if (deleteResponse.statusCode == 200) {
+          print('Data deleted successfully');
+          print(deleteResponse.body);
         } else {
           print(
-              'Failed to update data. Status code: ${updateResponse.statusCode}');
-          print(updateResponse.body);
+              'Failed to delete data. Status code: ${deleteResponse.statusCode}');
+          print(deleteResponse.body);
         }
       } else {
         print('Record with UID $uid not found.');
