@@ -3,9 +3,9 @@ import 'package:http/http.dart' as http;
 
 import 'package:contacts_service/contacts_service.dart';
 
-import '../../models/contact_model.dart';
-import '../../providers/contact_provider.dart';
-import '../../providers/load_data_from_device_on_start.dart';
+import '../../../models/contact_model.dart';
+import '../../../providers/contact_providers.dart';
+import '../shared_preferences/save_contacts_to_shared_preferences.dart';
 
 // This function gets all contacts from phone
 
@@ -38,6 +38,7 @@ Future<void> uploadContactsFromDevice(String? uid, ref) async {
 
     processedContacts.add(
       ContactModel(
+        contactID: '',
         firstName: firstName,
         lastName: lastName,
         email: email,
@@ -85,7 +86,7 @@ Future<void> uploadContactsToAt(
   };
 
   final Uri uri = Uri.parse(airtableApiEndpoint);
-  final http.Response response = await http.post(    
+  final http.Response response = await http.post(
     uri,
     headers: {
       'Authorization': 'Bearer $airtableApiKey',
@@ -115,11 +116,11 @@ Future<void> uploadContactsToAt(
 // This function saves contacts to saved contacts in airtable
 
 Future<void> saveContactToSavedTable(
-    String contactID, String savedByID, String lists) async {
+    String contactID, String? savedByID, lists) async {
   final String airtableApiKey =
       'patS6BGUI9SY8OcFJ.fd3c067a6f9874f1847fddf6a21815d8b54dac5ed1b0340dae533856d0c9437a';
   final String airtableApiEndpoint =
-      'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Saved%20Contacts'; // Use the correct endpoint for the "Saved Contacts" table
+      'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Saved%20Contacts';
 
   final Map<String, dynamic> requestData = {
     'fields': {

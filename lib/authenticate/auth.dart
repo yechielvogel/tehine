@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:io';
 
-import '../api/contacts/get_contacts.dart';
+import '../api/contacts/airtable/get_contacts.dart';
 import '../shared/globals.dart' as globals;
 import '../api/user/upload_user_info_at.dart';
 import '../models/users_model.dart';

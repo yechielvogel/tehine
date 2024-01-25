@@ -7,5 +7,5 @@ final loadingProvider = StateProvider<bool>(
 
 final selectedListScreenChipIndexProvider = StateProvider<int>((ref) => 0);
 
-
 final searchQueryProvider = StateProvider<String>((ref) => '');
+

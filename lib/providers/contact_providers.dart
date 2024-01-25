@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../api/contacts/get_contacts.dart';
+import '../api/contacts/airtable/get_contacts.dart';
+import '../api/contacts/shared_preferences/get_contact_from_shared_preferences.dart';
 import '../models/contact_model.dart';
-import 'list_provider.dart';
-import 'load_data_from_device_on_start.dart';
+import 'list_providers.dart';
+import '../api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
 
 final contactsFromSharedPrefProvider =
     FutureProvider<List<ContactModel>>((ref) async {

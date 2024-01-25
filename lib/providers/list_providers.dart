@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'load_data_from_device_on_start.dart';
+import '../api/contacts/shared_preferences/get_contact_from_shared_preferences.dart';
+import '../api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
 
 final selectedListProvider = StateProvider<String>(
   (ref) => 'All',

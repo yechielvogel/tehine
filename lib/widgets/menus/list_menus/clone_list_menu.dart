@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../api/contacts/upload_contacts.dart';
+import '../../../api/contacts/airtable/upload_contacts.dart';
 import '../../../models/contact_model.dart';
-import '../../../providers/contact_provider.dart';
-import '../../../providers/list_provider.dart';
-import '../../../providers/load_data_from_device_on_start.dart';
-import '../../../providers/user_provider.dart';
+import '../../../providers/contact_providers.dart';
+import '../../../providers/list_providers.dart';
+import '../../../api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
+import '../../../providers/user_providers.dart';
 import '../../forms/list_screen_add_list_pop_up_form.dart';
 
 void cloneListMenu(BuildContext context, WidgetRef ref) {
@@ -66,7 +66,6 @@ void cloneListMenu(BuildContext context, WidgetRef ref) {
       color: Color(0xFFF5F5F5),
     ).then((value) async {
       if (value != null && value != 2 && value != 1) {
-
         await cloneContactsToList(value, ref);
       }
       if (value == 1) {
@@ -112,6 +111,7 @@ Future<void> cloneContactsToList(String lists, ref) async {
     List<ContactModel> updatedContacts = selectedContacts.map((contact) {
       List<String> updatedLists = [...contact.lists, lists];
       return ContactModel(
+        contactID: contact.contactID,
         firstName: contact.firstName,
         lastName: contact.lastName,
         email: contact.email,
@@ -141,7 +141,6 @@ Future<void> cloneContactsToList(String lists, ref) async {
         ref.read(userStreamProvider).value?.uid,
       );
     });
-
 
     allUpdatedContacts.forEach((updatedContact) {
       print(updatedContact.lists.toString());

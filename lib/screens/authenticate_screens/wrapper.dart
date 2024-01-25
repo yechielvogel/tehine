@@ -8,7 +8,9 @@ import '../../api/user/upload_user_info_at.dart';
 import '../../authenticate/auth.dart';
 import '../../authenticate/authenticate.dart';
 import '../../models/users_model.dart';
-import '../../providers/user_provider.dart';
+import '../../providers/contact_providers.dart';
+import '../../providers/event_providers.dart';
+import '../../providers/user_providers.dart';
 import '../navigation_screens/navigation_screen.dart';
 
 import 'package:flutter/material.dart';

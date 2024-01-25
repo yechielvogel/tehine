@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../api/contacts/upload_contacts.dart';
+import '../../../api/contacts/airtable/upload_contacts.dart';
 import '../../../models/contact_model.dart';
-import '../../../providers/contact_provider.dart';
-import '../../../providers/list_provider.dart';
-import '../../../providers/load_data_from_device_on_start.dart';
-import '../../../providers/user_provider.dart';
+import '../../../providers/contact_providers.dart';
+import '../../../providers/list_providers.dart';
+import '../../../api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
+import '../../../providers/user_providers.dart';
 import 'clone_list_menu.dart';
 
 // Need to refactor the code here make functions for the items at the bottom of the page.
@@ -117,6 +117,7 @@ void listScreenEllipsisMenu(BuildContext context, ref) {
           // Check if the lists have been modified
           if (contact.lists.contains('${ref.read(selectedListProvider)}')) {
             ContactModel updatedContact = ContactModel(
+              contactID: '',
               firstName: contact.firstName,
               lastName: contact.lastName,
               email: contact.email,
@@ -185,6 +186,7 @@ void listScreenEllipsisMenu(BuildContext context, ref) {
         for (ContactModel contact in contacts) {
           print('Type of contact.lists: ${contacts.runtimeType}');
           ContactModel contactsToDelete = ContactModel(
+            contactID: '',
             firstName: contact.firstName,
             lastName: contact.lastName,
             email: contact.email,
@@ -209,6 +211,7 @@ void listScreenEllipsisMenu(BuildContext context, ref) {
       if (value == 8) {
         for (ContactModel contact in contacts) {
           ContactModel updatedContact = ContactModel(
+            contactID: '',
             firstName: contact.firstName,
             lastName: contact.lastName,
             email: contact.email,
@@ -290,27 +293,41 @@ void selectableListScreenEllipsisMenu(BuildContext context, WidgetRef ref) {
     ).then((value) {
       if (value != null) {
         for (ContactModel contact in contacts) {
+          List<String> updatedLists = List<String>.from(contact.lists);
+
+          // Check if 'All' is already present
+          if (!updatedLists.contains('All')) {
+            updatedLists.add('All');
+          }
           ContactModel updatedContact = ContactModel(
+            contactID: contact.contactID,
             firstName: contact.firstName,
             lastName: contact.lastName,
             email: contact.email,
             phoneNumber: contact.phoneNumber,
-            lists: [...contact.lists, value],
+            lists: [...updatedLists, value],
           );
-
+          print(updatedContact.lists);
+          String listsAsString = updatedContact.lists!.join(', ');
           processedContacts = ref.read(contactsProvider);
           processedContacts.add(updatedContact);
           saveContactsToSP(processedContacts);
-          updateContactsListsToAt(
-            ref.read(userStreamProvider).value!.uid,
-            '',
-            updatedContact.firstName,
-            updatedContact.lastName,
-            updatedContact.phoneNumber,
-            updatedContact.email,
-            updatedContact.lists,
-            ref.read(userStreamProvider).value!.uid,
-          );
+          if (ref.read(selectedListProvider) == 'Tehine') {
+            saveContactToSavedTable(updatedContact.contactID,
+                ref.read(userStreamProvider).value!.uid, listsAsString);
+          } else {
+            updateContactsListsToAt(
+              ref.read(userStreamProvider).value!.uid,
+              '',
+              updatedContact.firstName,
+              updatedContact.lastName,
+              updatedContact.phoneNumber,
+              updatedContact.email,
+              updatedContact.lists,
+              ref.read(userStreamProvider).value!.uid,
+            );
+          }
+
           ref.refresh(contactsFromSharedPrefProvider);
           ref.read(selectedContacts.notifier).state = [];
           ref.read(isSelectable.notifier).state = false;

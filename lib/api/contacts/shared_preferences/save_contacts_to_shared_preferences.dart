@@ -2,38 +2,13 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/contact_model.dart';
-import 'list_provider.dart';
+import '../../../models/contact_model.dart';
+import '../../../providers/list_providers.dart';
 
 // Need to refactor all this code and move around
 
-class LoadAllDataFromDevice {
-  static void runAllFunctions() {
-    loadListsFromSP();
-    // function2();
-    // function3();
-  }
-
-  static void function1() {
-    print('Function 1 executed');
-  }
-}
 
 // Lists
-// Load list from shared preference
-
-Future<List<String>?> loadListsFromSP() async {
-  SharedPreferences prefs;
-  try {
-    prefs = await SharedPreferences.getInstance();
-  } catch (e) {
-    return null;
-  }
-
-  List<String>? lists = prefs.getStringList('Lists');
-  return lists;
-}
-
 // Save list to shared preference
 
 void saveListToSP(List<String> data) async {
@@ -77,30 +52,6 @@ void removeListFromSP(String item, ref) async {
   }
 }
 
-// Contacts
-// Load contacts from shared preference
-
-Future<List<ContactModel>?> loadContactsFromSP() async {
-  SharedPreferences prefs;
-  try {
-    prefs = await SharedPreferences.getInstance();
-  } catch (e) {
-    return null;
-  }
-
-  List<String>? contactsJson = prefs.getStringList('Contacts');
-  if (contactsJson == null) {
-    return null;
-  }
-
-  List<ContactModel> contacts = contactsJson
-      .map((contactJson) => ContactModel.fromJson(
-          Map<String, dynamic>.from(json.decode(contactJson))))
-      .toList();
-
-  return contacts;
-}
-
 // Save contacts to SharedPreferences
 Future<void> saveContactsToSP(List<ContactModel> contacts) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -111,7 +62,7 @@ Future<void> saveContactsToSP(List<ContactModel> contacts) async {
     uniqueContactsMap[contact.phoneNumber] = contact;
   }
 
-  List<ContactModel> uniqueContacts = uniqueContactsMap.values.toList();
+  List<ContactModel> uniqueContacts = uniqueContactsMap.values.toList();    
 
   List<String> contactsJson =
       uniqueContacts.map((contact) => json.encode(contact.toJson())).toList();

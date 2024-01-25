@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../api/contacts/get_contacts.dart';
+import '../../api/contacts/airtable/get_contacts.dart';
 import '../../models/contact_model.dart';
-import '../../providers/contact_provider.dart';
+import '../../providers/contact_providers.dart';
 import '../../providers/general_providers.dart';
-import '../../providers/list_provider.dart';
+import '../../providers/list_providers.dart';
 import '../../widgets/tiles/contact_tiles/contact_tile_widget.dart';
 import '../../widgets/tiles/contact_tiles/select_contact_tile_widget.dart';
 
@@ -120,7 +120,7 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    for (int index = 0;   
+                    for (int index = 0;
                         index < ref.watch(listProvider).length;
                         index++)
                       ChoiceChip(
@@ -190,9 +190,6 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
                     child: contactWidget,
                   ));
                 }
-
-                print(
-                    'in list screen ${ref.read(isSelectable.notifier).state}');
 
                 return Column(
                   children: [

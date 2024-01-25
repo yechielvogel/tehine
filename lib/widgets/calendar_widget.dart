@@ -6,7 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 
-import '../providers/date_provider.dart';
+import '../providers/create_event_providers.dart';
+import '../providers/date_providers.dart';
 
 class CalendarWidget extends ConsumerStatefulWidget {
   const CalendarWidget({
@@ -20,7 +21,8 @@ class CalendarWidget extends ConsumerStatefulWidget {
 }
 
 class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
-  late DateTime focusedDate = DateTime.now();
+  late DateTime focusedDate =
+      ref.read(selectedEnglishDateProvider.notifier).state;
 
   Future<void> _onDaySelected(DateTime day, DateTime focusedDay) async {
     setState(() {
@@ -33,6 +35,8 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
           .state
           .replaceAll(RegExp(r'[0-9\s]+'), '');
       this.focusedDate = focusedDay;
+      ref.read(selectedEnglishDateProvider.notifier).state = focusedDay;
+      ref.read(selectedDateProvider.notifier).state = focusedDay;
     });
   }
 
@@ -49,6 +53,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
       return jewishDate;
     }
 
+    print('selected date should not be null ${ref.read(selectedDateProvider)}');
     return Container(
       padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
@@ -77,7 +82,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
               ),
               availableGestures: AvailableGestures.all,
               selectedDayPredicate: (day) => isSameDay(day, focusedDate),
-              focusedDay: ref.read(selectedEnglishDateProvider.notifier).state,
+              focusedDay: ref.watch(selectedEnglishDateProvider.notifier).state,
               calendarStyle: CalendarStyle(
                   weekendTextStyle: TextStyle(color: Colors.grey[850]),
                   outsideDaysVisible: false,

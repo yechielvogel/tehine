@@ -5,8 +5,11 @@ final todayEnglishDateProvider = StateProvider<DateTime>(
 );
 
 final selectedEnglishDateProvider = StateProvider<DateTime>(
-  (ref) => DateTime.now(),
+  (ref) => DateTime.now(),     
 );
+
+
+
 
 final todayHebrewDateProvider = StateProvider<String>(
   (ref) => '',

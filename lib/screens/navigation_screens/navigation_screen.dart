@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../authenticate/auth.dart';
-import '../../providers/contact_provider.dart';
-import '../../providers/user_provider.dart';
+import '../../providers/contact_providers.dart';
+import '../../providers/user_providers.dart';
 import '../../widgets/calendar_widget.dart';
 import '../../widgets/menus/list_menus/list_screen_add_menu.dart';
 import '../../widgets/menus/list_menus/list_screen_ellipsis_menu.dart';
