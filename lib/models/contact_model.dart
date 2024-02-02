@@ -5,7 +5,7 @@ class ContactModel {
   String lastName;
   String email;
   String phoneNumber;
-  List<String> lists;
+  List<String> lists;   
 
   ContactModel({
     required this.contactID,

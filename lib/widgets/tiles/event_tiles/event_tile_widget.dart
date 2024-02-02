@@ -3,16 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:tehine/providers/create_event_providers.dart';
 
 import '../../../api/contacts/airtable/upload_contacts.dart';
+import '../../../api/events/shared_preferences/get_event_from_shared_preference.dart';
 import '../../../models/contact_model.dart';
 
 import '../../../models/event_model.dart';
 import '../../../providers/contact_providers.dart';
 import '../../../api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
+import '../../../providers/event_providers.dart';
+import '../../../providers/list_providers.dart';
 import '../../../providers/user_providers.dart';
 
+import '../../../screens/expanded_screens/event_expanded_screen.dart';
+import '../../bottom_sheet_widgets/attending_info_bottom_sheet_widget.dart';
 import '../../dividers/divider_horizontal.dart';
 import '../../dividers/divider_vertical.dart';
 import '../../menus/list_menus/contact_tile_ellips_menu.dart';
@@ -46,7 +50,28 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
     List<EventModel> events = [];
     // contactToDelete.add(widget.contact);
     return GestureDetector(
-      onLongPress: () {},
+      onTap: () async {
+        print('Event ID ${widget.event.eventID}');
+        ref.read(selectedEventNameProvider.notifier).state =
+            widget.event.eventName;
+        ref.read(selectedEventProvider.notifier).state = widget.event;
+        // printEventListsFromSP();
+        await ref.refresh(eventListFromSharedPreferenceProvider);
+
+        await initializeProviders();
+        // ref.read(eventListProvider);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return EventExpandedScreenWidget(
+                  // event: widget
+                  //     .event
+                  ); // Replace YourNextScreen with the actual widget for the next screen
+            },
+          ),
+        );
+      },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
@@ -76,7 +101,7 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(
-                        top: 30,
+                        top: 20,
                         left: 20,
                       ),
                       child: Container(
@@ -91,13 +116,13 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                     ),
                     Padding(
                         padding: const EdgeInsets.only(
-                          top: 30,
+                          top: 20,
                           right: 20, // Adjust the right padding as needed
                         ),
                         child: icon),
                   ],
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: 25),
                 Row(
                   children: [
                     Padding(
@@ -126,10 +151,24 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                           const EdgeInsets.only(top: 50, left: 20, bottom: 0),
                       child: Row(
                         children: [
-                          Icon(
-                            Icons.mail_outline, // Envelope icon
-                            color: Colors.grey[850],
-                            size: 20,
+                          GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20),
+                                  ),
+                                ),
+                                context: context,
+                                builder: (context) =>
+                                    AttendingInfoWidget(event: widget.event),
+                              );
+                            },
+                            child: Icon(
+                              Icons.mail_outline, // Envelope icon
+                              color: Colors.grey[850],
+                              size: 20,
+                            ),
                           ),
                           SizedBox(
                               width:
@@ -247,5 +286,28 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
         size: 24,
       );
     }
+  }
+
+  Future<void> initializeProviders() async {
+    ref.read(eventIDProvider.notifier).state = widget.event.eventID;
+    // print('ref ID ${ref.read(eventIDProvider)}');
+    ref.read(eventNameProvider.notifier).state = widget.event.eventName;
+    ref.read(eventDescriptionProvider.notifier).state =
+        widget.event.eventDescription;
+    ref.read(eventTypeProvider.notifier).state = widget.event.eventType;
+    ref.read(eventDateProvider.notifier).state = widget.event.eventDate;
+    ref.read(eventAddressProvider.notifier).state = widget.event.eventAddress;
+    ref.read(eventAddress2Provider.notifier).state = widget.event.eventAddress2;
+    ref.read(eventCountryProvider.notifier).state = widget.event.eventCountry;
+    ref.read(eventStateProvider.notifier).state = widget.event.eventState;
+    ref.read(eventZipPostalCodeProvider.notifier).state =
+        widget.event.eventZipPostalCode;
+    // ref.read(eventListsProvider.notifier).state = widget.event.lists;
+    ref.read(eventInvitedProvider.notifier).state = widget.event.invited;
+    ref.read(eventAttendingProvider.notifier).state = widget.event.attending;
+    ref.read(eventPendingProvider.notifier).state = widget.event.pending;
+    ref.read(eventNotAttendingProvider.notifier).state =
+        widget.event.notAttending;
+    ref.read(eventAttachmentProvider.notifier).state = widget.event.attachment;
   }
 }

@@ -6,8 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 
-import '../providers/create_event_providers.dart';
-import '../providers/date_providers.dart';
+import '../../providers/general_providers.dart';
 
 class CalendarWidget extends ConsumerStatefulWidget {
   const CalendarWidget({

@@ -18,6 +18,9 @@ Future<void> uploadContactsFromDevice(String? uid, ref) async {
   for (var contact in contactList) {
     String firstName = contact.givenName ?? '';
     String lastName = contact.familyName ?? '';
+    if (firstName.isEmpty && lastName.isEmpty) {
+      continue;
+    }
     String email = '';
     Object address = contact.postalAddresses ?? '';
     List lists = ['All'];
@@ -46,6 +49,10 @@ Future<void> uploadContactsFromDevice(String? uid, ref) async {
         lists: ['All'],
       ),
     );
+    /* Need to change this. should first send to saved contacts table and then a 
+    automation in airtable that adds all the contacts to the contacts table. this 
+    will save allot of time when uploading contacts.
+    */
     saveContactsToSP(processedContacts);
     await uploadContactsToAt(
       null,
@@ -100,12 +107,14 @@ Future<void> uploadContactsToAt(
   if (response.statusCode == 200) {
     print('Data uploaded successfully');
     print(response.body);
-
-    // Step 2: Save the contact for the user in the "Saved Contacts" table
+    
+    // Step 2: Save the contact for the user in the "Saved Contacts" table   
     final Map<String, dynamic> responseData = jsonDecode(response.body);
     String contactID = responseData['id']; // Access the ID returned by Airtable
 
     // Call the function to save the contact for the user in the "Saved Contacts" table
+
+    // Call this function when not using the airtable automation to add saved contacts from contacts table 
     saveContactToSavedTable(contactID, addedByUser!, listsAsString);
   } else {
     print('Failed to upload data. Status code: ${response.statusCode}');
@@ -278,6 +287,6 @@ Future<void> deleteContactsFromUserAccountToAt(
       print(queryResponse.body);
     }
   } catch (error) {
-    print('Error: $error');
+    print('Error: $error');    
   }
 }

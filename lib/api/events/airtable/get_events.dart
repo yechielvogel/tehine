@@ -50,7 +50,7 @@ Future<List<EventModel>> loadEventsFromAT(userId, ref) async {
   final String airtableApiKey =
       'patS6BGUI9SY8OcFJ.fd3c067a6f9874f1847fddf6a21815d8b54dac5ed1b0340dae533856d0c9437a';
   final String airtableApiEndpoint =
-      'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Invitations';
+      'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Events';
 
   try {
     final Uri uri = Uri.parse(

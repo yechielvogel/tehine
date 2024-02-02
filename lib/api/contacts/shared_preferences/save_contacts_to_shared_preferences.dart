@@ -11,7 +11,7 @@ import '../../../providers/list_providers.dart';
 // Lists
 // Save list to shared preference
 
-void saveListToSP(List<String> data) async {
+void saveListsToSP(List<String> data) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   List<String>? existingList = prefs.getStringList('Lists');
@@ -46,7 +46,7 @@ void removeListFromSP(String item, ref) async {
   if (existingList!.contains(item)) {
     existingList.remove(item);
     prefs.setStringList('Lists', existingList);
-    await ref.refresh(listFromSharedPrefranceProvider);
+    await ref.refresh(listFromSharedPreferenceProvider);
   } else {
     print('Item not found in the list: $item');
   }
@@ -69,6 +69,8 @@ Future<void> saveContactsToSP(List<ContactModel> contacts) async {
 
   prefs.setStringList('Contacts', contactsJson);
 }
+
+// Delete a contact from shared preferences
 
 Future<void> deleteContactFromSP(ContactModel contact) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();

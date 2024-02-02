@@ -18,3 +18,27 @@ class Loading extends StatelessWidget {
     );
   }
 }
+
+class LoadingTransparent extends StatelessWidget {
+  const LoadingTransparent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // color: Color(0xFFF5F5F5),
+      child: Center(
+        child: SpinKitRing(
+          color: Colors.grey[850] ?? Colors.grey,
+          size: 50.0,
+        ),
+      ),
+    );
+  }
+}
+
+showLoader(BuildContext context) {
+  showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Center(child: Loading()));
+}

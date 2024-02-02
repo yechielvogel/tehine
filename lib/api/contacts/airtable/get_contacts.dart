@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import '../../../models/contact_model.dart';
 import '../../../providers/contact_providers.dart';
 import '../../../providers/event_providers.dart';
+import '../../../providers/general_providers.dart';
 import '../../../providers/list_providers.dart';
 import '../../events/airtable/get_events.dart';
 import '../shared_preferences/save_contacts_to_shared_preferences.dart';
@@ -15,14 +16,21 @@ import '../../../screens/navigation_screens/lists_screen.dart';
 
 // This function will get all contacts from the Tehine data base
 
+final String airtableApiKey =
+    'patS6BGUI9SY8OcFJ.fd3c067a6f9874f1847fddf6a21815d8b54dac5ed1b0340dae533856d0c9437a';
+final String airtableApiEndpoint =
+    'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Contacts';
+
+int pageSize = 20;
+
 Future<void> getAllContactsFromAT(ref) async {
-  final String airtableApiKey =
-      'patS6BGUI9SY8OcFJ.fd3c067a6f9874f1847fddf6a21815d8b54dac5ed1b0340dae533856d0c9437a';
-  final String airtableApiEndpoint =
-      'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Contacts';
-  final Uri uri = Uri.parse('$airtableApiEndpoint');
+  String offset = ref.read(offsetProvider);
 
   try {
+    final Uri uri = Uri.parse(
+      '$airtableApiEndpoint?filterByFormula=NOT({Last Name} = "")&sort%5B0%5D%5Bfield%5D=Last%20Name&sort%5B0%5D%5Bdirection%5D=asc&pageSize=$pageSize${offset.isNotEmpty ? '&offset=$offset' : ''}',
+    );
+
     final http.Response response = await http.get(
       uri,
       headers: {
@@ -40,13 +48,9 @@ Future<void> getAllContactsFromAT(ref) async {
         List<ContactModel> contacts =
             responseData['records'].map<ContactModel>((record) {
           ContactModel contact = ContactModel.fromJson(record['fields']);
-
-          // Extract the 'id' from the response and assign it to contact.contactID
           contact.contactID = record['id'] ?? '';
-
           contact.firstName = record['fields']['First Name'] ?? '';
           contact.lastName = record['fields']['Last Name'] ?? '';
-          contact.phoneNumber = record['fields']['Phone'] ?? '';
           contact.phoneNumber = record['fields']['Phone'] ?? '';
           contact.email = record['fields']['Email'] ?? '';
           String listsString = record['fields']['Lists'] ?? '';
@@ -55,21 +59,58 @@ Future<void> getAllContactsFromAT(ref) async {
               .map((item) => item.trim())
               .where((item) => item.isNotEmpty)
               .toList();
-
           contact.lists = splitList;
-          // This will save the lists to shared preference so we could get all lists
-          saveListToSP(splitList);
-          print('Original listsString: $listsString');
-          print('After splitting: $splitList');
-          // print(contact.contactID);
+          saveListsToSP(splitList);
           return contact;
         }).toList();
-        ref.read(filteredContactsProvider.notifier).state = contacts;
-        (ref.read(filteredContactsProvider.notifier).state
-                as List<ContactModel>)
-            .sort((ContactModel a, ContactModel b) =>
-                a.lastName.compareTo(b.lastName));
-      } else {}
+        // ref.read(tehineContacts.notifier).state = contacts;
+
+        // Reset offset when making a new request
+        // _contacts.clear();
+
+        Set<String> uniqueContactIds = Set<String>();
+        List<ContactModel> _contacts = [];
+
+        List<ContactModel> uniqueContacts = contacts.toSet().toList();
+
+        uniqueContacts.forEach(
+          (contact) {
+            if (!uniqueContactIds.contains(contact.contactID)) {
+              uniqueContactIds.add(contact.contactID);
+              _contacts.add(contact);
+            }
+          },
+        );
+
+// Update the offset for the next page
+        ref.read(offsetProvider.notifier).state = responseData['offset'] ?? '';
+
+        uniqueContacts.sort((a, b) => a.lastName.compareTo(b.lastName));
+
+// Get the current contacts from the provider
+        List<ContactModel> currentContacts =
+            ref.read(filteredContactsProvider.notifier).state;
+
+// Create a set to track unique contact IDs in the current state
+        Set<String> currentContactIds = Set<String>.from(
+            currentContacts.map((contact) => contact.contactID));
+
+// Filter out duplicates from the new uniqueContacts
+        List<ContactModel> filteredUniqueContacts = uniqueContacts
+            .where((contact) => !currentContactIds.contains(contact.contactID))
+            .toList();
+
+// Add the filtered uniqueContacts to the existing list
+        currentContacts.addAll(filteredUniqueContacts);
+
+// Update the state with the combined list using a new list
+        ref.read(filteredContactsProvider.notifier).state = [
+          ...currentContacts
+        ];
+      } else {
+        // offset = '';
+        // No more records to fetch
+      }
     } else {
       print('Failed to fetch data. Status code: ${response.statusCode}');
       print(response.body);
@@ -159,7 +200,7 @@ Future<void> loadContactsAndListsFromAT(userId, BuildContext context) async {
 
         // Save all contacts to shared preferences after processing
         saveContactsToSP(contacts);
-        ref.refresh(listFromSharedPrefranceProvider);
+        ref.refresh(listFromSharedPreferenceProvider);
       } else {
         print('No contacts found for the user');
       }
@@ -216,10 +257,114 @@ Future<ContactModel> mapRecordToContact(dynamic record) async {
   contact.lists = splitList;
 
   // This will save the lists to shared preference so we could get all lists
-  saveListToSP(splitList);
+  saveListsToSP(splitList);
 
   print('Original listsString: $listsString');
   print('After splitting: $splitList');
 
   return contact;
+}
+
+// Search a contact airtable
+
+Future<void> searchTehineContacts(
+  ref,
+  String search,
+) async {
+  final String airtableApiKey =
+      'patS6BGUI9SY8OcFJ.fd3c067a6f9874f1847fddf6a21815d8b54dac5ed1b0340dae533856d0c9437a';
+  final String airtableApiEndpoint =
+      'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Contacts';
+
+  try {
+    final Uri uri = Uri.parse(
+      '$airtableApiEndpoint?filterByFormula=OR(SEARCH("${Uri.encodeComponent(search.toLowerCase())}", LOWER({First Name})), SEARCH("${Uri.encodeComponent(search.toLowerCase())}", LOWER({Last Name})))',
+    );
+
+    final http.Response response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $airtableApiKey',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+      if (responseData.containsKey('records') &&
+          responseData['records'] is List &&
+          responseData['records'].isNotEmpty) {
+        List<ContactModel> contacts =
+            responseData['records'].map<ContactModel>((record) {
+          ContactModel contact = ContactModel.fromJson(record['fields']);
+          contact.contactID = record['id'] ?? '';
+          contact.firstName = record['fields']['First Name'] ?? '';
+          contact.lastName = record['fields']['Last Name'] ?? '';
+          contact.phoneNumber = record['fields']['Phone'] ?? '';
+          contact.email = record['fields']['Email'] ?? '';
+          String listsString = record['fields']['Lists'] ?? '';
+          List<String> splitList = listsString
+              .split(',')
+              .map((item) => item.trim())
+              .where((item) => item.isNotEmpty)
+              .toList();
+          contact.lists = splitList;
+          saveListsToSP(splitList);
+          return contact;
+        }).toList();
+        // ref.read(tehineContacts.notifier).state = contacts;
+
+        // Reset offset when making a new request
+        // _contacts.clear();
+
+        Set<String> uniqueContactIds = Set<String>();
+        List<ContactModel> _contacts = [];
+
+        List<ContactModel> uniqueContacts = contacts.toSet().toList();
+
+        uniqueContacts.forEach(
+          (contact) {
+            if (!uniqueContactIds.contains(contact.contactID)) {
+              uniqueContactIds.add(contact.contactID);
+              _contacts.add(contact);
+            }
+          },
+        );
+
+// Update the offset for the next page
+
+        uniqueContacts.sort((a, b) => a.lastName.compareTo(b.lastName));
+
+// Get the current contacts from the provider
+        List<ContactModel> currentContacts =
+            ref.read(filteredContactsProvider.notifier).state;
+
+// Create a set to track unique contact IDs in the current state
+        Set<String> currentContactIds = Set<String>.from(
+            currentContacts.map((contact) => contact.contactID));
+
+// Filter out duplicates from the new uniqueContacts
+        List<ContactModel> filteredUniqueContacts = uniqueContacts
+            .where((contact) => !currentContactIds.contains(contact.contactID))
+            .toList();
+
+// Add the filtered uniqueContacts to the existing list
+        currentContacts.addAll(filteredUniqueContacts);
+
+// Update the state with the combined list using a new list
+        ref.read(filteredContactsProvider.notifier).state = [
+          ...currentContacts
+        ];
+      } else {
+        // offset = '';
+        // No more records to fetch
+      }
+    } else {
+      print('Failed to fetch data. Status code: ${response.statusCode}');
+      print(response.body);
+    }
+  } catch (e) {
+    print('Error: $e');
+  }
 }

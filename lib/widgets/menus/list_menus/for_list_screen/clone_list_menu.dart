@@ -2,20 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../api/contacts/airtable/upload_contacts.dart';
-import '../../../models/contact_model.dart';
-import '../../../providers/contact_providers.dart';
-import '../../../providers/list_providers.dart';
-import '../../../api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
-import '../../../providers/user_providers.dart';
-import '../../forms/list_screen_add_list_pop_up_form.dart';
+import '../../../../api/contacts/airtable/upload_contacts.dart';
+import '../../../../models/contact_model.dart';
+import '../../../../providers/contact_providers.dart';
+import '../../../../providers/list_providers.dart';
+import '../../../../api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
+import '../../../../providers/user_providers.dart';
+import '../../../forms/create_list_form.dart';
 
 void cloneListMenu(BuildContext context, WidgetRef ref) {
   final RenderBox overlay =
       Overlay.of(context).context.findRenderObject() as RenderBox;
 
   final AsyncValue<List<String>> listOptions =
-      ref.read(listFromSharedPrefranceProvider);
+      ref.read(listFromSharedPreferenceProvider);
 
   if (listOptions is AsyncData) {
     String savedNameFromCreatedList = '';
@@ -72,7 +72,7 @@ void cloneListMenu(BuildContext context, WidgetRef ref) {
         await showDialog(
             context: context,
             builder: (BuildContext context) {
-              return ListScreenAddListPopUpForm(onSave: (String savedName) {
+              return CreateListForm(onSave: (String savedName) {
                 // Handle the saved name here, if needed
                 savedNameFromCreatedList = savedName;
               });
@@ -145,7 +145,7 @@ Future<void> cloneContactsToList(String lists, ref) async {
     allUpdatedContacts.forEach((updatedContact) {
       print(updatedContact.lists.toString());
       ref.refresh(contactsFromSharedPrefProvider);
-      ref.refresh(listFromSharedPrefranceProvider);
+      ref.refresh(listFromSharedPreferenceProvider);
       ref.read(listProvider);
     });
   }

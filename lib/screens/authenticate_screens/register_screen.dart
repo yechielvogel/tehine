@@ -59,25 +59,25 @@ class _RegisterState extends ConsumerState<Register> {
                           ),
                           TextFormField(
                             cursorColor: Colors.grey[850],
-                            decoration: InputDecoration(
+                                 decoration: InputDecoration(
                               focusedErrorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                   borderSide: BorderSide(
-                                      color: Colors.grey[850] ?? Colors.grey,
-                                      width: 3.0)),
+                                      color: Colors.grey[350] ?? Colors.grey,
+                                      width: 3)),
                               hintText: 'First Name',
                               hintStyle: TextStyle(color: Colors.grey[850]),
-                              fillColor: Color(0xFFF5F5F5),
+                              fillColor: Colors.grey[350] ?? Colors.grey,
                               filled: true,
                               enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                   borderSide: BorderSide(
-                                      color: Colors.grey[850] ?? Colors.grey,
+                                      color: Colors.grey[350] ?? Colors.grey,
                                       width: 3.0)),
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                   borderSide: BorderSide(
-                                      color: Colors.grey[850] ?? Colors.grey,
+                                      color: Colors.grey[350] ?? Colors.grey,
                                       width: 3.0)),
                               errorStyle: TextStyle(
                                 color: Colors.grey[850],
@@ -85,7 +85,7 @@ class _RegisterState extends ConsumerState<Register> {
                               errorBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
-                                    color: Colors.grey[850] ?? Colors.grey,
+                                    color: Colors.grey[350] ?? Colors.grey,
                                     width: 3.0),
                               ),
                             ),
@@ -108,25 +108,25 @@ class _RegisterState extends ConsumerState<Register> {
                           ),
                           TextFormField(
                             cursorColor: Colors.grey[850],
-                            decoration: InputDecoration(
+                                 decoration: InputDecoration(
                               focusedErrorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                   borderSide: BorderSide(
-                                      color: Colors.grey[850] ?? Colors.grey,
-                                      width: 3.0)),
+                                      color: Colors.grey[350] ?? Colors.grey,
+                                      width: 3)),
                               hintText: 'Last Name',
                               hintStyle: TextStyle(color: Colors.grey[850]),
-                              fillColor: Color(0xFFF5F5F5),
+                              fillColor: Colors.grey[350] ?? Colors.grey,
                               filled: true,
                               enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                   borderSide: BorderSide(
-                                      color: Colors.grey[850] ?? Colors.grey,
+                                      color: Colors.grey[350] ?? Colors.grey,
                                       width: 3.0)),
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                   borderSide: BorderSide(
-                                      color: Colors.grey[850] ?? Colors.grey,
+                                      color: Colors.grey[350] ?? Colors.grey,
                                       width: 3.0)),
                               errorStyle: TextStyle(
                                 color: Colors.grey[850],
@@ -134,7 +134,7 @@ class _RegisterState extends ConsumerState<Register> {
                               errorBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
-                                    color: Colors.grey[850] ?? Colors.grey,
+                                    color: Colors.grey[350] ?? Colors.grey,
                                     width: 3.0),
                               ),
                             ),
@@ -160,21 +160,21 @@ class _RegisterState extends ConsumerState<Register> {
                               focusedErrorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                   borderSide: BorderSide(
-                                      color: Colors.grey[850] ?? Colors.grey,
-                                      width: 3.0)),
+                                      color: Colors.grey[350] ?? Colors.grey,
+                                      width: 3)),
                               hintText: 'Email',
                               hintStyle: TextStyle(color: Colors.grey[850]),
-                              fillColor: Color(0xFFF5F5F5),
+                              fillColor: Colors.grey[350] ?? Colors.grey,
                               filled: true,
                               enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                   borderSide: BorderSide(
-                                      color: Colors.grey[850] ?? Colors.grey,
+                                      color: Colors.grey[350] ?? Colors.grey,
                                       width: 3.0)),
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                   borderSide: BorderSide(
-                                      color: Colors.grey[850] ?? Colors.grey,
+                                      color: Colors.grey[350] ?? Colors.grey,
                                       width: 3.0)),
                               errorStyle: TextStyle(
                                 color: Colors.grey[850],
@@ -182,7 +182,7 @@ class _RegisterState extends ConsumerState<Register> {
                               errorBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
-                                    color: Colors.grey[850] ?? Colors.grey,
+                                    color: Colors.grey[350] ?? Colors.grey,
                                     width: 3.0),
                               ),
                             ),
@@ -201,25 +201,25 @@ class _RegisterState extends ConsumerState<Register> {
                           TextFormField(
                             keyboardType: TextInputType.phone,
                             cursorColor: Colors.grey[850],
-                            decoration: InputDecoration(
+                               decoration: InputDecoration(
                               focusedErrorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                   borderSide: BorderSide(
-                                      color: Colors.grey[850] ?? Colors.grey,
-                                      width: 3.0)),
+                                      color: Colors.grey[350] ?? Colors.grey,
+                                      width: 3)),
                               hintText: 'Phone Number',
                               hintStyle: TextStyle(color: Colors.grey[850]),
-                              fillColor: Color(0xFFF5F5F5),
+                              fillColor: Colors.grey[350] ?? Colors.grey,
                               filled: true,
                               enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                   borderSide: BorderSide(
-                                      color: Colors.grey[850] ?? Colors.grey,
+                                      color: Colors.grey[350] ?? Colors.grey,
                                       width: 3.0)),
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                   borderSide: BorderSide(
-                                      color: Colors.grey[850] ?? Colors.grey,
+                                      color: Colors.grey[350] ?? Colors.grey,
                                       width: 3.0)),
                               errorStyle: TextStyle(
                                 color: Colors.grey[850],
@@ -227,7 +227,7 @@ class _RegisterState extends ConsumerState<Register> {
                               errorBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
-                                    color: Colors.grey[850] ?? Colors.grey,
+                                    color: Colors.grey[350] ?? Colors.grey,
                                     width: 3.0),
                               ),
                             ),
@@ -248,25 +248,25 @@ class _RegisterState extends ConsumerState<Register> {
                           ),
                           TextFormField(
                             cursorColor: Colors.grey[850],
-                            decoration: InputDecoration(
+                                 decoration: InputDecoration(
                               focusedErrorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                   borderSide: BorderSide(
-                                      color: Colors.grey[850] ?? Colors.grey,
-                                      width: 3.0)),
+                                      color: Colors.grey[350] ?? Colors.grey,
+                                      width: 3)),
                               hintText: 'Password',
                               hintStyle: TextStyle(color: Colors.grey[850]),
-                              fillColor: Color(0xFFF5F5F5),
+                              fillColor: Colors.grey[350] ?? Colors.grey,
                               filled: true,
                               enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                   borderSide: BorderSide(
-                                      color: Colors.grey[850] ?? Colors.grey,
+                                      color: Colors.grey[350] ?? Colors.grey,
                                       width: 3.0)),
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                   borderSide: BorderSide(
-                                      color: Colors.grey[850] ?? Colors.grey,
+                                      color: Colors.grey[350] ?? Colors.grey,
                                       width: 3.0)),
                               errorStyle: TextStyle(
                                 color: Colors.grey[850],
@@ -274,7 +274,7 @@ class _RegisterState extends ConsumerState<Register> {
                               errorBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
-                                    color: Colors.grey[850] ?? Colors.grey,
+                                    color: Colors.grey[350] ?? Colors.grey,
                                     width: 3.0),
                               ),
                             ),

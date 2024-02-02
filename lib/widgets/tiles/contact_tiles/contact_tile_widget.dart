@@ -9,6 +9,7 @@ import '../../../providers/contact_providers.dart';
 import '../../../api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
 import '../../../providers/user_providers.dart';
 
+import '../../../screens/expanded_screens/contact_expanded_screen.dart';
 import '../../menus/list_menus/contact_tile_ellips_menu.dart';
 
 class ContactTileWidget extends ConsumerStatefulWidget {
@@ -30,7 +31,18 @@ class _ContactTileWidgetState extends ConsumerState<ContactTileWidget> {
     List<ContactModel> contactToDelete = [];
     contactToDelete.add(widget.contact);
     return GestureDetector(
-      onLongPress: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return ContactExpandedScreenWidget(
+                  contact: widget
+                      .contact); // Replace YourNextScreen with the actual widget for the next screen
+            },
+          ),
+        );
+      },
       child: Padding(
         padding: const EdgeInsets.only(right: 8.0, left: 8.0),
         child: Container(

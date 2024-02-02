@@ -16,7 +16,7 @@ void contactTileEllipsisMenu(BuildContext context, WidgetRef ref,
   List<ContactModel> processedContacts = [];
 
   final AsyncValue<List<String>> listOptions =
-      ref.watch(listFromSharedPrefranceProvider);
+      ref.watch(listFromSharedPreferenceProvider);
 
   if (listOptions is AsyncData) {
     final List<String> listItems = listOptions.value ?? [];

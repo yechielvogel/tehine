@@ -44,12 +44,19 @@ final filteredContactsProvider = StateProvider<List<ContactModel>>((ref) {
       .toList();
   filteredContacts.sort((a, b) => a.lastName.compareTo(b.lastName));
 
-  if (selectedList == 'Tehine') {
-    getAllContactsFromAT(ref);
-    filteredContacts.sort((a, b) => a.lastName.compareTo(b.lastName));
-  }
+  // if (selectedList == 'Tehine') {
+  //   getAllContactsFromAT(ref);
+  //   filteredContacts.sort((a, b) => a.lastName.compareTo(b.lastName));
+  // }
 
   return filteredContacts;
 });
 
+
+
+
 final contactWidgetsProvider = StateProvider<List<Widget>>((ref) => []);
+
+final tehineContacts = StateProvider<List<ContactModel>>(
+  (ref) => [],
+);

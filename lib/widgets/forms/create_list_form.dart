@@ -4,18 +4,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/list_providers.dart';
 import '../../api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
 
-class ListScreenAddListPopUpForm extends ConsumerStatefulWidget {
+class CreateListForm extends ConsumerStatefulWidget {
     final void Function(String) onSave;
-  const ListScreenAddListPopUpForm({
+  const CreateListForm({
     required this.onSave,
     Key? key}) : super(key: key);
 
   @override
-  ConsumerState createState() => _ListScreenAddListPopUpFormState();
+  ConsumerState createState() => _CreateListFormState();
 }
 
-class _ListScreenAddListPopUpFormState
-    extends ConsumerState<ListScreenAddListPopUpForm> {
+class _CreateListFormState
+    extends ConsumerState<CreateListForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? selectedName;
 
@@ -56,34 +56,36 @@ class _ListScreenAddListPopUpFormState
             children: [
               TextFormField(
                 cursorColor: Colors.grey[850],
-                decoration: InputDecoration(
-                  focusedErrorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide(
-                          color: Colors.grey[850] ?? Colors.grey, width: 3.0)),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(
-                        color: Colors.grey[850] ?? Colors.grey, width: 3.0),
-                  ),
-                  hintText: 'Name',
-                  hintStyle: TextStyle(color: Colors.grey[850]),
-                  fillColor: Color(0xFFF5F5F5),
-                  filled: true,
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(
-                        color: Colors.grey[850] ?? Colors.grey, width: 3.0),
-                  ),
-                  errorStyle: TextStyle(
-                    color: Colors.grey[850],
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(
-                        color: Colors.grey[850] ?? Colors.grey, width: 3.0),
-                  ),
-                ),
+                     decoration: InputDecoration(
+                              focusedErrorBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide: BorderSide(
+                                      color: Colors.grey[350] ?? Colors.grey,
+                                      width: 3)),
+                              hintText: 'Name',
+                              hintStyle: TextStyle(color: Colors.grey[850]),
+                              fillColor: Colors.grey[350] ?? Colors.grey,
+                              filled: true,
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide: BorderSide(
+                                      color: Colors.grey[350] ?? Colors.grey,
+                                      width: 3.0)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide: BorderSide(
+                                      color: Colors.grey[350] ?? Colors.grey,
+                                      width: 3.0)),
+                              errorStyle: TextStyle(
+                                color: Colors.grey[850],
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: BorderSide(
+                                    color: Colors.grey[350] ?? Colors.grey,
+                                    width: 3.0),
+                              ),
+                            ),
                 style: TextStyle(color: Colors.grey[850]),
                 validator: nameValidator,
                 onChanged: (val) {
@@ -101,17 +103,17 @@ class _ListScreenAddListPopUpFormState
                 decoration: InputDecoration(
                   hintText: 'Select Category',
                   hintStyle: TextStyle(color: Colors.grey[850]),
-                  fillColor: Color(0xFFF5F5F5),
+                  fillColor: Colors.grey[350],
                   filled: true,
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                     borderSide: BorderSide(
-                        color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                        color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                     borderSide: BorderSide(
-                        color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                        color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                   ),
                 ),
                 style: TextStyle(color: Colors.grey[850]),
@@ -151,15 +153,15 @@ class _ListScreenAddListPopUpFormState
               if (_formKey.currentState!.validate()) {
                 // Form is valid, proceed with saving
                 final currentList = [
-                  ...await ref.read(listFromSharedPrefranceProvider.future),
+                  ...await ref.read(listFromSharedPreferenceProvider.future),
                 ];
                 currentList.add(newListName!);
 
                 ref.read(listProvider.notifier).state = [...currentList];
-                saveListToSP(currentList);
+                saveListsToSP(currentList);
                  widget.onSave(newListName!);
                 await ref.read(listProvider);
-                await ref.refresh(listFromSharedPrefranceProvider);
+                await ref.refresh(listFromSharedPreferenceProvider);
                 Navigator.pop(context);
               }
             },

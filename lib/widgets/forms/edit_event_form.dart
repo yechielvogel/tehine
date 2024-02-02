@@ -4,85 +4,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:country_state_city_pro/country_state_city_pro.dart';
-// import 'package:country_picker/country_picker.dart';
 
 import '../../api/events/airtable/upload_events.dart';
-import '../../api/events/shared_preferences/get_event_from_shared_preference.dart';
 import '../../api/events/shared_preferences/save_event_to_shared_preferences.dart';
 import '../../models/country_model.dart';
 import '../../models/event_model.dart';
-import '../../providers/create_event_providers.dart';
-import '../../providers/date_providers.dart';
 import '../../providers/event_providers.dart';
 import '../../providers/general_providers.dart';
-import '../../providers/list_providers.dart';
-import '../../api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
 import '../../providers/user_providers.dart';
-import '../calendar_widget.dart';
-import '../select_country_widget.dart';
-import '../select_state_widget.dart';
+import '../bottom_sheet_widgets/calendar_widget.dart';
+import '../bottom_sheet_widgets/select_country_widget.dart';
+import '../bottom_sheet_widgets/select_state_widget.dart';
 
 // This needs refactoring should make one class for the fields.
 
-class MyEventsScreenAddEventPopUpForm extends ConsumerStatefulWidget {
+class EditEventForm extends ConsumerStatefulWidget {
+  // final EventModel event;
   final void Function(String) onSave;
-  const MyEventsScreenAddEventPopUpForm({required this.onSave, Key? key})
+  const EditEventForm(
+      {required this.onSave,
+      // required this.event,
+      Key? key})
       : super(key: key);
 
   @override
-  ConsumerState createState() => _MyEventsScreenAddEventPopUpFormState();
+  ConsumerState createState() => _EditEventFormState();
 }
 
-class _MyEventsScreenAddEventPopUpFormState
-    extends ConsumerState<MyEventsScreenAddEventPopUpForm> {
+class _EditEventFormState extends ConsumerState<EditEventForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String? selectedName;
-
-  // Maybe make this a ref
-  String stateValue = "";
-
-  String? nameValidator(String? val) {
-    if (val!.isEmpty) {
-      return 'Enter Name';
-    } else if (val.contains(',')) {
-      return 'Name should not contain a comma';
-    } else {
-      return null; // Validation passed
-    }
-  }
-
-  String? addressValidator(String? val) {
-    if (val!.isEmpty) {
-      return 'Enter Address';
-    } else {
-      return null; // Validation passed
-    }
-  }
-
-  String? countryValidator() {
-    if (ref.read(selectedCountryProvider.notifier).state == 'Select Country') {
-      return 'Select Country';
-    } else {
-      return null; // Validation passed
-    }
-  }
-
-  String? stateValidator() {
-    if (ref.read(selectedStateProvider.notifier).state == 'Select State') {
-      return 'Select State';
-    } else {
-      return null; // Validation passed
-    }
-  }
-
-  String? zipPostalCodeValidator(String? val) {
-    if (val!.isEmpty) {
-      return 'Enter Zip/Postal Code';
-    } else {
-      return null; // Validation passed
-    }
-  }
 
   void dispose() {
     super.dispose();
@@ -90,11 +40,15 @@ class _MyEventsScreenAddEventPopUpFormState
 
   @override
   Widget build(BuildContext context) {
-    String eventName = '';
-    String eventDescription = '';
-    String eventAddress = '';
-    String eventAddress2 = '';
-    String zipPostalCode = '';
+    // String eventName = widget.event.eventName;
+    // String eventDescription = widget.event.eventDescription;
+    // String? eventType = widget.event.eventType;
+    // String eventDate = widget.event.eventDate;
+    // String eventAddress = widget.event.eventAddress;
+    // String eventAddress2 = widget.event.eventAddress2;
+    // String eventCountry = widget.event.eventCountry;
+    // String eventState = widget.event.eventState;
+    // String zipPostalCode = widget.event.eventZipPostalCode;
 
     List<CountryModel> _countrySubList = [];
 
@@ -139,26 +93,27 @@ class _MyEventsScreenAddEventPopUpFormState
             child: Column(
               children: [
                 TextFormField(
+                  initialValue: ref.watch(eventNameProvider),
                   cursorColor: Colors.grey[850],
                   decoration: InputDecoration(
                     focusedErrorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
-                            color: Colors.grey[850] ?? Colors.grey,
+                            color: Colors.grey[350] ?? Colors.grey,
                             width: 3.0)),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                          color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                     ),
-                    hintText: 'Event Name',
+                    // hintText: widget.event.eventName,
                     hintStyle: TextStyle(color: Colors.grey[850]),
-                    fillColor: Color(0xFFF5F5F5),
+                    fillColor: Colors.grey[350],
                     filled: true,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                          color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                     ),
                     errorStyle: TextStyle(
                       color: Colors.grey[850],
@@ -166,19 +121,17 @@ class _MyEventsScreenAddEventPopUpFormState
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                          color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                     ),
                   ),
                   style: TextStyle(color: Colors.grey[850]),
-                  validator: nameValidator,
                   onChanged: (val) {
-                    eventName = val;
-                    ref.read(createEventNameProvider.notifier).state =
-                        eventName;
+                    ref.read(eventNameProvider.notifier).state = val;
                   },
                 ),
                 SizedBox(height: 12),
                 TextFormField(
+                  initialValue: ref.watch(eventDescriptionProvider),
                   cursorColor: Colors.grey[850],
                   decoration: InputDecoration(
                     focusedErrorBorder: OutlineInputBorder(
@@ -189,16 +142,16 @@ class _MyEventsScreenAddEventPopUpFormState
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                          color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                     ),
-                    hintText: 'Description',
+                    // hintText: widget.event.eventDescription,
                     hintStyle: TextStyle(color: Colors.grey[850]),
-                    fillColor: Color(0xFFF5F5F5),
+                    fillColor: Colors.grey[350],
                     filled: true,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                          color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                     ),
                     errorStyle: TextStyle(
                       color: Colors.grey[850],
@@ -206,49 +159,45 @@ class _MyEventsScreenAddEventPopUpFormState
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                          color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                     ),
                   ),
                   style: TextStyle(color: Colors.grey[850]),
                   onChanged: (val) {
-                    eventDescription = val;
-                    ref.read(createEventDescriptionProvider.notifier).state =
-                        eventDescription;
+                    ref.read(eventDescriptionProvider.notifier).state = val;
                   },
                 ),
                 SizedBox(height: 12),
                 Container(
                   height: 60,
                   child: DropdownButtonFormField<String>(
-                    value: selectedName,
+                    value: ref.watch(eventTypeProvider),
                     onChanged: (value) {
                       setState(() {
-                        selectedName = value;
-                        ref.read(selectedEventTypeProvider.notifier).state =
-                            selectedName!;
+                        ref.read(eventTypeProvider.notifier).state = value!;
                       });
                     },
                     borderRadius: BorderRadius.circular(20),
                     decoration: InputDecoration(
                       isDense: true,
-                      hintText: 'Event Type',
+                      hintText: ref.watch(eventTypeProvider),
                       hintStyle: TextStyle(color: Colors.grey[850]),
-                      fillColor: Color(0xFFF5F5F5),
+                      fillColor: Colors.grey[350],
                       filled: true,
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
-                            color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                            color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                       ),
                       errorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
-                            color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                            color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                       ),
                       focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                           borderSide: BorderSide(
-                              color: Colors.grey[850] ?? Colors.grey,
+                              color: Colors.grey[350] ?? Colors.grey,
                               width: 3.0)),
                       errorStyle: TextStyle(
                         color: Colors.grey[850],
@@ -256,7 +205,7 @@ class _MyEventsScreenAddEventPopUpFormState
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
-                            color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                            color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                       ),
                     ),
                     style: TextStyle(color: Colors.grey[850]),
@@ -265,7 +214,7 @@ class _MyEventsScreenAddEventPopUpFormState
                         value: 'Birthday Party',
                         child: Text('Birthday Party'),
                       ),
-                      DropdownMenuItem<String>(    
+                      DropdownMenuItem<String>(
                         value: 'Bar Mitzvah',
                         child: Text('Bar Mitzvah'),
                       ),
@@ -278,22 +227,25 @@ class _MyEventsScreenAddEventPopUpFormState
                         child: Text('Wedding'),
                       ),
                     ],
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Select an event type';
-                      }
-                      return null; // Validation passed
-                    },
+                    // validator: (value) {
+                    //   if (value == null || value.isEmpty) {
+                    //     return 'Select an event type';
+                    //   }
+                    //   return null; // Validation passed
+                    // },
                   ),
                 ),
                 SizedBox(height: 12),
                 TextFormField(
+                  // initialValue: widget.event.eventDate,
                   controller: TextEditingController.fromValue(
                     TextEditingValue(
                       text: ref.watch(selectedDateProvider) != null
                           ? DateFormat('MM/dd/yyyy')
                               .format(ref.watch(selectedDateProvider)!)
-                          : 'Enter date',
+                          : DateFormat('MM/dd/yyyy').format(DateTime.parse(
+                              ref.watch(eventDateProvider),
+                            )),
                     ),
                   ),
                   onTap: () {
@@ -316,21 +268,21 @@ class _MyEventsScreenAddEventPopUpFormState
                     focusedErrorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
-                            color: Colors.grey[850] ?? Colors.grey,
+                            color: Colors.grey[350] ?? Colors.grey,
                             width: 3.0)),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                          color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                     ),
-                    hintText: 'Select Date',
+                    // hintText: widget.event.eventDate,
                     hintStyle: TextStyle(color: Colors.grey[850]),
-                    fillColor: Color(0xFFF5F5F5),
+                    fillColor: Colors.grey[350],
                     filled: true,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                          color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                     ),
                     errorStyle: TextStyle(
                       color: Colors.grey[850],
@@ -338,7 +290,7 @@ class _MyEventsScreenAddEventPopUpFormState
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                          color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                     ),
                   ),
                   style: TextStyle(color: Colors.grey[850]),
@@ -349,26 +301,27 @@ class _MyEventsScreenAddEventPopUpFormState
                 ),
                 SizedBox(height: 12),
                 TextFormField(
+                  initialValue: ref.watch(eventAddressProvider),
                   cursorColor: Colors.grey[850],
                   decoration: InputDecoration(
                     focusedErrorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
-                            color: Colors.grey[850] ?? Colors.grey,
+                            color: Colors.grey[350] ?? Colors.grey,
                             width: 3.0)),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                          color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                     ),
-                    hintText: 'Address',
+                    // hintText: widget.event.eventAddress,
                     hintStyle: TextStyle(color: Colors.grey[850]),
-                    fillColor: Color(0xFFF5F5F5),
+                    fillColor: Colors.grey[350],
                     filled: true,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                          color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                     ),
                     errorStyle: TextStyle(
                       color: Colors.grey[850],
@@ -376,39 +329,37 @@ class _MyEventsScreenAddEventPopUpFormState
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                          color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                     ),
                   ),
                   style: TextStyle(color: Colors.grey[850]),
-                  validator: addressValidator,
                   onChanged: (val) {
-                    eventAddress = val;
-                    ref.read(createEventAddressProvider.notifier).state =
-                        eventAddress;
+                    ref.read(eventNameProvider.notifier).state = val;
                   },
                 ),
                 SizedBox(height: 12),
                 TextFormField(
+                  initialValue: ref.watch(eventAddress2Provider),
                   cursorColor: Colors.grey[850],
                   decoration: InputDecoration(
                     focusedErrorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
-                            color: Colors.grey[850] ?? Colors.grey,
+                            color: Colors.grey[350] ?? Colors.grey,
                             width: 3.0)),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                          color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                     ),
-                    hintText: 'Address 2',
+                    // hintText: widget.event.eventAddress2,
                     hintStyle: TextStyle(color: Colors.grey[850]),
-                    fillColor: Color(0xFFF5F5F5),
+                    fillColor: Colors.grey[350],
                     filled: true,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                          color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                     ),
                     errorStyle: TextStyle(
                       color: Colors.grey[850],
@@ -416,14 +367,12 @@ class _MyEventsScreenAddEventPopUpFormState
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                          color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                     ),
                   ),
                   style: TextStyle(color: Colors.grey[850]),
                   onChanged: (val) {
-                    eventAddress2 = val;
-                    ref.read(createEventAddress2Provider.notifier).state =
-                        eventAddress2;
+                    ref.read(eventAddress2Provider.notifier).state = val;
                   },
                 ),
                 SizedBox(height: 12),
@@ -445,25 +394,28 @@ class _MyEventsScreenAddEventPopUpFormState
                     focusedErrorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                        color: Colors.grey[850] ?? Colors.grey,
+                        color: Colors.grey[350] ?? Colors.grey,
                         width: 3.0,
                       ),
                     ),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                        color: Colors.grey[850] ?? Colors.grey,
+                        color: Colors.grey[350] ?? Colors.grey,
                         width: 3.0,
                       ),
                     ),
-                    hintText: ref.watch((selectedCountryProvider)),
+                    hintText:
+                        ref.watch(selectedCountryProvider) == 'Select Country'
+                            ? ref.watch(eventCountryProvider)
+                            : ref.watch(selectedCountryProvider),
                     hintStyle: TextStyle(color: Colors.grey[850]),
-                    fillColor: Color(0xFFF5F5F5),
+                    fillColor: Colors.grey[350],
                     filled: true,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                        color: Colors.grey[850] ?? Colors.grey,
+                        color: Colors.grey[350] ?? Colors.grey,
                         width: 3.0,
                       ),
                     ),
@@ -473,19 +425,19 @@ class _MyEventsScreenAddEventPopUpFormState
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                        color: Colors.grey[850] ?? Colors.grey,
+                        color: Colors.grey[350] ?? Colors.grey,
                         width: 3.0,
                       ),
                     ),
                   ),
                   style: TextStyle(color: Colors.grey[850]),
-                  validator: (value) => countryValidator(),
                   // onChanged: (val) {
                   //   newListName = val;
                   // },
                 ),
                 SizedBox(height: 12),
                 TextFormField(
+                  // initialValue: widget.event.eventState,
                   onTap: () {
                     showModalBottomSheet(
                       shape: RoundedRectangleBorder(
@@ -503,21 +455,23 @@ class _MyEventsScreenAddEventPopUpFormState
                     focusedErrorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
-                            color: Colors.grey[850] ?? Colors.grey,
+                            color: Colors.grey[350] ?? Colors.grey,
                             width: 3.0)),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                          color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                     ),
-                    hintText: ref.watch((selectedStateProvider)),
+                    hintText: ref.watch(selectedStateProvider) == 'Select State'
+                        ? ref.watch(eventStateProvider)
+                        : ref.watch(selectedStateProvider),
                     hintStyle: TextStyle(color: Colors.grey[850]),
-                    fillColor: Color(0xFFF5F5F5),
+                    fillColor: Colors.grey[350],
                     filled: true,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                          color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                     ),
                     errorStyle: TextStyle(
                       color: Colors.grey[850],
@@ -525,17 +479,17 @@ class _MyEventsScreenAddEventPopUpFormState
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                          color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                     ),
                   ),
                   style: TextStyle(color: Colors.grey[850]),
-                  validator: (value) => stateValidator(),
                   // onChanged: (val) {
                   //   newListName = val;
                   // },
                 ),
                 SizedBox(height: 12),
                 TextFormField(
+                  initialValue: ref.watch(eventZipPostalCodeProvider),
                   cursorColor: Colors.grey[850],
                   decoration: InputDecoration(
                     focusedErrorBorder: OutlineInputBorder(
@@ -546,16 +500,17 @@ class _MyEventsScreenAddEventPopUpFormState
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                          color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                     ),
-                    hintText: 'Zip/Postal Code',
+                    // hintText: widget.event.eventZipPostalCode,
+
                     hintStyle: TextStyle(color: Colors.grey[850]),
-                    fillColor: Color(0xFFF5F5F5),
+                    fillColor: Colors.grey[350],
                     filled: true,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                          color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                     ),
                     errorStyle: TextStyle(
                       color: Colors.grey[850],
@@ -563,15 +518,14 @@ class _MyEventsScreenAddEventPopUpFormState
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                          color: Colors.grey[850] ?? Colors.grey, width: 3.0),
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0),
                     ),
                   ),
                   style: TextStyle(color: Colors.grey[850]),
-                  validator: zipPostalCodeValidator,
                   onChanged: (val) {
-                    zipPostalCode = val;
-                    ref.read(createEventZipPostalCodeProvider.notifier).state =
-                        zipPostalCode;
+                    ref.read(eventZipPostalCodeProvider.notifier).state = val;
+                    // ref.read(createEventZipPostalCodeProvider.notifier).state =
+                    //     zipPostalCode;
                   },
                 ),
               ],
@@ -589,9 +543,51 @@ class _MyEventsScreenAddEventPopUpFormState
               ),
             ),
             onPressed: () async {
+              // Should refactor this its long
               if (_formKey.currentState!.validate()) {
-                await _saveEventsToSP();
-                await _saveEventsToAT();
+                if (ref.read(selectedDateProvider) != null &&
+                    ref.read(selectedDateProvider).toString() !=
+                        ref.watch(eventDateProvider)) {
+                  ref.read(eventDateProvider.notifier).state =
+                      ref.read(selectedDateProvider).toString();
+                }
+                if (ref.read(selectedCountryProvider) != 'Select Country') {
+                  ref.read(eventCountryProvider.notifier).state =
+                      ref.read(selectedCountryProvider);
+                }
+                if (ref.read(selectedStateProvider) != 'Select State') {
+                  ref.read(eventStateProvider.notifier).state =
+                      ref.read(selectedStateProvider);
+                }
+                // save to airtable
+                await updateEventToAt(
+                  ref.read(eventIDProvider),
+                  ref.read(userStreamProvider).value!.uid.toString(),
+                  ref.read(eventNameProvider),
+                  ref.read(eventDescriptionProvider),
+                  ref.read(eventTypeProvider),
+                  ref.read(eventDateProvider),
+                  ref.read(eventAddressProvider),
+                  ref.read(eventAddress2Provider),
+                  ref.read(eventCountryProvider),
+                  ref.read(eventStateProvider),
+                  ref.read(eventZipPostalCodeProvider),
+                );
+                // save to shared preference
+                await editEventInSP(
+                  ref.read(eventIDProvider),
+                  ref.read(eventNameProvider),
+                  ref.read(eventDescriptionProvider),
+                  ref.read(eventTypeProvider),
+                  ref.read(eventDateProvider),
+                  ref.read(eventAddressProvider),
+                  ref.read(eventAddress2Provider),
+                  ref.read(eventCountryProvider),
+                  ref.read(eventStateProvider),
+                  ref.read(eventZipPostalCodeProvider),
+                );
+                // await _saveEventsToSP();
+                print(ref.read(eventIDProvider));
                 await resetProviders();
                 Navigator.pop(context);
               }
@@ -606,46 +602,20 @@ class _MyEventsScreenAddEventPopUpFormState
     );
   }
 
-  Future<void> _saveEventsToSP() async {
-    List<EventModel> processedEvents = [];
-
-    List<EventModel>? loadedEvents = await loadEventsFromSP();
-    if (loadedEvents != null) {
-      processedEvents.addAll(loadedEvents);
-    }
-    EventModel event = EventModel(
-      eventName: ref.read(createEventNameProvider),
-      eventDescription: ref.read(createEventDescriptionProvider),
-      eventType: ref.read(selectedEventTypeProvider),
-      eventDate: ref.read(selectedDateProvider).toString(),
-      eventAddress: ref.read(createEventAddressProvider),
-      eventAddress2: ref.read(createEventAddress2Provider),
-      eventZipPostalCode: ref.read(createEventZipPostalCodeProvider),
-      eventCountry: ref.read(selectedCountryProvider),
-      eventState: ref.read(selectedStateProvider),
-      invited: 0,
-      attending: 0,
-      pending: 0,
-      notAttending: 0
-      // eventMode: true,
-    );
-    processedEvents.add(event);
-    saveEventsToSP(processedEvents);
-  }
-
-  Future<void> _saveEventsToAT() async {
-    uploadEventsToAt(
-        ref.read(createEventNameProvider),
-        ref.read(createEventDescriptionProvider),
-        ref.read(selectedEventTypeProvider),
-        ref.read(selectedDateProvider).toString(),
-        ref.read(createEventAddressProvider),
-        ref.read(createEventAddress2Provider),
-        ref.read(selectedCountryProvider),
-        ref.read(selectedStateProvider),
-        ref.read(createEventZipPostalCodeProvider),
-        ref.read(userStreamProvider).value!.uid.toString());
-  }
+  // Future<void> _saveEventsToAT() async {
+  //   uploadEventsToAt(
+  //       widget.event.eventID,
+  //       ref.read(createEventNameProvider),
+  //       ref.read(createEventDescriptionProvider),
+  //       ref.read(selectedEventTypeProvider),
+  //       ref.read(selectedDateProvider).toString(),
+  //       ref.read(createEventAddressProvider),
+  //       ref.read(createEventAddress2Provider),
+  //       ref.read(selectedCountryProvider),
+  //       ref.read(selectedStateProvider),
+  //       ref.read(createEventZipPostalCodeProvider),
+  //       ref.read(userStreamProvider).value!.uid.toString());
+  // }
 
   Future<void> resetProviders() async {
     ref.read(selectedStateProvider.notifier).state = 'Select State';

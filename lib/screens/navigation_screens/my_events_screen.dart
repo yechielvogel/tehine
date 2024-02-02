@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/event_model.dart';
 import '../../providers/event_providers.dart';
-import '../../widgets/forms/my_events_screen_add_event_pop_up_form.dart';
+import '../../widgets/forms/create_event_form.dart';
 import '../../widgets/tiles/event_tiles/event_tile_widget.dart';
 
 class MyEventsScreen extends ConsumerStatefulWidget {
@@ -66,15 +66,15 @@ class _MyEventsScreenState extends ConsumerState<MyEventsScreen> {
           List<EventModel> events = ref.watch(eventsProvider);
           print(events.length);
           for (EventModel event in events) {
-            print('Event Name: ${event.eventName}');
-            print('Event Description: ${event.eventDescription}');
-            print('Event Type: ${event.eventType}');
-            print('Event Date: ${event.eventDate}');
-            print('Event Address: ${event.eventAddress}');
-            print('Event Address 2: ${event.eventAddress2}');
-            print('Event Country: ${event.eventCountry}');
-            print('Event State: ${event.eventState}');
-            print('Event Zip/Postal Code: ${event.eventZipPostalCode}');
+            // print('Event Name: ${event.eventName}');
+            // print('Event Description: ${event.eventDescription}');
+            // print('Event Type: ${event.eventType}');
+            // print('Event Date: ${event.eventDate}');
+            // print('Event Address: ${event.eventAddress}');
+            // print('Event Address 2: ${event.eventAddress2}');
+            // print('Event Country: ${event.eventCountry}');
+            // print('Event State: ${event.eventState}');
+            // print('Event Zip/Postal Code: ${event.eventZipPostalCode}');
             // print('Event Mode: ${event.eventMode}');
             // print('-----------------------------');
 
@@ -84,8 +84,7 @@ class _MyEventsScreenState extends ConsumerState<MyEventsScreen> {
           await showDialog(
             context: context,
             builder: (BuildContext context) {
-              return MyEventsScreenAddEventPopUpForm(
-                  onSave: (String savedName) {
+              return CreateEventForm(onSave: (String savedName) {
                 // Handle the saved name here, if needed
                 print('Saved Name: $savedName');
               });

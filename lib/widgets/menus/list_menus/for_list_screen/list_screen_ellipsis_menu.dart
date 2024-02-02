@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../api/contacts/airtable/upload_contacts.dart';
-import '../../../models/contact_model.dart';
-import '../../../providers/contact_providers.dart';
-import '../../../providers/list_providers.dart';
-import '../../../api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
-import '../../../providers/user_providers.dart';
+import '../../../../api/contacts/airtable/upload_contacts.dart';
+import '../../../../models/contact_model.dart';
+import '../../../../providers/contact_providers.dart';
+import '../../../../providers/list_providers.dart';
+import '../../../../api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
+import '../../../../providers/user_providers.dart';
 import 'clone_list_menu.dart';
 
 // Need to refactor the code here make functions for the items at the bottom of the page.
@@ -163,7 +163,7 @@ void listScreenEllipsisMenu(BuildContext context, ref) {
 
           ref.read(listProvider.notifier).state = currentList;
           removeListFromSP(selectedList, ref);
-          ref.refresh(listFromSharedPrefranceProvider);
+          ref.refresh(listFromSharedPreferenceProvider);
           ref.refresh(contactsFromSharedPrefProvider);
           ref.read(selectedContacts.notifier).state = <ContactModel>[];
         }
@@ -173,7 +173,7 @@ void listScreenEllipsisMenu(BuildContext context, ref) {
             ref.read(selectedContact.notifier).state;
 
         ref.read(isSelectable.notifier).state = true;
-        print(ref.read(isSelectable.notifier).state);
+        print('selectable is now ${ref.read(isSelectable.notifier).state}');
       }
       if (value == 3) {
         cloneListMenu(context, ref);
@@ -252,7 +252,7 @@ void selectableListScreenEllipsisMenu(BuildContext context, WidgetRef ref) {
       Overlay.of(context).context.findRenderObject() as RenderBox;
 
   final AsyncValue<List<String>> listOptions =
-      ref.watch(listFromSharedPrefranceProvider);
+      ref.watch(listFromSharedPreferenceProvider);
 
   if (listOptions is AsyncData) {
     final List<String> listItems = listOptions.value ?? [];
