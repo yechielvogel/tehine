@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../api/contacts/airtable/upload_contacts.dart';
+import '../../../../backend/api/contacts/airtable/upload_contacts.dart';
 import '../../../../models/contact_model.dart';
 import '../../../../providers/contact_providers.dart';
 import '../../../../providers/list_providers.dart';
-import '../../../../api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
+import '../../../../backend/api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
 import '../../../../providers/user_providers.dart';
 import 'clone_list_menu.dart';
 
@@ -117,7 +117,7 @@ void listScreenEllipsisMenu(BuildContext context, ref) {
           // Check if the lists have been modified
           if (contact.lists.contains('${ref.read(selectedListProvider)}')) {
             ContactModel updatedContact = ContactModel(
-              contactID: '',
+              contactRecordID: '',
               firstName: contact.firstName,
               lastName: contact.lastName,
               email: contact.email,
@@ -186,7 +186,7 @@ void listScreenEllipsisMenu(BuildContext context, ref) {
         for (ContactModel contact in contacts) {
           print('Type of contact.lists: ${contacts.runtimeType}');
           ContactModel contactsToDelete = ContactModel(
-            contactID: '',
+            contactRecordID: '',
             firstName: contact.firstName,
             lastName: contact.lastName,
             email: contact.email,
@@ -211,7 +211,7 @@ void listScreenEllipsisMenu(BuildContext context, ref) {
       if (value == 8) {
         for (ContactModel contact in contacts) {
           ContactModel updatedContact = ContactModel(
-            contactID: '',
+            contactRecordID: '',
             firstName: contact.firstName,
             lastName: contact.lastName,
             email: contact.email,
@@ -300,12 +300,14 @@ void selectableListScreenEllipsisMenu(BuildContext context, WidgetRef ref) {
             updatedLists.add('All');
           }
           ContactModel updatedContact = ContactModel(
-            contactID: contact.contactID,
+            userRecordID: contact.userRecordID,
+            contactRecordID: contact.contactRecordID,
             firstName: contact.firstName,
             lastName: contact.lastName,
             email: contact.email,
             phoneNumber: contact.phoneNumber,
-            lists: [...updatedLists, value],
+            // Need to add addresses 
+            lists: [...updatedLists, value],   
           );
           print(updatedContact.lists);
           String listsAsString = updatedContact.lists!.join(', ');
@@ -313,7 +315,7 @@ void selectableListScreenEllipsisMenu(BuildContext context, WidgetRef ref) {
           processedContacts.add(updatedContact);
           saveContactsToSP(processedContacts);
           if (ref.read(selectedListProvider) == 'Tehine') {
-            saveContactToSavedTable(updatedContact.contactID,
+            saveContactToSavedTable(updatedContact.contactRecordID,
                 ref.read(userStreamProvider).value!.uid, listsAsString);
           } else {
             updateContactsListsToAt(

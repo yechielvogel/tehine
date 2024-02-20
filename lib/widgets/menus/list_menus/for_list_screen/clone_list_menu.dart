@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../api/contacts/airtable/upload_contacts.dart';
+import '../../../../backend/api/contacts/airtable/upload_contacts.dart';
 import '../../../../models/contact_model.dart';
 import '../../../../providers/contact_providers.dart';
 import '../../../../providers/list_providers.dart';
-import '../../../../api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
+import '../../../../backend/api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
 import '../../../../providers/user_providers.dart';
 import '../../../forms/create_list_form.dart';
 
@@ -111,11 +111,15 @@ Future<void> cloneContactsToList(String lists, ref) async {
     List<ContactModel> updatedContacts = selectedContacts.map((contact) {
       List<String> updatedLists = [...contact.lists, lists];
       return ContactModel(
-        contactID: contact.contactID,
+        contactRecordID: contact.contactRecordID,
         firstName: contact.firstName,
         lastName: contact.lastName,
         email: contact.email,
         phoneNumber: contact.phoneNumber,
+        // addressStreet: contact.addressStreet,
+        // addressCity: contact.addressCity,
+        // addressState: contact.addressState,
+        // addressCountry: contact.addressCountry,
         lists: updatedLists,
       );
     }).toList();
@@ -138,6 +142,8 @@ Future<void> cloneContactsToList(String lists, ref) async {
         updatedContact.phoneNumber,
         updatedContact.email,
         updatedContact.lists,
+
+
         ref.read(userStreamProvider).value?.uid,
       );
     });

@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tehine/shared/style.dart';
 
-import '../../authenticate/auth.dart';
+import '../../backend/authenticate/auth.dart';
 import '../../shared/loading.dart';
 
 class SignIn extends ConsumerStatefulWidget {
@@ -145,7 +146,7 @@ class _SignInState extends ConsumerState<SignIn> {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20),
                                     ),
-                                    backgroundColor: Color(0xFFE6D3B3)),
+                                    backgroundColor: darkGrey),
                                 onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
                                     setState(() => loading = true);
@@ -168,7 +169,7 @@ class _SignInState extends ConsumerState<SignIn> {
                                 },
                                 child: Text(
                                   'Sign in',
-                                  style: TextStyle(color: Colors.grey[850]),
+                                  style: TextStyle(color: creamWhite),
                                 ),
                               ),
                               Spacer(),
@@ -177,7 +178,7 @@ class _SignInState extends ConsumerState<SignIn> {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20),
                                     ),
-                                    backgroundColor: Color(0xFFE6D3B3)),
+                                    backgroundColor: darkGrey),
                                 onPressed: () async {
                                   widget.toggleView();
                                   print('register');
@@ -186,7 +187,7 @@ class _SignInState extends ConsumerState<SignIn> {
                                 },
                                 child: Text(
                                   'Register',
-                                  style: TextStyle(color: Colors.grey[850]),
+                                  style: TextStyle(color: creamWhite),
                                 ),
                               ),
                             ],

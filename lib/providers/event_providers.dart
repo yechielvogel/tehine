@@ -2,13 +2,11 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../api/events/shared_preferences/get_event_from_shared_preference.dart';
+import '../backend/api/events/shared_preferences/get_event_from_shared_preference.dart';
 import '../models/event_model.dart';
 
-
-
 // final selectedDateProvider = StateProvider<DateTime?>(
-//   (ref) => null, 
+//   (ref) => null,
 // );
 
 final selectedCountryProvider =
@@ -18,8 +16,7 @@ final selectedStateProvider = StateProvider<String>((ref) => 'Select State');
 
 final selectedEventTypeProvider = StateProvider<String>((ref) => '');
 
-
-// For creating a event 
+// For creating a event
 
 final createEventNameProvider = StateProvider<String>((ref) => '');
 
@@ -31,8 +28,6 @@ final createEventAddress2Provider = StateProvider<String>((ref) => '');
 
 final createEventZipPostalCodeProvider = StateProvider<String>((ref) => '');
 
- 
-
 final eventsFromSharedPrefProvider =
     FutureProvider<List<EventModel>>((ref) async {
   return await loadEventsFromSP() ?? [];
@@ -43,17 +38,32 @@ final eventsProvider = StateProvider<List<EventModel>>((ref) {
   return futureEvents.value ?? [];
 });
 
+final eventsProviderCheck = StateProvider<List<EventModel>>((ref)  => []);
+
+
 final selectedEventNameProvider = StateProvider<String>(
   (ref) => '',
 );
 
-
-
 final selectedEventProvider = StateProvider<EventModel>(
-  (ref) => EventModel(eventID: 'eventID', eventName: 'eventName', eventDescription: 'eventDescription', eventType: 'eventType', eventDate: 'eventDate', eventAddress: 'eventAddress', eventAddress2: 'eventAddress2', eventCountry: 'eventCountry', eventState: 'eventState', eventZipPostalCode: 'eventZipPostalCode', invited: 0, attending: 0, pending: 0, notAttending: 0),
+  (ref) => EventModel(
+      eventRecordID: 'eventRecordID',
+      eventName: 'eventName',
+      eventDescription: 'eventDescription',
+      eventType: 'eventType',
+      eventDate: 'eventDate',
+      eventAddress: 'eventAddress',
+      eventAddress2: 'eventAddress2',
+      eventCountry: 'eventCountry',
+      eventState: 'eventState',
+      eventZipPostalCode: 'eventZipPostalCode',
+      invited: 0,
+      attending: 0,
+      pending: 0,
+      notAttending: 0),
 );
 
-final eventIDProvider = StateProvider<String?>(
+final eventRecordIDProvider = StateProvider<String?>(
   (ref) => '',
 );
 
@@ -68,7 +78,7 @@ final eventDateProvider = StateProvider<String>((ref) => '');
 final eventAddressProvider = StateProvider<String>((ref) => '');
 
 final eventAddress2Provider = StateProvider<String>((ref) => '');
-
+    
 final eventCountryProvider = StateProvider<String>((ref) => '');
 
 final eventStateProvider = StateProvider<String>((ref) => '');
@@ -85,7 +95,4 @@ final eventPendingProvider = StateProvider<int>((ref) => 0);
 
 final eventNotAttendingProvider = StateProvider<int>((ref) => 0);
 
-final eventAttachmentProvider = StateProvider<String?>(
-      (ref) => ''
-);
-
+final eventAttachmentProvider = StateProvider<String?>((ref) => '');

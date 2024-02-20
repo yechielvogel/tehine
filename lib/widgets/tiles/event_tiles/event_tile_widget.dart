@@ -3,30 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:tehine/providers/user_providers.dart';
+import 'package:tehine/shared/style.dart';
 
-import '../../../api/contacts/airtable/upload_contacts.dart';
-import '../../../api/events/shared_preferences/get_event_from_shared_preference.dart';
-import '../../../models/contact_model.dart';
-
+import '../../../backend/api/events/airtable/get_events.dart';
 import '../../../models/event_model.dart';
-import '../../../providers/contact_providers.dart';
-import '../../../api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
+
 import '../../../providers/event_providers.dart';
 import '../../../providers/list_providers.dart';
-import '../../../providers/user_providers.dart';
 
 import '../../../screens/expanded_screens/event_expanded_screen.dart';
-import '../../bottom_sheet_widgets/attending_info_bottom_sheet_widget.dart';
-import '../../dividers/divider_horizontal.dart';
-import '../../dividers/divider_vertical.dart';
-import '../../menus/list_menus/contact_tile_ellips_menu.dart';
+import '../../bottom_sheet_widgets/attending_info_widget.dart';
 
 class EventTileWidget extends ConsumerStatefulWidget {
   final EventModel event;
-  final int invited;
-  final int attending;
-  final int pending;
-  final int notAttending;
+  int? invited;
+  int? attending;
+  int? pending;
+  int? notAttending;
   late Offset tapPosition = Offset.zero;
 
   EventTileWidget({
@@ -43,6 +37,24 @@ class EventTileWidget extends ConsumerStatefulWidget {
 }
 
 class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
+  @override
+  void initState() {
+    super.initState();
+    /*
+    The following is called to check if there is any contacts on device
+    if not it will call a function to check airtable and download contacts
+    */
+    List<String> eventRecordIds = [];
+    for (var event in ref.read(eventsProvider)) {
+      eventRecordIds.add(event.eventRecordID.toString());
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      loadEventAttendingFromAT(
+          ref.read(userRecordIDProvider), eventRecordIds, ref);
+      ref.refresh(eventsFromSharedPrefProvider);
+    });
+  }
+
   Icon? icon;
   @override
   Widget build(BuildContext context) {
@@ -51,7 +63,7 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
     // contactToDelete.add(widget.contact);
     return GestureDetector(
       onTap: () async {
-        print('Event ID ${widget.event.eventID}');
+        print('Event ID ${widget.event.eventRecordID}');
         ref.read(selectedEventNameProvider.notifier).state =
             widget.event.eventName;
         ref.read(selectedEventProvider.notifier).state = widget.event;
@@ -154,14 +166,15 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                           GestureDetector(
                             onTap: () {
                               showModalBottomSheet(
+                                backgroundColor: creamWhite,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.vertical(
                                     top: Radius.circular(20),
                                   ),
                                 ),
                                 context: context,
-                                builder: (context) =>
-                                    AttendingInfoWidget(event: widget.event),
+                                builder: (context) => AttendingInfoWidget(
+                                    indexNumber: 0, event: widget.event),
                               );
                             },
                             child: Icon(
@@ -174,7 +187,8 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                               width:
                                   5), // Add some spacing between icon and count
                           Text(
-                            '0', // Replace with your attendance count
+                            widget.event.invited
+                                .toString(), // Replace with your attendance count
                             style: TextStyle(
                               color: Colors.grey[850],
                               fontSize: 14,
@@ -188,14 +202,29 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                           const EdgeInsets.only(top: 50, left: 20, bottom: 0),
                       child: Row(
                         children: [
-                          Icon(
-                            Icons.check_circle_outline,
-                            color: Colors.grey[850],
-                            size: 20,
+                          GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                backgroundColor: creamWhite,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20),
+                                  ),
+                                ),
+                                context: context,
+                                builder: (context) => AttendingInfoWidget(
+                                    indexNumber: 1, event: widget.event),
+                              );
+                            },
+                            child: Icon(
+                              Icons.check_circle_outline,
+                              color: Colors.grey[850],
+                              size: 20,
+                            ),
                           ),
                           SizedBox(width: 5),
                           Text(
-                            '0',
+                            widget.attending.toString(),
                             style: TextStyle(
                               color: Colors.grey[850],
                               fontSize: 14,
@@ -209,16 +238,33 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                           const EdgeInsets.only(top: 50, left: 20, bottom: 0),
                       child: Row(
                         children: [
-                          Icon(
-                            Icons.schedule, // Envelope icon
-                            color: Colors.grey[850],
-                            size: 20,
+                          GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                backgroundColor: creamWhite,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20),
+                                  ),
+                                ),
+                                context: context,
+                                builder: (context) => AttendingInfoWidget(
+                                    indexNumber: 2, event: widget.event),
+                              );
+                            },
+                            child: Icon(
+                              Icons.schedule, // Envelope icon
+                              color: Colors.grey[850],
+                              size: 20,
+                            ),
                           ),
                           SizedBox(
                               width:
                                   5), // Add some spacing between icon and count
                           Text(
-                            '0', // Replace with your attendance count
+                            widget.pending
+                                .toString()
+                                .toString(), // Replace with your attendance count
                             style: TextStyle(
                               color: Colors.grey[850],
                               fontSize: 14,
@@ -232,16 +278,35 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                           const EdgeInsets.only(top: 50, left: 20, bottom: 0),
                       child: Row(
                         children: [
-                          Icon(
-                            Icons.cancel_outlined, // Envelope icon
-                            color: Colors.grey[850],
-                            size: 20,
+                          GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                backgroundColor: creamWhite,
+                                // isScrollControlled: true,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20),
+                                  ),
+                                ),
+                                context: context,
+                                builder: (context) =>
+                                    // mainAxisSize: MainAxisSize.min,
+                                    AttendingInfoWidget(
+                                        indexNumber: 3, event: widget.event),
+                              );
+                            },
+                            child: Icon(
+                              Icons.cancel_outlined, // Envelope icon
+                              color: Colors.grey[850],
+                              size: 20,
+                            ),
                           ),
                           SizedBox(
                               width:
                                   5), // Add some spacing between icon and count
                           Text(
-                            '0', // Replace with your attendance count
+                            widget.notAttending
+                                .toString(), // Replace with your attendance count
                             style: TextStyle(
                               color: Colors.grey[850],
                               fontSize: 14,
@@ -289,8 +354,8 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
   }
 
   Future<void> initializeProviders() async {
-    ref.read(eventIDProvider.notifier).state = widget.event.eventID;
-    // print('ref ID ${ref.read(eventIDProvider)}');
+    ref.read(eventRecordIDProvider.notifier).state = widget.event.eventRecordID;
+    // print('ref ID ${ref.read(eventRecordIDProvider)}');
     ref.read(eventNameProvider.notifier).state = widget.event.eventName;
     ref.read(eventDescriptionProvider.notifier).state =
         widget.event.eventDescription;
@@ -303,11 +368,11 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
     ref.read(eventZipPostalCodeProvider.notifier).state =
         widget.event.eventZipPostalCode;
     // ref.read(eventListsProvider.notifier).state = widget.event.lists;
-    ref.read(eventInvitedProvider.notifier).state = widget.event.invited;
-    ref.read(eventAttendingProvider.notifier).state = widget.event.attending;
-    ref.read(eventPendingProvider.notifier).state = widget.event.pending;
+    ref.read(eventInvitedProvider.notifier).state = widget.event.invited!;
+    ref.read(eventAttendingProvider.notifier).state = widget.event.attending!;
+    ref.read(eventPendingProvider.notifier).state = widget.event.pending!;
     ref.read(eventNotAttendingProvider.notifier).state =
-        widget.event.notAttending;
+        widget.event.notAttending!;
     ref.read(eventAttachmentProvider.notifier).state = widget.event.attachment;
   }
 }

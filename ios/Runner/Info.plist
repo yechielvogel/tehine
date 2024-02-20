@@ -4,6 +4,11 @@
 <plist version="1.0">
 <dict>
     <!-- Add other keys and values specific to your Info.plist here -->
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+    <string>sms</string>
+    <string>tel</string>
+    </array>
     <key>NSCameraUsageDescription</key>
     <string>We need access to your camera to take pictures</string>
     <key>NSPhotoLibraryUsageDescription</key>

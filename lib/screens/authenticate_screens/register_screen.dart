@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tehine/shared/style.dart';
 
-import '../../authenticate/auth.dart';
+import '../../backend/authenticate/auth.dart';
 import '../../shared/loading.dart';
 
 class Register extends ConsumerStatefulWidget {
@@ -300,7 +301,7 @@ class _RegisterState extends ConsumerState<Register> {
                                       borderRadius: BorderRadius.circular(
                                           20), 
                                     ),
-                                    backgroundColor: Color(0xFFE6D3B3)),
+                                    backgroundColor: darkGrey),
                                 onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
                                     setState(() => loading = true);
@@ -311,7 +312,7 @@ class _RegisterState extends ConsumerState<Register> {
                                           '${firstName.capitalizeFirstLetter()} ${lastName.capitalizeFirstLetter()}';
                                     } else {
                                       displayName = firstName + ' ' + lastName;
-                                    }
+                                    }   
 
                                     dynamic result = await _auth
                                         .registerWithEmailAndPassword(
@@ -345,7 +346,7 @@ class _RegisterState extends ConsumerState<Register> {
                                 },
                                 child: Text(
                                   'Register',
-                                  style: TextStyle(color: Colors.grey[850]),
+                                  style: TextStyle(color: creamWhite),
                                 ),
                               ),
                               Spacer(),
@@ -354,7 +355,7 @@ class _RegisterState extends ConsumerState<Register> {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20),
                                     ),
-                                    backgroundColor: Color(0xFFE6D3B3)),
+                                    backgroundColor: darkGrey),
                                 onPressed: () async {
                                   widget.toggleView();
                                   print(email);
@@ -362,7 +363,7 @@ class _RegisterState extends ConsumerState<Register> {
                                 },
                                 child: Text(
                                   'Sign in',
-                                  style: TextStyle(color: Colors.grey[850]),
+                                  style: TextStyle(color: creamWhite),
                                 ),
                               ),
                             ],

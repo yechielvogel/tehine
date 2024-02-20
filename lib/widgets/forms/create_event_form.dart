@@ -4,15 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:tehine/shared/style.dart';
 
-import '../../api/events/airtable/upload_events.dart';
+import '../../backend/api/events/airtable/get_events.dart';
+import '../../backend/api/events/airtable/upload_events.dart';
 import '../../models/country_model.dart';
 import '../../providers/event_providers.dart';
 import '../../providers/general_providers.dart';
 import '../../providers/user_providers.dart';
 import '../bottom_sheet_widgets/calendar_widget.dart';
-import '../bottom_sheet_widgets/select_country_widget.dart';
-import '../bottom_sheet_widgets/select_state_widget.dart';
+import '../bottom_sheet_widgets/country_state_picker/select_country_widget.dart';
+import '../bottom_sheet_widgets/country_state_picker/select_state_widget.dart';
 
 // This needs refactoring should make one class for the fields.
 
@@ -572,7 +574,7 @@ class _CreateEventFormState extends ConsumerState<CreateEventForm> {
         Center(
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFE6D3B3),
+              backgroundColor: darkGrey,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0),
               ),
@@ -581,14 +583,14 @@ class _CreateEventFormState extends ConsumerState<CreateEventForm> {
               if (_formKey.currentState!.validate()) {
                 await _saveEventsToAT();
                 // await _saveEventsToSP();
-                print(ref.read(eventIDProvider));
-                await resetProviders();
+                print(ref.read(eventRecordIDProvider));
+                await _resetProviders();
                 Navigator.pop(context);
               }
             },
             child: Text(
               'Save',
-              style: TextStyle(color: Colors.grey[850]),
+              style: TextStyle(color: creamWhite),
             ),
           ),
         ),
@@ -604,7 +606,7 @@ class _CreateEventFormState extends ConsumerState<CreateEventForm> {
   //     processedEvents.addAll(loadedEvents);
   //   }
   //   EventModel event = EventModel(
-  //       eventID: ref.read(eventIDProvider),
+  //       eventRecordID: ref.read(eventRecordIDProvider),
   //       eventName: ref.read(createEventNameProvider),
   //       eventDescription: ref.read(createEventDescriptionProvider),
   //       eventType: ref.read(selectedEventTypeProvider),
@@ -625,6 +627,7 @@ class _CreateEventFormState extends ConsumerState<CreateEventForm> {
   // }
 
   Future<void> _saveEventsToAT() async {
+    
     uploadEventsToAt(
         ref,
         ref.read(createEventNameProvider),
@@ -639,7 +642,7 @@ class _CreateEventFormState extends ConsumerState<CreateEventForm> {
         ref.read(userStreamProvider).value!.uid.toString());
   }
 
-  Future<void> resetProviders() async {
+  Future<void> _resetProviders() async {
     ref.read(selectedStateProvider.notifier).state = 'Select State';
     ref.read(selectedCountryProvider.notifier).state = 'Select Country';
     ref.read(selectedDateProvider.notifier).state = null;

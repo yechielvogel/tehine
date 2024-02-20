@@ -1,9 +1,5 @@
-import 'dart:io';
-
-import 'dart:io';
-
 class EventModel {
-  late final String? eventID;
+  late final String? eventRecordID;
   late final String eventName;
   late final String eventDescription;
   late final String eventType;
@@ -14,14 +10,19 @@ class EventModel {
   late final String eventState;
   late final String eventZipPostalCode;
   late final List<String>? lists;
-  late final int invited;
-  late final int attending;
-  late final int pending;
-  late final int notAttending;
+  List? invitedList;
+  List? attendingList;
+  List? notAttendingList;
+  List? pendingList;
+  int? invited;
+  int? attending;
+  int? pending;
+  int? notAttending;
   late final String? attachment;
+  bool? didAccept;
 
   EventModel({
-    this.eventID,
+    this.eventRecordID,
     required this.eventName,
     required this.eventDescription,
     required this.eventType,
@@ -31,17 +32,22 @@ class EventModel {
     required this.eventCountry,
     required this.eventState,
     required this.eventZipPostalCode,
+    this.invitedList,
+    this.attendingList,
+    this.notAttendingList,
+    this.pendingList,
     this.lists,
-    required this.invited,
-    required this.attending,
-    required this.pending,
-    required this.notAttending,
+    this.invited,
+    this.attending,
+    this.pending,
+    this.notAttending,
     this.attachment,
+    this.didAccept,
   });
 
   factory EventModel.fromJson(Map<String, dynamic> json) {
     return EventModel(
-      eventID: json['eventID'] ?? '',
+      eventRecordID: json['eventRecordID'] ?? '',
       eventName: json['eventName'] ?? '',
       eventDescription: json['eventDescription'] ?? '',
       eventType: json['eventType'] ?? '',
@@ -51,17 +57,27 @@ class EventModel {
       eventCountry: json['eventCountry'] ?? '',
       eventState: json['eventState'] ?? '',
       eventZipPostalCode: json['eventZipPostalCode'] ?? '',
-      lists: json['lists'] != null ? List<String>.from(json['lists']) : [],
+      lists: json['lists'] != null ? List?.from(json['lists']) : [],
+      invitedList:
+          json['invitedList'] != null ? List?.from(json['invitedList']) : [],
+      attendingList:
+          json['attendingList'] != null ? List?.from(json['attendingList']) : [],
+      notAttendingList:
+          json['notAttendingList'] != null ? List?.from(json['notAttendingList']) : [],
+      pendingList:
+          json['pendingList'] != null ? List?.from(json['pendingList']) : [],
       invited: json['invited'] ?? 0,
       attending: json['attending'] ?? 0,
       pending: json['pending'] ?? 0,
       notAttending: json['notAttending'] ?? 0,
-attachment: json['attachment'] ?? '',    );
+      attachment: json['attachment'] ?? '',
+      didAccept: json['didAccept'] ?? false,
+    );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson() {   
     return {
-      'eventID': eventID,
+      'eventRecordID': eventRecordID,
       'eventName': eventName,
       'eventDescription': eventDescription,
       'eventType': eventType,
@@ -72,16 +88,21 @@ attachment: json['attachment'] ?? '',    );
       'eventState': eventState,
       'eventZipPostalCode': eventZipPostalCode,
       'lists': lists,
+      'invitedList': invitedList,
+      'attendingList': attendingList,
+      'pendingList': pendingList,
+      'notAttendingList': notAttendingList,
       'invited': invited,
       'attending': attending,
       'pending': pending,
       'notAttending': notAttending,
       'attachment': attachment,
+      'didAccept': didAccept,
     };
   }
 
   EventModel copyWith({
-    String? eventID,
+    String? eventRecordID,
     String? eventName,
     String? eventDescription,
     String? eventType,
@@ -92,14 +113,19 @@ attachment: json['attachment'] ?? '',    );
     String? eventState,
     String? eventZipPostalCode,
     List<String>? lists,
+    List? invitedList,
+    List? attendingList,
+    List? pendingList,
+    List? notAttendingList,
     String? attachment,
     int? invited,
     int? attending,
     int? pending,
     int? notAttending,
+    bool? didAccept,
   }) {
-    return EventModel(     
-      eventID: eventID ?? this.eventID,
+    return EventModel(
+      eventRecordID: eventRecordID ?? this.eventRecordID,
       eventName: eventName ?? this.eventName,
       eventDescription: eventDescription ?? this.eventDescription,
       eventType: eventType ?? this.eventType,
@@ -110,11 +136,16 @@ attachment: json['attachment'] ?? '',    );
       eventState: eventState ?? this.eventState,
       eventZipPostalCode: eventZipPostalCode ?? this.eventZipPostalCode,
       lists: lists ?? this.lists,
+      invitedList: invitedList ?? this.invitedList,
+      attendingList: attendingList ?? this.attendingList,
+      pendingList: pendingList ?? this.pendingList,
+      notAttendingList: notAttendingList ?? this.notAttendingList,
       attachment: attachment ?? this.attachment,
       invited: invited ?? this.invited,
       attending: attending ?? this.attending,
       pending: pending ?? this.pending,
       notAttending: notAttending ?? this.notAttending,
+      didAccept: didAccept ?? this.didAccept,
     );
   }
 }

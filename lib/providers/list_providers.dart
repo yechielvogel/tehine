@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../api/contacts/shared_preferences/get_contact_from_shared_preferences.dart';
-import '../api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
-import '../api/events/shared_preferences/get_event_from_shared_preference.dart';
+import '../backend/api/contacts/shared_preferences/get_contact_from_shared_preferences.dart';
+import '../backend/api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
+import '../backend/api/events/shared_preferences/get_event_from_shared_preference.dart';
 import 'event_providers.dart';
 
 final selectedListProvider = StateProvider<String>(

@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../backend/api/events/airtable/get_events.dart';
 import '../../models/event_model.dart';
 import '../../providers/event_providers.dart';
+import '../../shared/loading.dart';
 import '../../widgets/forms/create_event_form.dart';
 import '../../widgets/tiles/event_tiles/event_tile_widget.dart';
 
@@ -18,6 +20,22 @@ class MyEventsScreen extends ConsumerStatefulWidget {
 
 class _MyEventsScreenState extends ConsumerState<MyEventsScreen> {
   @override
+  void initState() {
+    super.initState();      
+    /*
+    The following is called to check if there is any contacts on device
+    if not it will call a function to check airtable and download contacts
+    */
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      
+      if (ref.watch(eventsProviderCheck).isEmpty) {
+        initializeData();
+        // await getAllEventsDataFromAtOnStart(context);
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     // ref.refresh(eventsFromAirtableProvider);
     // final eventsAsyncValue = ref.read(eventsFromAirtableProvider);
@@ -29,7 +47,7 @@ class _MyEventsScreenState extends ConsumerState<MyEventsScreen> {
     final events = ref.watch(eventsProvider);
     // print(events.length);
     return Scaffold(
-      backgroundColor: Color(0xFFF5F5F5),
+      backgroundColor: Color(0xFFF5F5F5),   
       body: Consumer(
         builder: (context, watch, child) {
           List<Widget> contactWidgets = [];
@@ -65,22 +83,8 @@ class _MyEventsScreenState extends ConsumerState<MyEventsScreen> {
           await ref.refresh(eventsFromSharedPrefProvider);
           List<EventModel> events = ref.watch(eventsProvider);
           print(events.length);
-          for (EventModel event in events) {
-            // print('Event Name: ${event.eventName}');
-            // print('Event Description: ${event.eventDescription}');
-            // print('Event Type: ${event.eventType}');
-            // print('Event Date: ${event.eventDate}');
-            // print('Event Address: ${event.eventAddress}');
-            // print('Event Address 2: ${event.eventAddress2}');
-            // print('Event Country: ${event.eventCountry}');
-            // print('Event State: ${event.eventState}');
-            // print('Event Zip/Postal Code: ${event.eventZipPostalCode}');
-            // print('Event Mode: ${event.eventMode}');
-            // print('-----------------------------');
-
-            // print('Event Mode: ${event.eventMode}');
-            // print('-----------------------------');
-          }
+          // for (EventModel event in events) {
+          // }
           await showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -97,5 +101,39 @@ class _MyEventsScreenState extends ConsumerState<MyEventsScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> initializeData() async {
+    // Reset
+    // ref.read(contactsProvider.notifier).state = [];
+    // // Refresh
+    // ref.refresh(contactsFromSharedPrefProvider);
+    // // Filter
+    // ref.read(filteredContactsProvider);
+
+    // ref.read(selectedListProvider.notifier).state = 'All';
+    // ref.watch(selectedListScreenChipIndexProvider.state).state = 1;
+    // print(ref.read(selectedListProvider));
+
+    if (ref.watch(eventsProvider).isEmpty) {
+      // Refresh
+      ref.refresh(eventsFromSharedPrefProvider);
+      // Filter
+      // ref.read(filteredContactsProvider);
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {    
+          return Center(
+            child: LoadingTransparent(),
+          );
+        },
+      );
+      try {
+        await getAllEventsDataFromAtOnStart(context);
+      } finally {
+        Navigator.of(context).pop();
+      }
+    }
   }
 }

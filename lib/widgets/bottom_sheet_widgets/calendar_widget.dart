@@ -5,6 +5,7 @@ import 'package:kosher_dart/kosher_dart.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
+import 'package:tehine/shared/style.dart';
 
 import '../../providers/general_providers.dart';
 
@@ -154,7 +155,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                     height: 50,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(50),
-                      color: Color(0xFFE6D3B3),
+                      color: darkGrey,
                     ),
                     child: Column(
                       children: [
@@ -163,8 +164,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                           alignment: Alignment.topCenter,
                           child: Text(
                             '${gregorianDate.day}',
-                            style: TextStyle(
-                                fontSize: 16, color: Colors.grey[850]),
+                            style: TextStyle(fontSize: 16, color: creamWhite),
                           ),
                         ),
                         Container(
@@ -176,7 +176,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                                 : '${jewishDate.getJewishDayOfMonth()}',
                             style: TextStyle(
                               fontSize: 8,
-                              color: Colors.grey[850],
+                              color: creamWhite,
                             ),
                           ),
                         ),
@@ -199,7 +199,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                     height: 50,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(50),
-                      color: Color(0xFFE6D3B3),
+                      color: lightGrey,
                     ),
                     child: Column(
                       children: [

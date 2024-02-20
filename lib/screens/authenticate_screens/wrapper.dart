@@ -1,15 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:provider/provider.dart';
-import 'package:tehine/api/user/get_user_info_at.dart';
-import 'package:tehine/shared/loading.dart';
 
-import '../../api/user/upload_user_info_at.dart';
-import '../../authenticate/auth.dart';
-import '../../authenticate/authenticate.dart';
-import '../../models/users_model.dart';
-import '../../providers/contact_providers.dart';
-import '../../providers/event_providers.dart';
+import '../../backend/authenticate/authenticate.dart';
 import '../../providers/user_providers.dart';
 import '../navigation_screens/navigation_screen.dart';
 
@@ -19,17 +11,16 @@ class Wrapper extends ConsumerWidget {
   bool userInfoCalled = false;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context, ref) {
     final user = ref.watch(userStreamProvider);
 
     if (user.value == null) {
-      print('User is null');
+      // print('User is null');
       return Authenticate();
     } else {
-      print('there is a user');
-      print('User UID: ${user.value?.uid}');
-      print('User Name: ${user.value?.username}');
-
+      // print('there is a user');
+      // print('User UID: ${user.value?.uid}');
+      // print('User Name: ${user.value?.username}');
       return NavigationScreen();
     }
   }

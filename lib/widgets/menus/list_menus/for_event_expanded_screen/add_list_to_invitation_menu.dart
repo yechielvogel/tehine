@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tehine/providers/event_providers.dart';
 
-import '../../../../api/contacts/airtable/upload_contacts.dart';
-import '../../../../api/events/airtable/upload_events.dart';
-import '../../../../api/events/shared_preferences/save_event_to_shared_preferences.dart';
+import '../../../../backend/api/contacts/airtable/upload_contacts.dart';
+import '../../../../backend/api/events/airtable/upload_events.dart';
+import '../../../../backend/api/events/shared_preferences/save_event_to_shared_preferences.dart';
 import '../../../../models/event_model.dart';
 import '../../../../providers/list_providers.dart';
 import '../../../../providers/user_providers.dart';
@@ -67,7 +67,7 @@ void addListToInvitationMenu(BuildContext context, WidgetRef ref) {
               updatedLists.add(value);
 
               return EventModel(
-                eventID: events.eventID,
+                eventRecordID: events.eventRecordID,
                 eventName: events.eventName,
                 eventDescription: events.eventDescription,
                 eventType: events.eventType,
@@ -99,7 +99,7 @@ void addListToInvitationMenu(BuildContext context, WidgetRef ref) {
           // Add a way to get the event id then could edit the event by searching the event id
           // so there won't ever be a mistake editing the wrong event
           updateEventListsToAt(
-            ref.read(eventIDProvider),
+            ref.read(eventRecordIDProvider),
             updatedEvents
                 .firstWhere((e) => e.eventName == event.eventName)
                 .lists,

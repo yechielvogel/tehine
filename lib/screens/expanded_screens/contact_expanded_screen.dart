@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:tehine/shared/style.dart';
 
 import '../../models/contact_model.dart';
 import '../../widgets/info_blocks/event_info_block.dart';
@@ -60,7 +61,7 @@ class _ContactExpandedScreenWidgetState
                     style: ElevatedButton.styleFrom(
                       elevation: 0,
                       fixedSize: Size(20, 50.0),
-                      backgroundColor: Color(0xFFE6D3B3),
+                      backgroundColor: darkGrey,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
@@ -68,14 +69,14 @@ class _ContactExpandedScreenWidgetState
                     onPressed: () {},
                     child: Icon(
                       Icons.person_add_alt_1_rounded,
-                      color: Colors.grey[850],
+                      color: creamWhite,
                     ),
                   ),
                   // ElevatedButton(
                   //   style: ElevatedButton.styleFrom(
                   //     elevation: 0,
                   //     fixedSize: Size(20, 50.0),
-                  //     backgroundColor: Color(0xFFE6D3B3),
+                  //     backgroundColor: darkGrey,
                   //     shape: RoundedRectangleBorder(
                   //       borderRadius: BorderRadius.circular(20.0),
                   //     ),
@@ -90,7 +91,7 @@ class _ContactExpandedScreenWidgetState
                     style: ElevatedButton.styleFrom(
                       elevation: 0,
                       fixedSize: Size(20, 50.0),
-                      backgroundColor: Color(0xFFE6D3B3),
+                      backgroundColor: darkGrey,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
@@ -98,14 +99,14 @@ class _ContactExpandedScreenWidgetState
                     onPressed: () {},
                     child: Icon(
                       CupertinoIcons.share_solid,
-                      color: Colors.grey[850],
+                      color: creamWhite,
                     ),
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       elevation: 0,
                       fixedSize: Size(20, 50.0),
-                      backgroundColor: Color(0xFFE6D3B3),
+                      backgroundColor: darkGrey,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
@@ -113,14 +114,14 @@ class _ContactExpandedScreenWidgetState
                     onPressed: () {},
                     child: Icon(
                       Icons.edit,
-                      color: Colors.grey[850],
+                      color: creamWhite,
                     ),
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       elevation: 0,
                       fixedSize: Size(20, 50.0),
-                      backgroundColor: Color(0xFFE6D3B3),
+                      backgroundColor: darkGrey,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
@@ -128,7 +129,7 @@ class _ContactExpandedScreenWidgetState
                     onPressed: () {},
                     child: Icon(
                       Icons.delete,
-                      color: Colors.grey[850],
+                      color: creamWhite,
                     ),
                   ),
                 ],
@@ -146,7 +147,10 @@ class _ContactExpandedScreenWidgetState
               title: 'Email',
               content: widget.contact.email,
             ),
-            EventAndContactInfoBlock(title: 'Address', content: 'coming soon'
+            EventAndContactInfoBlock(
+                title: 'Address',
+                content:
+                    '${widget.contact.addressStreet.toString()} ${widget.contact.addressCity.toString()} ${widget.contact.addressZip.toString()}'
                 // content: widget.contact.address,
                 ),
             EventAndContactInfoBlock(

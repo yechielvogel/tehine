@@ -4,17 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:tehine/shared/style.dart';
 
-import '../../api/events/airtable/upload_events.dart';
-import '../../api/events/shared_preferences/save_event_to_shared_preferences.dart';
+import '../../backend/api/events/airtable/upload_events.dart';
+import '../../backend/api/events/shared_preferences/save_event_to_shared_preferences.dart';
 import '../../models/country_model.dart';
 import '../../models/event_model.dart';
 import '../../providers/event_providers.dart';
 import '../../providers/general_providers.dart';
 import '../../providers/user_providers.dart';
 import '../bottom_sheet_widgets/calendar_widget.dart';
-import '../bottom_sheet_widgets/select_country_widget.dart';
-import '../bottom_sheet_widgets/select_state_widget.dart';
+import '../bottom_sheet_widgets/country_state_picker/select_country_widget.dart';
+import '../bottom_sheet_widgets/country_state_picker/select_state_widget.dart';
 
 // This needs refactoring should make one class for the fields.
 
@@ -78,7 +79,7 @@ class _EditEventFormState extends ConsumerState<EditEventForm> {
       backgroundColor: Color(0xFFF5F5F5),
       title: Center(
         child: Text(
-          'Create Event',
+          'Edit Event',
           style: TextStyle(color: Colors.grey[850]),
         ),
       ),
@@ -537,7 +538,7 @@ class _EditEventFormState extends ConsumerState<EditEventForm> {
         Center(
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFE6D3B3),
+              backgroundColor: darkGrey,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0),
               ),
@@ -561,7 +562,7 @@ class _EditEventFormState extends ConsumerState<EditEventForm> {
                 }
                 // save to airtable
                 await updateEventToAt(
-                  ref.read(eventIDProvider),
+                  ref.read(eventRecordIDProvider),
                   ref.read(userStreamProvider).value!.uid.toString(),
                   ref.read(eventNameProvider),
                   ref.read(eventDescriptionProvider),
@@ -575,7 +576,7 @@ class _EditEventFormState extends ConsumerState<EditEventForm> {
                 );
                 // save to shared preference
                 await editEventInSP(
-                  ref.read(eventIDProvider),
+                  ref.read(eventRecordIDProvider),
                   ref.read(eventNameProvider),
                   ref.read(eventDescriptionProvider),
                   ref.read(eventTypeProvider),
@@ -587,14 +588,14 @@ class _EditEventFormState extends ConsumerState<EditEventForm> {
                   ref.read(eventZipPostalCodeProvider),
                 );
                 // await _saveEventsToSP();
-                print(ref.read(eventIDProvider));
-                await resetProviders();
+                print(ref.read(eventRecordIDProvider));
+                await _resetProviders();
                 Navigator.pop(context);
               }
             },
             child: Text(
               'Save',
-              style: TextStyle(color: Colors.grey[850]),
+              style: TextStyle(color: creamWhite),
             ),
           ),
         ),
@@ -604,7 +605,7 @@ class _EditEventFormState extends ConsumerState<EditEventForm> {
 
   // Future<void> _saveEventsToAT() async {
   //   uploadEventsToAt(
-  //       widget.event.eventID,
+  //       widget.event.eventRecordID,
   //       ref.read(createEventNameProvider),
   //       ref.read(createEventDescriptionProvider),
   //       ref.read(selectedEventTypeProvider),
@@ -617,7 +618,7 @@ class _EditEventFormState extends ConsumerState<EditEventForm> {
   //       ref.read(userStreamProvider).value!.uid.toString());
   // }
 
-  Future<void> resetProviders() async {
+  Future<void> _resetProviders() async {
     ref.read(selectedStateProvider.notifier).state = 'Select State';
     ref.read(selectedCountryProvider.notifier).state = 'Select Country';
     ref.read(selectedDateProvider.notifier).state = null;

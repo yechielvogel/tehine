@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../api/contacts/airtable/upload_contacts.dart';
+import '../../../backend/api/contacts/airtable/upload_contacts.dart';
 import '../../../models/contact_model.dart';
 
 import '../../../providers/contact_providers.dart';
-import '../../../api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
+import '../../../backend/api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
 import '../../../providers/user_providers.dart';
 
 import '../../../screens/expanded_screens/contact_expanded_screen.dart';
@@ -115,23 +115,50 @@ class _ContactTileWidgetState extends ConsumerState<ContactTileWidget> {
                     ),
                   ),
                   Expanded(
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(top: 15, left: 20, bottom: 35),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Container(
-                          child: Text(
-                            widget.contact.firstName +
-                                ' ' +
-                                widget.contact.lastName,
-                            style: TextStyle(
-                              color: Colors.grey[850],
-                              fontSize: 16,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 10, left: 20, bottom: 3),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Container(
+                              child: Text(
+                                widget.contact.firstName +
+                                    ' ' +
+                                    widget.contact.lastName,
+                                style: TextStyle(
+                                  color: Colors.grey[850],
+                                  fontSize: 16,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                        SizedBox(
+                          height: 3,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: 12,
+                            left: 20,
+                          ),
+                          child: Container(   
+                            height: 15,
+                            child: widget.contact.addressStreet != null
+                                ? Text(
+                                    widget.contact.addressStreet!,
+                                    style: TextStyle(
+                                      color: Colors.grey[600],
+                                      fontSize: 13,
+                                    ),
+                                  )
+                                : Container(),
+                          ),
+                        )
+                      ],
                     ),
                   ),
                   // Padding(

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../api/contacts/airtable/get_contacts.dart';
-import '../api/contacts/shared_preferences/get_contact_from_shared_preferences.dart';
+import '../backend/api/contacts/shared_preferences/get_contact_from_shared_preferences.dart';
 import '../models/contact_model.dart';
 import 'list_providers.dart';
-import '../api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
 
 final contactsFromSharedPrefProvider =
     FutureProvider<List<ContactModel>>((ref) async {
@@ -16,19 +14,20 @@ final contactsProvider = StateProvider<List<ContactModel>>((ref) {
   final futureContacts = ref.watch(contactsFromSharedPrefProvider);
   return futureContacts.value ?? [];
 });
+   
+final contactsProviderCheck = StateProvider<List<ContactModel>>((ref)  => []);
 
 final selectedContact = StateProvider<String>(
   (ref) => '',
 );
 
-// not sure this belongs here should find a better place
 
 final isSelectable = StateProvider<bool>(
-  (ref) => false,
+  (ref) => false,    
 );
 
 final selectedContacts = StateProvider<List<ContactModel>>(
-  (ref) => [],
+  (ref) => [],     
 );
 
 final filteredContactsProvider = StateProvider<List<ContactModel>>((ref) {

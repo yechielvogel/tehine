@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tehine/shared/style.dart';
 
 import '../../providers/list_providers.dart';
-import '../../api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
+import '../../backend/api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
 
 class CreateListForm extends ConsumerStatefulWidget {
-    final void Function(String) onSave;
-  const CreateListForm({
-    required this.onSave,
-    Key? key}) : super(key: key);
+  final void Function(String) onSave;
+  const CreateListForm({required this.onSave, Key? key}) : super(key: key);
 
   @override
   ConsumerState createState() => _CreateListFormState();
 }
 
-class _CreateListFormState
-    extends ConsumerState<CreateListForm> {
+class _CreateListFormState extends ConsumerState<CreateListForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? selectedName;
 
@@ -56,36 +54,32 @@ class _CreateListFormState
             children: [
               TextFormField(
                 cursorColor: Colors.grey[850],
-                     decoration: InputDecoration(
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                  borderSide: BorderSide(
-                                      color: Colors.grey[350] ?? Colors.grey,
-                                      width: 3)),
-                              hintText: 'Name',
-                              hintStyle: TextStyle(color: Colors.grey[850]),
-                              fillColor: Colors.grey[350] ?? Colors.grey,
-                              filled: true,
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                  borderSide: BorderSide(
-                                      color: Colors.grey[350] ?? Colors.grey,
-                                      width: 3.0)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                  borderSide: BorderSide(
-                                      color: Colors.grey[350] ?? Colors.grey,
-                                      width: 3.0)),
-                              errorStyle: TextStyle(
-                                color: Colors.grey[850],
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
-                                    color: Colors.grey[350] ?? Colors.grey,
-                                    width: 3.0),
-                              ),
-                            ),
+                decoration: InputDecoration(
+                  focusedErrorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide(
+                          color: Colors.grey[350] ?? Colors.grey, width: 3)),
+                  hintText: 'Name',
+                  hintStyle: TextStyle(color: Colors.grey[850]),
+                  fillColor: Colors.grey[350] ?? Colors.grey,
+                  filled: true,
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide(
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide(
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0)),
+                  errorStyle: TextStyle(
+                    color: Colors.grey[850],
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(
+                        color: Colors.grey[350] ?? Colors.grey, width: 3.0),
+                  ),
+                ),
                 style: TextStyle(color: Colors.grey[850]),
                 validator: nameValidator,
                 onChanged: (val) {
@@ -144,7 +138,7 @@ class _CreateListFormState
         Center(
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFE6D3B3),
+              backgroundColor: darkGrey,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0),
               ),
@@ -159,7 +153,7 @@ class _CreateListFormState
 
                 ref.read(listProvider.notifier).state = [...currentList];
                 saveListsToSP(currentList);
-                 widget.onSave(newListName!);
+                widget.onSave(newListName!);
                 await ref.read(listProvider);
                 await ref.refresh(listFromSharedPreferenceProvider);
                 Navigator.pop(context);
@@ -167,7 +161,7 @@ class _CreateListFormState
             },
             child: Text(
               'Save',
-              style: TextStyle(color: Colors.grey[850]),
+              style: TextStyle(color: creamWhite),
             ),
           ),
         ),

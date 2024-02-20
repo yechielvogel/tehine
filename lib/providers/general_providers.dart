@@ -7,6 +7,7 @@ final loadingProvider = StateProvider<bool>(
 
 final selectedListScreenChipIndexProvider = StateProvider<int>((ref) => 0);
 
+
 final searchQueryProvider = StateProvider<String>((ref) => '');
 
 // Date providers
@@ -38,3 +39,9 @@ final selectedHebrewMonthDateProvider = StateProvider<String>(
 final offsetProvider = StateProvider<String>(
   (ref) => '',
 );
+
+
+final selectedChipIndexForInvitationTileProvider = StateProvider.family<int?, String>((ref, tileId) => null);
+
+final selectedInvitationScreenChipIndexProvider =
+    StateProvider<int>((ref) => 1);
