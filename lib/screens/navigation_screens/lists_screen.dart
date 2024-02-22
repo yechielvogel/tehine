@@ -223,71 +223,71 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
     );
   }
 
-  Widget futureConsumer() {
-    return FutureBuilder<void>(
-      future: getAllContactsDataFromAtOnStart(context),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          // Display a loading indicator while waiting for data
-          return Loading();
-        } else if (snapshot.hasError) {
-          // Handle errors
-          return Text('Error: ${snapshot.error}');
-        } else {
-          // Data has been fetched, build your UI here
-          return Consumer(
-            builder: (context, watch, child) {
-              final filteredContacts = ref.watch(filteredContactsProvider);
-              final checkIfContactsProviderIsEmpty =
-                  ref.watch(contactsProvider);
+  // Widget futureConsumer() {
+  //   return FutureBuilder<void>(
+  //     future: getAllContactsDataFromAtOnStart(context),
+  //     builder: (context, snapshot) {
+  //       if (snapshot.connectionState == ConnectionState.waiting) {
+  //         // Display a loading indicator while waiting for data
+  //         return Loading();
+  //       } else if (snapshot.hasError) {
+  //         // Handle errors
+  //         return Text('Error: ${snapshot.error}');
+  //       } else {
+  //         // Data has been fetched, build your UI here
+  //         return Consumer(
+  //           builder: (context, watch, child) {
+  //             final filteredContacts = ref.watch(filteredContactsProvider);
+  //             final checkIfContactsProviderIsEmpty =
+  //                 ref.watch(contactsProvider);
 
-              // Check if contactsProvider is empty
-              if (checkIfContactsProviderIsEmpty.isEmpty) {
-                print('contacts are empty');
-                return Loading(); // Show loading indicator while fetching data
-              } else {
-                // Contacts are available, build contact list
-                return Column(
-                  children: [
-                    SizedBox(height: 10),
-                    Listener(
-                      onPointerMove: (event) async {
-                        loadMore();
-                      },
-                      child: ListView.builder(
-                        key: ValueKey(ref.watch(isSelectable)),
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: filteredContacts.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final contact = filteredContacts[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(
-                              top: 6,
-                              bottom: 6,
-                            ),
-                            child: ref.watch(isSelectable.notifier).state
-                                ? Hero(
-                                    tag:
-                                        'contactHeroTag_${contact.phoneNumber}',
-                                    child: SelectContactTileWidget(
-                                      contact: contact,
-                                    ),
-                                  )
-                                : ContactTileWidget(contact: contact),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                );
-              }
-            },
-          );
-        }
-      },
-    );
-  }
+  //             // Check if contactsProvider is empty
+  //             if (checkIfContactsProviderIsEmpty.isEmpty) {
+  //               print('contacts are empty');
+  //               return Loading(); // Show loading indicator while fetching data
+  //             } else {
+  //               // Contacts are available, build contact list
+  //               return Column(
+  //                 children: [
+  //                   SizedBox(height: 10),
+  //                   Listener(
+  //                     onPointerMove: (event) async {
+  //                       loadMore();
+  //                     },
+  //                     child: ListView.builder(
+  //                       key: ValueKey(ref.watch(isSelectable)),
+  //                       physics: NeverScrollableScrollPhysics(),
+  //                       shrinkWrap: true,
+  //                       itemCount: filteredContacts.length,
+  //                       itemBuilder: (BuildContext context, int index) {
+  //                         final contact = filteredContacts[index];
+  //                         return Padding(
+  //                           padding: const EdgeInsets.only(
+  //                             top: 6,
+  //                             bottom: 6,
+  //                           ),
+  //                           child: ref.watch(isSelectable.notifier).state
+  //                               ? Hero(
+  //                                   tag:
+  //                                       'contactHeroTag_${contact.phoneNumber}',
+  //                                   child: SelectContactTileWidget(
+  //                                     contact: contact,
+  //                                   ),
+  //                                 )
+  //                               : ContactTileWidget(contact: contact),
+  //                         );
+  //                       },
+  //                     ),
+  //                   ),
+  //                 ],
+  //               );
+  //             }
+  //           },
+  //         );
+  //       }
+  //     },
+  //   );
+  // }
 
 // Function for search
   Future<void> performSearch(String query, ref) async {

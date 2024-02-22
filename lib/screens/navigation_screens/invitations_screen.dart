@@ -2,13 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:tehine/providers/event_providers.dart';
 import 'package:tehine/providers/invitations_providers.dart';
 import 'package:tehine/providers/user_providers.dart';
 import 'package:tehine/shared/loading.dart';
 
 import '../../backend/api/events/airtable/get_events.dart';
-import '../../backend/api/user/airtable/get_user_info_at.dart';
 import '../../backend/api/user/shared_preferences/get_user_from_shared_preferences.dart';
 import '../../models/event_model.dart';
 import '../../providers/general_providers.dart';
@@ -39,51 +37,43 @@ class _HomeState extends ConsumerState<InvitationsScreen> {
 
   bool _invitationsLoaded = false;
 
+
+// Should refactor this to clean up
   @override
   Widget build(BuildContext context) {
     final selectedChipIndex =
-        ref.watch(selectedInvitationScreenChipIndexProvider);
+        ref.read(selectedInvitationScreenChipIndexProvider);
 
-    // going to change this to filtered...
-    // List<EventModel> events = ref.watch(invitationsProvider);
-    List<EventModel> events = ref.watch(filteredInvitationsProvider);
-    String? _userFirebaseID = ref.read(userStreamProvider).value?.uid;
-
-    if (ref.read(invitationsProvider).isNotEmpty) {
+    List<EventModel> events = initializeInvitations(selectedChipIndex);
+    if (ref.watch(invitationsProvider).isNotEmpty) {
       ref.read(userProvider)?.userRecordID;
       return buildScaffold(events, selectedChipIndex);
     } else {
-      if (!_invitationsLoaded) {
-        ref.read(userProvider)?.userRecordID;
-        print('users first ${ref.read(userProvider)?.firstName}');
-        print('users rec ${ref.read(userProvider)?.userRecordID}');
-
-        if (ref.read(userProvider)?.userRecordID != null) {
-        } else
-          () {};
-        _invitationsLoaded = true;
-        return FutureBuilder<void>(
-          future: () async {
-            await populateUsersProviderIfDataExists(ref);
-            print('after pop ${ref.read(userRecordIDProvider)}');
-            await loadInvitationsFromAT(ref, ref.read(userRecordIDProvider));
-          }(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Loading(); // Show a loading indicator while waiting
-            } else if (snapshot.hasError) {
-              return Text(
-                  'Error: ${snapshot.error}'); // Show an error message if any of the futures fail
-            } else {
-              // Both futures have completed successfully, build your widget
-              return buildScaffold(events, selectedChipIndex);
-            }
-          },
-        );
-      } else {
-        // need to make a error alert for this saying something like no internet
-        return Text('Error: Failed to load invitations');
-      }
+      ref.read(userProvider)?.userRecordID;
+      if (ref.read(userProvider)?.userRecordID != null) {
+      } else
+        () {};
+      _invitationsLoaded = true;
+      return FutureBuilder<void>(
+        future: () async {
+          await populateUsersProviderIfDataExists(ref);
+          await loadInvitationsFromAT(ref, ref.read(userRecordIDProvider));
+        }(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Loading(); 
+          } else if (snapshot.hasError) {
+            return Text(
+                'Error: ${snapshot.error}'); 
+          } else {
+            return buildScaffold(events, selectedChipIndex);
+          }
+        },
+      );
+      // } else {
+      //   // need to make a error alert for this saying something like no internet
+      //   return Text('Error: Failed to load invitations');
+      // }
     }
   }
 
@@ -174,8 +164,8 @@ class _HomeState extends ConsumerState<InvitationsScreen> {
                                       .state = index;
                                 }
                                 await filterInvitations(index);
-                                ref.read(invitationsProvider);
-                                ref.read(filteredInvitationsProvider);
+                                ref.watch(invitationsProvider);
+                                ref.watch(filteredInvitationsProvider);
                               },
                             ),
                           ),
@@ -191,8 +181,6 @@ class _HomeState extends ConsumerState<InvitationsScreen> {
                   itemCount: events.length,
                   itemBuilder: (BuildContext context, int index) {
                     EventModel event = events[index];
-                    // print(event.eventState);
-
                     return EventInvitationTileWidget(
                       event: event,
                       invited: event.invited,
@@ -269,6 +257,22 @@ class _HomeState extends ConsumerState<InvitationsScreen> {
     'Upcoming',
     'Not Going'
   ];
+
+  List<EventModel> initializeInvitations(int index) {
+    List<EventModel> getInitialInvitations = ref.watch(invitationsProvider);
+    List<EventModel> getFilteredInvitations =
+        ref.watch(filteredInvitationsProvider);
+    List<EventModel> invitations = [];
+
+    if (getFilteredInvitations.isEmpty && index == 1) {
+      invitations = getInitialInvitations;
+    } else {
+      for (EventModel invitations in getFilteredInvitations) {
+      }
+      invitations = getFilteredInvitations;
+    }
+    return invitations;
+  }
 }
 
 // rules_version = '2';
@@ -280,3 +284,5 @@ class _HomeState extends ConsumerState<InvitationsScreen> {
 //     }
 //   }
 // }
+
+

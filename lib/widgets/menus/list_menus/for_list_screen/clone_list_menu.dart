@@ -120,6 +120,7 @@ Future<void> cloneContactsToList(String lists, ref) async {
         // addressCity: contact.addressCity,
         // addressState: contact.addressState,
         // addressCountry: contact.addressCountry,
+        // addressZip: contact.addressZip,
         lists: updatedLists,
       );
     }).toList();

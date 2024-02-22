@@ -35,7 +35,9 @@ Future<void> resetProviders(ref) async {
   // print('event provider length is now ${ref.read(eventsProvider).length}');
   ref.read(eventsProviderCheck.notifier).state = List<EventModel>.empty();
   // invitations providers
-
   ref.read(invitationsProvider.notifier).state = List<EventModel>.empty();
-  // print('restet invitlist ${ref.read(invitationsProvider).length}');
+  ref.read(filteredInvitationsProvider.notifier).state =
+      List<EventModel>.empty();
+  // General Providers
+  ref.read(selectedInvitationScreenChipIndexProvider.notifier).state = 1;
 }

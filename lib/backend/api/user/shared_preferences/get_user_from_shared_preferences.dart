@@ -42,7 +42,7 @@ Future<Users?> loadUserRecordIDFromSP() async {
 Future<void> populateUsersProviderIfDataExists(WidgetRef ref) async {
   final Users? user = await loadUserRecordIDFromSP();
   if (user != null) {
-    print('pop user rec ${user.userRecordID}');
+    // print('pop user rec ${user.userRecordID}');
     ref.read(userRecordIDProvider.notifier).state = user.userRecordID!;
   }
 }

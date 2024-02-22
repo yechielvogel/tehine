@@ -161,6 +161,12 @@ Future<void> uploadContactsToAt(
     // Call the function to save the contact for the user in the "Saved Contacts" table
 
     // Call this function when not using the airtable automation to add saved contacts from contacts table
+
+    /*
+    Refactor this to make a link in the users saved contacts field in the users 
+    table
+    */
+    // saveContactsToUsersLink();
     saveContactToSavedTable(contactRecordID, addedByUser!, listsAsString);
   } else {
     print('Failed to upload data. Status code: ${response.statusCode}');
@@ -204,6 +210,46 @@ Future<void> saveContactToSavedTable(
   }
 }
 
+/* 
+This function is a refactor of the saveContactToSavedTable
+Just one problem not sure what to do about the lists. have to figure it out.
+
+*/
+// Future<void> saveContactsToUsers(
+// String userRecordID,
+// String contactRecordID,
+// ) async {
+//   final String airtableApiKey =
+//       'patS6BGUI9SY8OcFJ.fd3c067a6f9874f1847fddf6a21815d8b54dac5ed1b0340dae533856d0c9437a';
+//   final String airtableApiEndpoint =
+//       'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Users/$userRecordID';
+
+//  final Map<String, dynamic> requestData = {
+//     'fields': {
+//       'Saved Contacts': [contactRecordID],
+      
+//       'Lists': lists,
+//     },
+//   };
+
+//   final Uri uri = Uri.parse(airtableApiEndpoint);
+//   final http.Response response = await http.post(
+//     uri,
+//     headers: {
+//       'Authorization': 'Bearer $airtableApiKey',
+//       'Content-Type': 'application/json',
+//     },
+//     body: jsonEncode(requestData),
+//   );
+
+//   if (response.statusCode == 200) {
+//     print('Contact saved in "Saved Contacts" table successfully');
+//     print(response.body);
+//   } else {
+//     print('Failed to save contact. Status code: ${response.statusCode}');
+//     print(response.body);
+//   }
+// }
 // This function updates a contacts lists in AirTable
 
 Future<void> updateContactsListsToAt(

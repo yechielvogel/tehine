@@ -103,7 +103,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                     _auth.signOut(ref);
                     setState(() {
                       showSearchBar = false;
-                      print(showSearchBar);
+                      // print(showSearchBar);
                       _auth.signOut(ref);
                     });
                   },

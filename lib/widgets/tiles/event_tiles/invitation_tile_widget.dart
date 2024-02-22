@@ -52,7 +52,8 @@ class _EventInvitationTileWidgetState
 
   @override
   Widget build(BuildContext context) {
-    ;
+    String eventIDForProvider =
+        '${widget.event.eventRecordID.toString()}${ref.watch(userRecordIDProvider)}';
 
     getIcon();
     return GestureDetector(
@@ -173,12 +174,9 @@ class _EventInvitationTileWidgetState
                                 ),
                                 elevation: 0,
                                 backgroundColor: ref
-                                            .watch(
-                                                selectedChipIndexForInvitationTileProvider(
-                                                        widget
-                                                            .event.eventRecordID
-                                                            .toString())
-                                                    .notifier)
+                                            .watch(attendingChipProvider(eventIDForProvider
+                                                    .toString())
+                                                .notifier)
                                             .state ==
                                         index
                                     ? Colors.grey[850]
@@ -201,12 +199,10 @@ class _EventInvitationTileWidgetState
                                 chipLabels[index],
                                 style: TextStyle(
                                   color: ref
-                                              .watch(
-                                                  selectedChipIndexForInvitationTileProvider(
-                                                          widget.event
-                                                              .eventRecordID
-                                                              .toString())
-                                                      .notifier)
+                                              .watch(attendingChipProvider(
+                                                      eventIDForProvider
+                                                          .toString())
+                                                  .notifier)
                                               .state ==
                                           index
                                       ? Color(0xFFF5F5F5)
@@ -228,44 +224,43 @@ class _EventInvitationTileWidgetState
   }
 
   Future<void> acceptOrDeclineInvitationLogic(index) async {
+    String eventIDForProvider =
+        '${widget.event.eventRecordID.toString()}${ref.watch(userRecordIDProvider)}';
+
     if (ref
-            .watch(selectedChipIndexForInvitationTileProvider(
-                    widget.event.eventRecordID.toString())
+            .watch(attendingChipProvider(eventIDForProvider)
                 .notifier)
             .state ==
         index) {
       if (ref
-              .watch(selectedChipIndexForInvitationTileProvider(
-                      widget.event.eventRecordID.toString())
-                  .notifier)
+              .watch(
+                  attendingChipProvider(eventIDForProvider)
+                      .notifier)
               .state ==
           0) {
         unAcceptInvitationToAt(
             widget.event.eventRecordID, ref.read(userRecordIDProvider));
       } else if (ref
-              .watch(selectedChipIndexForInvitationTileProvider(
-                      widget.event.eventRecordID.toString())
-                  .notifier)
+              .watch(
+                  attendingChipProvider(eventIDForProvider)
+                      .notifier)
               .state ==
           1) {
         unDeclineInvitationToAt(
             widget.event.eventRecordID, ref.read(userRecordIDProvider));
       }
       ref
-          .watch(selectedChipIndexForInvitationTileProvider(
-                  widget.event.eventRecordID.toString())
+          .watch(attendingChipProvider(eventIDForProvider)
               .notifier)
           .state = null;
       widget.event.didAccept = null;
     } else
       ref
-          .watch(selectedChipIndexForInvitationTileProvider(
-                  widget.event.eventRecordID.toString())
+          .watch(attendingChipProvider(eventIDForProvider)
               .notifier)
           .state = index;
     if (ref
-            .watch(selectedChipIndexForInvitationTileProvider(
-                    widget.event.eventRecordID.toString())
+            .watch(attendingChipProvider(eventIDForProvider)
                 .notifier)
             .state ==
         0) {
@@ -277,8 +272,7 @@ class _EventInvitationTileWidgetState
       // Not sure why the below was there.
       // widget.event.didAccept = null;
     } else if (ref
-            .watch(selectedChipIndexForInvitationTileProvider(
-                    widget.event.eventRecordID.toString())
+            .watch(attendingChipProvider(eventIDForProvider)
                 .notifier)
             .state ==
         1) {

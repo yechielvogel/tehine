@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final loadingProvider = StateProvider<bool>(
@@ -41,7 +40,7 @@ final offsetProvider = StateProvider<String>(
 );
 
 
-final selectedChipIndexForInvitationTileProvider = StateProvider.family<int?, String>((ref, tileId) => null);
+final attendingChipProvider = StateProvider.family<int?, String>((ref, tileId) => null);
 
 final selectedInvitationScreenChipIndexProvider =
-    StateProvider<int>((ref) => 1);
+    StateProvider<int>((ref) => 1);    

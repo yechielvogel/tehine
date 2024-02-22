@@ -21,17 +21,13 @@ the data down
 Future<void> getAllEventsDataFromAtOnStart(BuildContext context) async {
   final ref = ProviderScope.containerOf(context);
   ref.refresh(eventsFromSharedPrefProvider);
-  // print('events length: ${ref.read(eventsProvider).length}');    
-
-  // print("Line 82 ${ref.read(contactsFromSharedPrefProvider)}");
   bool isThereAnyDataOnDevice = false;
   final events = ref.read(eventsProvider);
   if (events.isNotEmpty) {
     isThereAnyDataOnDevice = true;
-    // print('Line 87 there is event data on device');
   }
   if (!isThereAnyDataOnDevice) {
-    // print('Line 90 there is no event data on device');
+    
     // search airtable
     try {
       // should put this back when finished making invitations
@@ -74,8 +70,6 @@ Future<List<EventModel>> loadEventsFromAT(userFirebaseID, ref) async {
     if (response.statusCode == 200) {
       // Parse JSON response
       final Map<String, dynamic> eventData = json.decode(response.body);
-      // print('1 ${eventData}');
-
       final List<dynamic> records = eventData['records'];
       for (final record in records) {
         final Map<String, dynamic> fields = record['fields'];
@@ -110,7 +104,6 @@ Future<List<EventModel>> loadEventsFromAT(userFirebaseID, ref) async {
         events.add(event);
       }
 
-      // print('got Events');
       ref.read(eventsProvider.notifier).state = events;
       // saveEventsToSP(events);
     } else {
@@ -118,7 +111,6 @@ Future<List<EventModel>> loadEventsFromAT(userFirebaseID, ref) async {
       print(response.body);
     }
 
-    // print('Number of events fetched: ${events.length}');
     saveEventsToSP(events);
     ref.refresh(eventsFromSharedPrefProvider);
   } catch (e) {
@@ -295,13 +287,9 @@ Future<List<EventModel>> loadEventAttendingFromAT(
             pendingList.add(name);
           }
         }
-        // print('invited list $invitedList');
-        // print('attending list $attendingList');
-        // print('invited list $invitedList');
-        // print('notAttending list $notAttendingList');
-        // print('pending list $pendingList');
 
-        final EventModel event = EventModel(
+
+        final EventModel event = EventModel(   
           eventRecordID: eventData['id'],
           eventName: fields['Event Name'] ?? '',
           eventDescription: fields['Event Description'] ?? '',
@@ -352,12 +340,6 @@ Future<List<EventModel>> loadEventAttendingFromAT(
         print('Failed to fetch event with ID: $eventId');
       }
     }
-
-    // print(
-    //     'invitations with in the function ${ref.read(invitationsProvider).length}');
-    // Do something with the populated events list
-    // For example, you could pass it to another function or store it in a database
-    // print('Fetched ${events.length} events.');
   } catch (e) {
     return events;
 
@@ -373,8 +355,11 @@ Future<List<String>> loadInvitationsFromAT(ref, String? userRecordID) async {
 
   final String airtableApiKey =
       'patS6BGUI9SY8OcFJ.fd3c067a6f9874f1847fddf6a21815d8b54dac5ed1b0340dae533856d0c9437a';
+
+  // Construct the Airtable API endpoint using the userRecordID
   String airtableApiEndpoint =
       'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Users/$userRecordID';
+
   try {
     final Uri uri = Uri.parse('$airtableApiEndpoint');
 
@@ -388,18 +373,23 @@ Future<List<String>> loadInvitationsFromAT(ref, String? userRecordID) async {
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
-      // print('response data $responseData');
-      // Access the fields directly
-      final dynamic eventRecordIdField =
-          responseData['fields']['Event Record ID (from Events Invitations)'];
 
-      // Check if the field is a list of strings
-      if (eventRecordIdField is List<dynamic>) {
-        // Convert each item in the list to a string and add it to the eventInvitations list
-        eventInvitations
-            .addAll(eventRecordIdField.map((item) => item.toString()));
-      } else {
-        print('Event Record ID field is not a list of strings');
+      // Process the user record data
+      if (responseData.containsKey('fields') &&
+          responseData['fields'] != null) {
+        var fields = responseData['fields'];
+
+        if (fields.containsKey('Event Record ID (from Invitations)') &&
+            fields['Event Record ID (from Invitations)'] != null) {
+          var eventRecordIdField = fields['Event Record ID (from Invitations)'];
+
+          if (eventRecordIdField is List<dynamic>?) {
+            eventInvitations
+                .addAll(eventRecordIdField!.map((item) => item.toString()));
+          } else if (eventRecordIdField.runtimeType == String) {
+            eventInvitations.add(eventRecordIdField);
+          }
+        }
       }
 
       await getInvitationsData(ref, eventInvitations, userRecordID);
@@ -408,7 +398,7 @@ Future<List<String>> loadInvitationsFromAT(ref, String? userRecordID) async {
       print(response.body);
     }
   } catch (e) {
-    print('Error: $e');
+    print('Error:: $e');
   }
 
   return eventInvitations;
@@ -462,7 +452,6 @@ Future<void> getInvitationsData(
             eventData['fields']['User Record ID (from Attending)'];
         if (currentAttendees != null) {
           if (currentAttendees is List<dynamic>?) {
-            // print(currentAttendees);
             if (currentAttendees!.contains(userRecordID)) {
               didAccept = true;
             }
@@ -472,8 +461,7 @@ Future<void> getInvitationsData(
             }
           }
         }
-        // print(userRecordID);
-        // print(didAccept);
+
         // Extract event fields
         final String? eventName = eventData['fields']['Event Name'];
         final String? eventDescription =
@@ -506,13 +494,11 @@ Future<void> getInvitationsData(
           lists: lists,
           didAccept: didAccept,
         );
-        // print('got Events');
         events.add(event);
-
-        ref
-            .read(selectedChipIndexForInvitationTileProvider(eventId.toString())
-                .notifier)
-            .state = didAccept == null ? null : (didAccept == true ? 0 : 1);
+        String eventIDForProvider =
+            '${eventId.toString()}${ref.watch(userRecordIDProvider)}';
+        ref.read(attendingChipProvider(eventIDForProvider).notifier).state =
+            didAccept == null ? null : (didAccept == true ? 0 : 1);
         didAccept = null;
         // saveEventsToSP(events);
       } else {
@@ -521,8 +507,7 @@ Future<void> getInvitationsData(
       }
     }
     ref.read(invitationsProvider.notifier).state = events;
-    // print(
-    //     'invitations with in the function ${ref.read(invitationsProvider).length}');
+    // ref.watch(filteredInvitationsProvider.notifier).state = events;
     // Do something with the populated events list
     // For example, you could pass it to another function or store it in a database
     // print('Fetched ${events.length} events.');

@@ -9,7 +9,7 @@ import '../shared_preferences/save_user_to_shared_preferences.dart';
 
 // This gets the user record id when a user logs in on a device
 
-Future<void> getUserRecordIDFromAT(
+Future<String> getUserRecordIDFromAT(
   ref,
   String? userFirebaseUID,
 ) async {
@@ -17,6 +17,7 @@ Future<void> getUserRecordIDFromAT(
       'patS6BGUI9SY8OcFJ.fd3c067a6f9874f1847fddf6a21815d8b54dac5ed1b0340dae533856d0c9437a';
   final String airtableApiEndpoint =
       'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Users?filterByFormula={Firebase UID}="${userFirebaseUID}"';
+  String _userRecordId = '';
   try {
     final Uri uri = Uri.parse('$airtableApiEndpoint');
 
@@ -44,7 +45,7 @@ Future<void> getUserRecordIDFromAT(
           email: fields['Email'] ?? '',
           phoneNumber: fields['Phone Number'] ?? '',
         );
-
+        _userRecordId = userRecordID;
         await saveUserToSP(user);
         // could only call this if calling this function from the invitations tab.
         ref.read(userRecordIDProvider.notifier).state = userRecordID;
@@ -55,4 +56,5 @@ Future<void> getUserRecordIDFromAT(
   } catch (e) {
     print('Error:: $e');
   }
+  return _userRecordId;
 }

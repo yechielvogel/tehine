@@ -168,8 +168,8 @@ Future<void> updateUserDeviceInfoToAt(
         user.email = email;
         user.phoneNumber = phoneNumber;
         saveUserToSP(user);
-        print('user rec id from updateUserDeviceInfoToAt ${userRecordID}');
-        print('user name from updateUserDeviceInfoToAt ${firstName}');
+        // print('user rec id from updateUserDeviceInfoToAt ${userRecordID}');
+        // print('user name from updateUserDeviceInfoToAt ${firstName}');
       }
       if (records.isNotEmpty) {
         final String recordId = records[0]['id'];
@@ -244,6 +244,6 @@ Future<void> uploadUserLoginRecordsToAt(String? uid, String? email,
     // print(response.body);
   } else {
     print('Failed to upload data. Status code: ${response.statusCode}');
-    print(response.body);
+    // print(response.body);
   }
 }

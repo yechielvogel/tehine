@@ -64,20 +64,25 @@ class AuthService {
         email: email,
         password: password,
       );
+      // this might work should try it.
+      // String? uid = result.user?.uid;
+      // await getUserRecordIDFromAT(ref, uid);
       User? user = result.user;
-      print(user);
+      // print(user);
 
       // send login details to airtable
       // Problem here with the order of getting the data
       // await getAllDataFromAtOnStart(context);
+
       await updateUserDeviceInfoToAt(user?.uid, device);
-      print('before calling func ${user?.uid}');
+
       /* 
       instead of calling uploadUserLoginRecordsToAt here we are calling in the 
       invitations tab (the first tap) 
       so we can set the ref.read(userRecordIdProvider) 
       */
       // await getUserRecordIDFromAT(ref, user?.uid);
+
       uploadUserLoginRecordsToAt(user?.uid, user?.email, user?.displayName,
           DateTime.now().toString(), device, globals.version);
 
