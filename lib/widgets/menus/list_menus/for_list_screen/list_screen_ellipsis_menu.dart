@@ -122,11 +122,11 @@ void listScreenEllipsisMenu(BuildContext context, ref) {
               lastName: contact.lastName,
               email: contact.email,
               phoneNumber: contact.phoneNumber,
-              // addressStreet: contact.addressStreet,
-              // addressCity: contact.addressCity,
-              // addressState: contact.addressState,
-              // addressCountry: contact.addressCountry,
-              // addressZip: contact.addressZip,
+              addressStreet: contact.addressStreet,
+              addressCity: contact.addressCity,
+              addressState: contact.addressState,
+              addressCountry: contact.addressCountry,
+              addressZip: contact.addressZip,
               lists: [...contact.lists]
                 ..remove('${ref.read(selectedListProvider)}'),
             );
@@ -139,7 +139,7 @@ void listScreenEllipsisMenu(BuildContext context, ref) {
               updatedContact.lastName,
               updatedContact.phoneNumber,
               updatedContact.email,
-              updatedContact.lists,              
+              updatedContact.lists,
               ref.read(userStreamProvider).value!.uid,
             );
 
@@ -197,11 +197,11 @@ void listScreenEllipsisMenu(BuildContext context, ref) {
             email: contact.email,
             phoneNumber: contact.phoneNumber,
             lists: contact.lists,
-              //       addressStreet: contact.addressStreet,
-              // addressCity: contact.addressCity,
-              // addressState: contact.addressState,
-              // addressCountry: contact.addressCountry,
-              // addressZip: contact.addressZip,
+            addressStreet: contact.addressStreet,
+            addressCity: contact.addressCity,
+            addressState: contact.addressState,
+            addressCountry: contact.addressCountry,
+            addressZip: contact.addressZip,
           );
           print('this is the type${contacts.runtimeType}');
           await deleteContactsFromUserAccountToAt(
@@ -316,13 +316,13 @@ void selectableListScreenEllipsisMenu(BuildContext context, WidgetRef ref) {
             lastName: contact.lastName,
             email: contact.email,
             phoneNumber: contact.phoneNumber,
-            // addressStreet: contact.addressStreet,
-            // addressCity: contact.addressCity,
-            // addressState: contact.addressState,
-            // addressCountry: contact.addressCountry,
-            // addressZip: contact.addressZip,
-            // Need to add addresses 
-            lists: [...updatedLists, value],   
+            addressStreet: contact.addressStreet,
+            addressCity: contact.addressCity,
+            addressState: contact.addressState,
+            addressCountry: contact.addressCountry,
+            addressZip: contact.addressZip,
+            // Need to add addresses
+            lists: [...updatedLists, value],
           );
           print(updatedContact.lists);
           String listsAsString = updatedContact.lists!.join(', ');

@@ -156,7 +156,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                               ref.read(isSelectable.notifier).state = false;
                             },
                             child: Text(
-                              'Cancel',
+                              'Done',
                               style: TextStyle(color: Color(0xFFF5F5F5)),
                             ),
                           ),

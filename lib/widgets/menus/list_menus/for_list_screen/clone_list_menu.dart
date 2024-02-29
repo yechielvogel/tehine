@@ -116,11 +116,11 @@ Future<void> cloneContactsToList(String lists, ref) async {
         lastName: contact.lastName,
         email: contact.email,
         phoneNumber: contact.phoneNumber,
-        // addressStreet: contact.addressStreet,
-        // addressCity: contact.addressCity,
-        // addressState: contact.addressState,
-        // addressCountry: contact.addressCountry,
-        // addressZip: contact.addressZip,
+        addressStreet: contact.addressStreet,
+        addressCity: contact.addressCity,
+        addressState: contact.addressState,
+        addressCountry: contact.addressCountry,
+        addressZip: contact.addressZip,
         lists: updatedLists,
       );
     }).toList();

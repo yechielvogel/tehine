@@ -14,20 +14,19 @@ final contactsProvider = StateProvider<List<ContactModel>>((ref) {
   final futureContacts = ref.watch(contactsFromSharedPrefProvider);
   return futureContacts.value ?? [];
 });
-   
-final contactsProviderCheck = StateProvider<List<ContactModel>>((ref)  => []);
+
+final contactsProviderCheck = StateProvider<List<ContactModel>>((ref) => []);
 
 final selectedContact = StateProvider<String>(
   (ref) => '',
 );
 
-
 final isSelectable = StateProvider<bool>(
-  (ref) => false,    
+  (ref) => false,
 );
 
 final selectedContacts = StateProvider<List<ContactModel>>(
-  (ref) => [],     
+  (ref) => [],
 );
 
 final filteredContactsProvider = StateProvider<List<ContactModel>>((ref) {
@@ -51,8 +50,11 @@ final filteredContactsProvider = StateProvider<List<ContactModel>>((ref) {
   return filteredContacts;
 });
 
+// This is to display all contacts for adding a contact.    
 
-
+final allContactsForAddingProvider = StateProvider<List<ContactModel>>(
+  (ref) => [],
+);
 
 final contactWidgetsProvider = StateProvider<List<Widget>>((ref) => []);
 

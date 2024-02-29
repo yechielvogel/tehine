@@ -9,7 +9,7 @@ import '../shared_preferences/save_contacts_to_shared_preferences.dart';
 
 // This function gets all contacts from phone
 
-Future<void> uploadContactsFromDevice(String? uid, ref) async {
+Future<void> uploadContactsFromDevice(String? uid, ref, bool shouldSave) async {
   Iterable<Contact> contacts = await ContactsService.getContacts(
     withThumbnails: true,
   );
@@ -80,25 +80,35 @@ Future<void> uploadContactsFromDevice(String? uid, ref) async {
     automation in airtable that adds all the contacts to the contacts table. this 
     will save allot of time when uploading contacts.
     */
-    saveContactsToSP(processedContacts);
-    await uploadContactsToAt(
-      null,
-      firstName,
-      lastName,
-      phoneNumber,
-      email,
-      fullAddress,
-      street,
-      city,
-      state,
-      zip,
-      country,
-      // address,
-      // contactProfilePic,
-      lists,
-      uid,
-    );
-    await ref.refresh(contactsFromSharedPrefProvider);
+
+    /* 
+    The if statement is so i could use the function also for adding a specific contact 
+    So i don't have to save all the contacts to device rather just display them all 
+    and separate function to save that contact. not sure if this is the right way though.
+    */
+    if (shouldSave == true) {
+      saveContactsToSP(processedContacts);
+      await uploadContactsToAt(
+        null,
+        firstName,
+        lastName,
+        phoneNumber,
+        email,
+        fullAddress,
+        street,
+        city,
+        state,
+        zip,
+        country,
+        // address,
+        // contactProfilePic,
+        lists,
+        uid,
+      );
+      await ref.refresh(contactsFromSharedPrefProvider);
+    } else {
+      ref.read(allContactsForAddingProvider.notifier).state = processedContacts;
+    }
   }
 }
 
@@ -189,7 +199,7 @@ Future<void> saveContactToSavedTable(
       'Saved By User': savedByID,
       'Lists': lists,
     },
-  };
+  };      
 
   final Uri uri = Uri.parse(airtableApiEndpoint);
   final http.Response response = await http.post(
@@ -227,7 +237,7 @@ Just one problem not sure what to do about the lists. have to figure it out.
 //  final Map<String, dynamic> requestData = {
 //     'fields': {
 //       'Saved Contacts': [contactRecordID],
-      
+
 //       'Lists': lists,
 //     },
 //   };

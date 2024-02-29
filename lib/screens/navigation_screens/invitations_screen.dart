@@ -191,7 +191,7 @@ class _HomeState extends ConsumerState<InvitationsScreen> {
                     );
                   },
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 10),       
               ],
             ),
           );

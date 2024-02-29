@@ -28,16 +28,16 @@ final listScreenAddMenuProvider = Provider<List<PopupMenuEntry<dynamic>>>(
       value: 1,
     ),
     PopupMenuItem(
-      child: Text('Add Contact'),
+      child: Text('Add Contacts'),
       value: 2,
     ),
     PopupMenuItem(
       child: Text('Import Contacts From Device'),
-      value: 2,
+      value: 3,
     ),
     PopupMenuItem(
       child: Text('Import Contacts From CSV File'),
-      value: 2,
+      value: 4,
     ),
   ],
 );
