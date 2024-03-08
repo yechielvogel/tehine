@@ -18,10 +18,16 @@ class _CreateListFormState extends ConsumerState<CreateListForm> {
   String? selectedName;
 
   String? nameValidator(String? val) {
+    List _lists = [];
+    for (var list in ref.read(listProvider)) {
+      _lists.add(list);
+    }
     if (val!.isEmpty) {
       return 'Enter Name';
     } else if (val.contains(',')) {
       return 'Name should not contain a comma';
+    } else if (_lists.contains(val)) {
+      return 'Please use a unique name';
     } else {
       return null; // Validation passed
     }

@@ -67,7 +67,7 @@ class AuthService {
       // this might work should try it.
       // String? uid = result.user?.uid;
       // await getUserRecordIDFromAT(ref, uid);
-      User? user = result.user;
+      User? user = result.user;    
       // print(user);
 
       // send login details to airtable

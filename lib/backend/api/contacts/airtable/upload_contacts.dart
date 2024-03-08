@@ -13,7 +13,7 @@ Future<void> uploadContactsFromDevice(String? uid, ref, bool shouldSave) async {
   Iterable<Contact> contacts = await ContactsService.getContacts(
     withThumbnails: true,
   );
-  List<Contact> contactList = contacts.toList();
+  List<Contact> contactList = contacts.toList();   
   List<ContactModel> processedContacts = [];
   for (var contact in contactList) {
     String firstName = contact.givenName ?? '';
@@ -141,7 +141,7 @@ Future<void> uploadContactsToAt(
     'Address': fullAddress,
     'Address Street': street,
     'Address City': city,
-    'Address State': state,
+    'Address State': state,      
     'Address Zip': zip,
     'Address Country': country,
     'Added By User': addedByUser,

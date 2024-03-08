@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
+// import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tehine/providers/user_providers.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_sms/flutter_sms.dart';
+// import 'package:url_launcher/url_launcher.dart';
+// import 'package:flutter_sms/flutter_sms.dart';
 
 import '../../backend/api/events/airtable/upload_events.dart';
 import '../../models/contact_model.dart';
@@ -60,7 +60,7 @@ class _SendInvitationWidgetState extends ConsumerState<SendInvitationWidget> {
                       await sendTehineInvitations(ref);
                       await _getAttachment(ref);
                       // await sendTehineInvitations(ref);
-                      await sendEmail();
+                      // await sendEmail();
                       // await sendEmail();
                     },
                     child: Icon(
@@ -79,7 +79,7 @@ class _SendInvitationWidgetState extends ConsumerState<SendInvitationWidget> {
                     onPressed: () async {
                       await _getAllContactsPhone(ref);
                       await _getAttachment(ref);
-                      await _sendSMS();
+                      // await _sendSMS();
                       await sendTehineInvitations(ref);
                     },
                     child: Icon(
@@ -117,54 +117,54 @@ class _SendInvitationWidgetState extends ConsumerState<SendInvitationWidget> {
   }
 
   List<String> phoneNumbers = ["+16464206057"];
-  // List<String> phoneNumbers = ["+447709004207", "+16464206057"];
-  Future<void> sendWhatsApp() async {
-    // String url = "whatsapp://send?phone=+447709004207&text=test";
-    String message = 'test';
-    String phones = phoneNumbers.map((phoneNumber) => "$phoneNumber").join(",");
 
-    String url =
-        "whatsapp://send?phone=$phones&text=${Uri.encodeFull(message)}";
+  // Future<void> sendWhatsApp() async {
+  //   // String url = "whatsapp://send?phone=+447709004207&text=test";
+  //   String message = 'test';
+  //   String phones = phoneNumbers.map((phoneNumber) => "$phoneNumber").join(",");
 
-    launchUrl(Uri.parse(url));
-  }
+  //   String url =
+  //       "whatsapp://send?phone=$phones&text=${Uri.encodeFull(message)}";
 
-  Future<void> _sendSMS() async {
-    String message = 'Please join us for the...';
-    List<String> contacts = recipients;
-    String _result = await sendSMS(message: message, recipients: contacts)
-        .catchError((onError) {
-      print(onError);
-    });
-    print(_result);
-  }
+  //   launchUrl(Uri.parse(url));
+  // }
 
-  bool isHTML = false;
-  final _subjectController = TextEditingController(text: 'The subject');
+  // Future<void> _sendSMS() async {
+  //   String message = 'Please join us for the...';
+  //   List<String> contacts = recipients;
+  //   String _result = await sendSMS(message: message, recipients: contacts)
+  //       .catchError((onError) {
+  //     print(onError);
+  //   });
+  //   print(_result);
+  // }
 
-  final _bodyController = TextEditingController(
-    text: 'Mail body.',
-  );
+  // bool isHTML = false;
+  // final _subjectController = TextEditingController(text: 'The subject');
 
-  Future<void> sendEmail() async {
-    final Email email = Email(
-      body: 'Please join us for the wedding of...',
-      subject: ref.read(eventNameProvider),
-      recipients: [ref.read(userEmailProvider)],
-      // cc: ['cc@example.com'],
-      bcc: recipients,
-      attachmentPaths: attachments,
-      isHTML: false,
-    );
+  // final _bodyController = TextEditingController(
+  //   text: 'Mail body.',
+  // );
 
-    try {
-      await FlutterEmailSender.send(email);
-    } catch (error) {
-      print('Error sending email: $error');
-      // show dialog saying you don't have a default email setup on your device
-      // maybe add click here to add one. (with a link)
-    }
-  }
+  // Future<void> sendEmail() async {
+  //   final Email email = Email(
+  //     body: 'Please join us for the wedding of...',
+  //     subject: ref.read(eventNameProvider),
+  //     recipients: [ref.read(userEmailProvider)],
+  //     // cc: ['cc@example.com'],
+  //     bcc: recipients,
+  //     attachmentPaths: attachments,
+  //     isHTML: false,
+  //   );
+
+  //   try {
+  //     await FlutterEmailSender.send(email);
+  //   } catch (error) {
+  //     print('Error sending email: $error');
+  //     // show dialog saying you don't have a default email setup on your device
+  //     // maybe add click here to add one. (with a link)
+  //   }
+  // }
 
   Future<void> _getAttachment(ref) async {
     EventModel event = ref.read(selectedEventProvider);

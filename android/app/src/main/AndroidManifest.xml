@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <!-- <uses-permission android:name="android.permission.SEND_SMS"/> -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />  
     <uses-permission android:name="android.permission.WRITE_CONTACTS" /> 
     <uses-permission android:name="android.permission.CAMERA" />
@@ -11,14 +11,14 @@
         android:label="Tehine"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- Add the receiver and intent-filter here -->
+        <receiver android:name="com.vanethos.myappname.NotificationReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.intent.action.NOTIFICATION_REPEATER" />
+            </intent-filter>
+        </receiver>
         
-        <!-- Add the <queries> element here -->
-        <queries>
-            <intent>
-                <action android:name="android.intent.action.SENDTO" />
-                <data android:scheme="mailto" />
-            </intent>
-        </queries>
+
         
         <activity
             android:name=".MainActivity"

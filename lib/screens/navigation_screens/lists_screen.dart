@@ -303,8 +303,8 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
     ref.read(filteredContactsProvider);
 
     if (selected) {
-      ref.read(selectedListProvider.notifier).state =
-          ref.watch(listProvider)[index];
+      ref.read(selectedListProvider.notifier).state =    
+      ref.watch(listProvider)[index];
       ref.watch(selectedListScreenChipIndexProvider.state).state = index;
       print(ref.read(selectedListProvider));
     }

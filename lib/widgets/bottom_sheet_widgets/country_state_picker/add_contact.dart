@@ -207,13 +207,14 @@ class _AddContactWidgetState extends ConsumerState<AddContactWidget> {
         addressCity: contact.addressCity,
         addressState: contact.addressState,
         addressCountry: contact.addressCountry,
-        addressZip: contact.addressZip,
+        addressZip: contact.addressZip,   
         // Need to add addresses
         lists: ['All'],
       );
       String listsAsString = newContact.lists!.join(', ');
       processedContacts = ref.read(contactsProvider);
       processedContacts.add(newContact);
+      // Some reason not saveing addresses to sp
       saveContactsToSP(processedContacts);
       uploadContactsToAt(
           null,
