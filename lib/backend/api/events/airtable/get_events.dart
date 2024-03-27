@@ -348,7 +348,7 @@ Future<List<EventModel>> loadEventAttendingFromAT(
 
 // This gets invitations record ids
 
-Future<List<String>> loadInvitationsFromAT(ref, String? userRecordID) async {
+Future<List<String>?> loadInvitationsFromAT(ref, String? userRecordID) async {
   List<String> eventInvitations = [];
 
   final String airtableApiKey =
@@ -398,10 +398,12 @@ Future<List<String>> loadInvitationsFromAT(ref, String? userRecordID) async {
   } catch (e) {
     print('Error:: $e');
   }
+if (eventInvitations.isEmpty) {
+    return null; // Return null if there are no invitations to load
+  }
 
   return eventInvitations;
 }
-
 // get invitations data
 
 Future<void> getInvitationsData(

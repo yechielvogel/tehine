@@ -13,7 +13,6 @@ import '../../providers/general_providers.dart';
 import '../../shared/style.dart';
 import '../../widgets/tiles/event_tiles/invitation_tile_widget.dart';
 
-// Should move this to a provider file.
 
 class InvitationsScreen extends ConsumerStatefulWidget {
   bool showSearchBar = true;
@@ -35,16 +34,18 @@ class _HomeState extends ConsumerState<InvitationsScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {});
   }
 
-  bool _invitationsLoaded = false;
+  bool invitationsLoaded = false;
 
 // Should refactor this to clean up
+
   @override
   Widget build(BuildContext context) {
     final selectedChipIndex =
         ref.read(selectedInvitationScreenChipIndexProvider);
 
     List<EventModel> events = initializeInvitations(selectedChipIndex);
-    if (ref.watch(invitationsProvider).isNotEmpty) {
+    if (ref.watch(invitationsProvider).isNotEmpty ||
+        invitationsLoaded == true) {
       ref.read(userProvider)?.userRecordID;
       return buildScaffold(events, selectedChipIndex);
     } else {
@@ -52,14 +53,17 @@ class _HomeState extends ConsumerState<InvitationsScreen> {
       if (ref.read(userProvider)?.userRecordID != null) {
       } else
         () {};
-      _invitationsLoaded = true;
+
       return FutureBuilder<void>(
         future: () async {
           await populateUsersProviderIfDataExists(ref);
           await loadInvitationsFromAT(ref, ref.read(userRecordIDProvider));
+          print('loaded invitations');
+          invitationsLoaded = true;
+          print(invitationsLoaded);
         }(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          if (invitationsLoaded == false) {
             return Loading();
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
@@ -286,6 +290,14 @@ class _HomeState extends ConsumerState<InvitationsScreen> {
     }
     return invitations;
   }
+
+  Future<void> _loadData() async {
+    await populateUsersProviderIfDataExists(ref);
+    await loadInvitationsFromAT(ref, ref.read(userRecordIDProvider));
+    print('Loaded invitations');
+    invitationsLoaded = false;
+    print(invitationsLoaded);
+  }
 }
 
 // rules_version = '2';
@@ -297,5 +309,3 @@ class _HomeState extends ConsumerState<InvitationsScreen> {
 //     }
 //   }
 // }
-
-
