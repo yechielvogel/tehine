@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tehine/providers/list_providers.dart';
 
 import '../../../backend/api/contacts/airtable/upload_contacts.dart';
 import '../../../models/contact_model.dart';
@@ -60,107 +61,177 @@ class _ContactTileWidgetState extends ConsumerState<ContactTileWidget> {
           //   axis: _directionIsXAxis ? Axis.horizontal : Axis.vertical,
           //   moveAnimation: _moveAnimation,
           // ),
-          child: Dismissible(
-            direction: DismissDirection.endToStart,
-            key: Key(widget.contact.firstName),
-            onDismissed: (direction) async {
-              if (direction == DismissDirection.endToStart) {
-                deleteContactFromSP(widget.contact);
-                deleteContactsFromUserAccountToAt(
-                    ref.read(userStreamProvider).value!.uid,
-                    widget.contact.firstName,
-                    widget.contact.lastName,
-                    widget.contact.phoneNumber,
-                    widget.contact.email,
-                    widget.contact.lists,
-                    '');
-                ref.refresh(contactsFromSharedPrefProvider);
-                ref.read(contactsProvider);
-              }
-            },
-            background: Container(
-              alignment: Alignment.centerRight,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(0),
-                color: Colors.red,
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(right: 20),
-                child: Icon(
-                  Icons.delete,
-                  color: Colors.grey[850],
-                ),
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: seaSault,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: Container(
-                        child: const Icon(Icons.account_circle_rounded,
-                            size: 50, color: Color(0xFFBDBDBD)),
+
+          child: ref.watch(selectedListProvider) != 'Tehine'
+              ? Dismissible(
+                  direction: DismissDirection.endToStart,
+                  key: Key(widget.contact.firstName),
+                  onDismissed: (direction) async {
+                    if (direction == DismissDirection.endToStart) {
+                      await deleteContactsFromUserAccountToAt(
+                          ref.read(userStreamProvider).value!.uid,
+                          widget.contact.firstName,
+                          widget.contact.lastName,
+                          widget.contact.phoneNumber,
+                          widget.contact.email,
+                          widget.contact.lists,
+                          '');
+                      await deleteContactFromSP(widget.contact);
+                      ref.refresh(contactsFromSharedPrefProvider);
+                      ref.read(contactsProvider);
+                    }
+                  },
+                  background: Container(
+                    alignment: Alignment.centerRight,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(0),
+                      color: Colors.red,
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 20),
+                      child: Icon(
+                        Icons.delete,
+                        color: Colors.grey[850],
                       ),
                     ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: seaSault,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(
-                              left: 20,
-                            ),
-                            child: ClipRRect(
-                              child: Container(
-                                child: Text(
-                                  widget.contact.firstName +
-                                      ' ' +
-                                      widget.contact.lastName,
-                                  style: TextStyle(
-                                    color: Colors.grey[850],
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
+                            padding: const EdgeInsets.only(left: 5),
+                            child: Container(
+                              child: const Icon(Icons.account_circle_rounded,
+                                  size: 50, color: Color(0xFFBDBDBD)),
                             ),
                           ),
-
-                          // SizedBox(
-                          //   height: 3,
-                          // ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              // bottom: 12,
-                              left: 20,
-                            ),
-                            child: Container(
-                              // height: 15,
-                              child: widget.contact.addressStreet != null
-                                  ? Text(
-                                      widget.contact.addressStreet!,
-                                      style: TextStyle(
-                                        color: Colors.grey[600],
-                                        fontSize: 13,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 20,
+                                  ),
+                                  child: ClipRRect(
+                                    child: Container(
+                                      child: Text(
+                                        widget.contact.firstName +
+                                            ' ' +
+                                            widget.contact.lastName,
+                                        style: TextStyle(
+                                          color: Colors.grey[850],
+                                          fontSize: 16,
+                                        ),
                                       ),
-                                    )
-                                  : Container(),
+                                    ),
+                                  ),
+                                ),
+
+                                // SizedBox(
+                                //   height: 3,
+                                // ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    // bottom: 12,
+                                    left: 20,
+                                  ),
+                                  child: Container(
+                                    // height: 15,
+                                    child: widget.contact.addressStreet != null
+                                        ? Text(
+                                            widget.contact.addressStreet!,
+                                            style: TextStyle(
+                                              color: Colors.grey[600],
+                                              fontSize: 13,
+                                            ),
+                                          )
+                                        : Container(),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ],
+                  ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: seaSault,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Container(
+                            child: const Icon(Icons.account_circle_rounded,
+                                size: 50, color: Color(0xFFBDBDBD)),
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 20,
+                                ),
+                                child: ClipRRect(
+                                  child: Container(
+                                    child: Text(
+                                      widget.contact.firstName +
+                                          ' ' +
+                                          widget.contact.lastName,
+                                      style: TextStyle(
+                                        color: Colors.grey[850],
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              // SizedBox(
+                              //   height: 3,
+                              // ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  // bottom: 12,
+                                  left: 20,
+                                ),
+                                child: Container(
+                                  // height: 15,
+                                  child: widget.contact.addressStreet != null
+                                      ? Text(
+                                          widget.contact.addressStreet!,
+                                          style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 13,
+                                          ),
+                                        )
+                                      : Container(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
         ),
       ),
     );

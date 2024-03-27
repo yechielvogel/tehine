@@ -202,7 +202,7 @@ void listScreenEllipsisMenu(BuildContext context, ref) {
             addressCity: contact.addressCity,
             addressState: contact.addressState,
             addressCountry: contact.addressCountry,
-            addressZip: contact.addressZip,
+            addressZip: contact.addressZip,   
           );
           print('this is the type${contacts.runtimeType}');
           await deleteContactsFromUserAccountToAt(
