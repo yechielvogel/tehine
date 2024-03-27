@@ -27,10 +27,16 @@ final listScreenAddMenuProvider = Provider<List<PopupMenuEntry<dynamic>>>(
       child: Text('Create List'),
       value: 1,
     ),
-    PopupMenuItem(
-      child: Text('Add Contacts'),
-      value: 2,
-    ),
+    if (ref.watch(selectedListProvider).toString() == 'All')
+      PopupMenuItem(
+        child: Text('Add Contacts'),
+        value: 2,
+      ),
+       if (ref.watch(selectedListProvider).toString() != 'All' && ref.watch(selectedListProvider).toString() != 'Tehine')
+        PopupMenuItem(
+        child: Text('Add Contacts'),
+        value: 5,
+      ),
     PopupMenuItem(
       child: Text('Import Contacts From Device'),
       value: 3,
@@ -64,7 +70,8 @@ final listProvider = StateProvider<List<String>>((ref) {
 
 final eventListFromSharedPreferenceProvider = FutureProvider<List<String>>(
   (ref) async {
-    return await loadEventListsFromSP(ref.read(selectedEventNameProvider)) ?? [];
+    return await loadEventListsFromSP(ref.read(selectedEventNameProvider)) ??
+        [];
   },
 );
 
@@ -72,5 +79,3 @@ final eventListProvider = StateProvider<List<String>>((ref) {
   final futureList = ref.watch(eventListFromSharedPreferenceProvider);
   return futureList.value ?? [];
 });
-
-

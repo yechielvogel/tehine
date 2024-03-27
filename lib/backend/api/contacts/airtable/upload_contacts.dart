@@ -13,8 +13,10 @@ Future<void> uploadContactsFromDevice(String? uid, ref, bool shouldSave) async {
   Iterable<Contact> contacts = await ContactsService.getContacts(
     withThumbnails: true,
   );
-  List<Contact> contactList = contacts.toList();   
-  List<ContactModel> processedContacts = [];
+  List<Contact> contactList = contacts.toList();
+  List<ContactModel> allContacts = ref.read(contactsProvider);
+  List<ContactModel> processedContacts = allContacts;
+
   for (var contact in contactList) {
     String firstName = contact.givenName ?? '';
     String lastName = contact.familyName ?? '';
@@ -76,16 +78,6 @@ Future<void> uploadContactsFromDevice(String? uid, ref, bool shouldSave) async {
         addressCountry: country,
       ),
     );
-    /* Need to change this. should first send to saved contacts table and then a 
-    automation in airtable that adds all the contacts to the contacts table. this 
-    will save allot of time when uploading contacts.
-    */
-
-    /* 
-    The if statement is so i could use the function also for adding a specific contact 
-    So i don't have to save all the contacts to device rather just display them all 
-    and separate function to save that contact. not sure if this is the right way though.
-    */
     if (shouldSave == true) {
       saveContactsToSP(processedContacts);
       await uploadContactsToAt(
@@ -107,6 +99,11 @@ Future<void> uploadContactsFromDevice(String? uid, ref, bool shouldSave) async {
       );
       await ref.refresh(contactsFromSharedPrefProvider);
     } else {
+      Map<String, ContactModel> uniqueContactsMap = {};
+      for (ContactModel contact in processedContacts) {
+        uniqueContactsMap[contact.phoneNumber] = contact;
+      }
+      processedContacts = uniqueContactsMap.values.toList();
       ref.read(allContactsForAddingProvider.notifier).state = processedContacts;
     }
   }
@@ -127,6 +124,7 @@ Future<void> uploadContactsToAt(
     String? zip,
     String? country,
     List? lists,
+    // Should change this to user recordId. basically firebase uid is only for auth
     String? addedByUser) async {
   final String airtableApiKey =
       'patS6BGUI9SY8OcFJ.fd3c067a6f9874f1847fddf6a21815d8b54dac5ed1b0340dae533856d0c9437a';
@@ -141,7 +139,7 @@ Future<void> uploadContactsToAt(
     'Address': fullAddress,
     'Address Street': street,
     'Address City': city,
-    'Address State': state,      
+    'Address State': state,
     'Address Zip': zip,
     'Address Country': country,
     'Added By User': addedByUser,
@@ -199,7 +197,7 @@ Future<void> saveContactToSavedTable(
       'Saved By User': savedByID,
       'Lists': lists,
     },
-  };      
+  };
 
   final Uri uri = Uri.parse(airtableApiEndpoint);
   final http.Response response = await http.post(

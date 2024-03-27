@@ -1,37 +1,37 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tehine/providers/contact_providers.dart';
+import 'package:tehine/providers/list_providers.dart';
+import 'package:tehine/providers/user_providers.dart';
 
 import '../../../backend/api/contacts/airtable/upload_contacts.dart';
-import '../../../models/contact_model.dart';
-
-import '../../../providers/contact_providers.dart';
 import '../../../backend/api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
-import '../../../providers/user_providers.dart';
-
+import '../../../models/contact_model.dart';
 import '../../../screens/expanded_screens/contact_expanded_screen.dart';
 import '../../../shared/style.dart';
-import '../../dividers/divider_horizontal.dart';
-import '../../menus/list_menus/contact_tile_ellips_menu.dart';
 
-class ContactTileWidget extends ConsumerStatefulWidget {
+class ContactTileForAddingToAllWidget extends ConsumerStatefulWidget {
+  final String contactName;
   final ContactModel contact;
   late Offset tapPosition = Offset.zero;
 
-  ContactTileWidget({
-    Key? key,
-    required this.contact,
-  }) : super(key: key);
+  ContactTileForAddingToAllWidget(
+      {Key? key,
+      // required this.contact,
+      required this.contact,
+      required this.contactName})
+      : super(key: key);
 
   @override
-  ConsumerState<ContactTileWidget> createState() => _ContactTileWidgetState();
+  ConsumerState<ContactTileForAddingToAllWidget> createState() =>
+      _ContactTileForAddingToAllWidgetState();
 }
 
-class _ContactTileWidgetState extends ConsumerState<ContactTileWidget> {
+class _ContactTileForAddingToAllWidgetState
+    extends ConsumerState<ContactTileForAddingToAllWidget> {
   @override
   Widget build(BuildContext context) {
-    List<ContactModel> contactToDelete = [];
-    contactToDelete.add(widget.contact);
     return Container(
       child: GestureDetector(
         onTap: () {
@@ -65,29 +65,21 @@ class _ContactTileWidgetState extends ConsumerState<ContactTileWidget> {
             key: Key(widget.contact.firstName),
             onDismissed: (direction) async {
               if (direction == DismissDirection.endToStart) {
-                deleteContactFromSP(widget.contact);
-                deleteContactsFromUserAccountToAt(
-                    ref.read(userStreamProvider).value!.uid,
-                    widget.contact.firstName,
-                    widget.contact.lastName,
-                    widget.contact.phoneNumber,
-                    widget.contact.email,
-                    widget.contact.lists,
-                    '');
-                ref.refresh(contactsFromSharedPrefProvider);
-                ref.read(contactsProvider);
+                ref.read(filteredForAddingContacts).remove(widget.contact);
+                await addContact(widget.contact);
               }
             },
             background: Container(
               alignment: Alignment.centerRight,
               decoration: BoxDecoration(
+                // Maybe change this to a bit more rounded
                 borderRadius: BorderRadius.circular(0),
-                color: Colors.red,
+                color: Colors.green[400],
               ),
               child: Padding(
                 padding: EdgeInsets.only(right: 20),
                 child: Icon(
-                  Icons.delete,
+                  Icons.add,
                   color: Colors.grey[850],
                 ),
               ),
@@ -164,5 +156,48 @@ class _ContactTileWidgetState extends ConsumerState<ContactTileWidget> {
         ),
       ),
     );
+  }
+
+  Future<void> addContact(ContactModel contact) async {
+    List<ContactModel> allContacts = ref.read(contactsProvider);
+    List<ContactModel> processedContacts = allContacts;
+    List<String> contactsOriginalList = widget.contact.lists;
+    List<String> contactsListsToAdd = ['All'];
+    List<String> allLists = contactsOriginalList + contactsListsToAdd;
+    processedContacts.add(ContactModel(
+      contactRecordID: widget.contact.contactRecordID,
+      firstName: widget.contact.firstName,
+      lastName: widget.contact.lastName,
+      email: widget.contact.email,
+      phoneNumber: widget.contact.phoneNumber,
+      lists: allLists,
+      // add the current list to be added to,
+      address: widget.contact.address,
+      addressStreet: widget.contact.addressStreet,
+      addressCity: widget.contact.addressCity,
+      addressState: widget.contact.addressState,
+      addressZip: widget.contact.addressZip,
+      addressCountry: widget.contact.addressCountry,
+    ));
+    saveContactsToSP(processedContacts);
+    // Still need to test this.
+    await uploadContactsToAt(
+      null,
+      widget.contact.firstName,
+      widget.contact.lastName,
+      widget.contact.phoneNumber,
+      widget.contact.email,
+      widget.contact.address,
+      widget.contact.addressStreet,
+      widget.contact.addressCity,
+      widget.contact.addressState,
+      widget.contact.addressZip,
+      widget.contact.addressCountry,
+      // address,
+      // contactProfilePic,
+      widget.contact.lists,
+      ref.read(userStreamProvider).value?.uid,
+    );
+    await ref.refresh(contactsFromSharedPrefProvider);
   }
 }

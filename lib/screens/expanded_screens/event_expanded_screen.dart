@@ -50,11 +50,137 @@ class _EventExpandedScreenWidgetState
     // ref.refresh(eventListFromSharedPreferenceProvider);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFFF5F5F5),
+        backgroundColor: seaSault,
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.grey[850]),      
+        iconTheme: IconThemeData(color: steelBlue),
+        title: Padding(
+          padding: const EdgeInsets.all(0.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                icon: Icon(
+                  Icons.person_add_alt_1_rounded,
+                  color: steelBlue,
+                  size: 25,
+                ),
+
+                // padding: EdgeInsets.all(0),
+                onPressed: () async {
+                  addListToInvitationMenu(context, ref);
+                },
+              ),
+              // SizedBox(width: 5),
+              IconButton(
+                icon: Icon(
+                  Icons.attach_file_rounded,
+                  color: steelBlue,
+                  size: 25,
+                ),
+                onPressed: () async {
+                  showModalBottomSheet(
+                      backgroundColor: seaSault,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(20),
+                        ),
+                      ),
+                      context: context,
+                      builder: (context) => Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                leading: Icon(
+                                  Icons.camera_alt,
+                                  color: grey400,
+                                ),
+                                title: Text('Camera'),
+                                onTap: () => Navigator.of(context)
+                                    .pop(pickImage(ImageSource.camera)),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 25.0),
+                                child: ListTile(
+                                  leading: Icon(Icons.image, color: grey400),
+                                  title: Text('My Photos'),
+                                  onTap: () => Navigator.of(context)
+                                      .pop(pickImage(ImageSource.gallery)),
+                                ),
+                              ),
+                            ],
+
+                            // Attach a file photo/pdf (like a invitation)
+                          ));
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.send,
+                  color: steelBlue,
+                  size: 25,
+                ),
+                onPressed: () async {
+                  showModalBottomSheet(
+                      backgroundColor: seaSault,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(20),
+                        ),
+                      ),
+                      context: context,
+                      builder: (context) => Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SendInvitationWidget(),
+                            ],
+                          ));
+                  // Send
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.edit,
+                  color: steelBlue,
+                  size: 25,
+                ),
+                onPressed: () async {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return EditEventForm(
+                        onSave: (String savedName) {
+                          // Handle the saved name here, if needed
+                          print('Saved Name: $savedName');
+                        },
+                        // event: widget.event,
+                      );
+                    },
+                  );
+
+                  // Function to open form to edit
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.delete,
+                  color: steelBlue,
+                  size: 25,
+                ),
+                onPressed: () async {
+                  // Delete From Airtable
+                  await deleteEventFromUserAccountToAt(
+                      ref.read(eventRecordIDProvider));
+                  // Delete from shared preference
+
+                  await deleteEventFromSP(ref.read(selectedEventProvider));
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        ),
       ),
-      backgroundColor: Color(0xFFF5F5F5),
+      backgroundColor: seaSault,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -84,180 +210,7 @@ class _EventExpandedScreenWidgetState
                 ),
               ),
             ),
-            SizedBox(height: 10),
-            Container(
-              child: Padding(
-                padding: const EdgeInsets.only(right: 8, left: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        fixedSize: Size(20, 50.0),
-                        backgroundColor: darkGrey,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                      ),
-                      onPressed: () {
-                        // this func is here for testing should be by create event
-                        // attendingWebhook(
-                        //     ref.read(eventRecordIDProvider).toString());
-                        addListToInvitationMenu(context, ref);
-                      },
-                      child: Icon(
-                        Icons.person_add_alt_1_rounded,
-                        color: creamWhite,
-                      ),
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        fixedSize: Size(20, 50.0),
-                        backgroundColor: darkGrey,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                      ),
-                      onPressed: () {
-                        // for testing
-                        // listWebhooks();
-                        showModalBottomSheet(
-                            backgroundColor: creamWhite,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(20),
-                              ),
-                            ),
-                            context: context,
-                            builder: (context) => Column(
-                              
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    ListTile(
-                                      leading: Icon(
-                                        Icons.camera_alt,
-                                        color: Colors.grey[850],
-                                      ),
-                                      title: Text('Camera'),
-                                      onTap: () => Navigator.of(context)
-                                          .pop(pickImage(ImageSource.camera)),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 25.0),
-                                      child: ListTile(
-                                        leading: Icon(Icons.image,
-                                            color: Colors.grey[850]),
-                                        title: Text('My Photos'),
-                                        onTap: () => Navigator.of(context).pop(
-                                            pickImage(ImageSource.gallery)),
-                                      ),
-                                    ),
-                                  ],
-
-                                  // Attach a file photo/pdf (like a invitation)
-                                ));
-                      },
-                      child: Icon(
-                        Icons.attach_file_rounded,
-                        color: creamWhite,
-                      ),
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        fixedSize: Size(20, 50.0),
-                        backgroundColor: darkGrey,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                      ),
-                      onPressed: () {
-                        // sendWhatsApp();
-                        // sendEmail();
-                        // for testing
-                        // deleteWebhook('achtzYqSFe3Nf1ZSq');
-                        showModalBottomSheet(
-                            backgroundColor: creamWhite,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(20),
-                              ),
-                            ),
-                            context: context,
-                            builder: (context) => Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    SendInvitationWidget(),
-                                  ],
-                                ));
-                        // Send
-                      },
-                      child: Icon(
-                        Icons.send,
-                        color: creamWhite,
-                      ),
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        fixedSize: Size(20, 50.0),
-                        backgroundColor: darkGrey,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                      ),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return EditEventForm(
-                              onSave: (String savedName) {
-                                // Handle the saved name here, if needed
-                                print('Saved Name: $savedName');    
-                              },
-                              // event: widget.event,
-                            );
-                          },
-                        );
-
-                        // Function to open form to edit
-                      },
-                      child: Icon(
-                        Icons.edit,
-                        color: creamWhite,
-                      ),
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        fixedSize: Size(20, 50.0),
-                        backgroundColor: darkGrey,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                      ),
-                      onPressed: () async {
-                        // Delete From Airtable
-                        await deleteEventFromUserAccountToAt(
-                            ref.read(eventRecordIDProvider));
-                        // Delete from shared preference
-
-                        await deleteEventFromSP(
-                            ref.read(selectedEventProvider));
-                        Navigator.of(context).pop();
-                      },
-                      child: Icon(
-                        Icons.delete,
-                        color: creamWhite,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            // SizedBox(height: 10),
             Column(
               children: [
                 Row(
@@ -266,7 +219,7 @@ class _EventExpandedScreenWidgetState
                 // put the stats here
                 ref.watch(eventListProvider).isNotEmpty
                     ? Padding(
-                        padding: const EdgeInsets.only(left: 5.0, top: 8),
+                        padding: const EdgeInsets.only(left: 5.0, top: 5),
                         child: SizedBox(
                           height: 50, // specify the desired height,
                           child: ListView(
@@ -278,7 +231,7 @@ class _EventExpandedScreenWidgetState
                                 Padding(
                                   padding: const EdgeInsets.only(right: 5.0),
                                   child: ChoiceChip(
-                                    selectedColor: creamWhite,
+                                    selectedColor: seaSault,
                                     backgroundColor: lightGrey,
                                     label: Text(
                                       ref.watch(eventListProvider)[index],
@@ -288,7 +241,7 @@ class _EventExpandedScreenWidgetState
                                             //             selectedListProvider) ==
                                             //         ref.watch(
                                             //             eventListProvider)[index]
-                                            //     ? creamWhite
+                                            //     ? seaSault
                                             //     :
                                             darkGrey,
                                       ),
@@ -312,32 +265,55 @@ class _EventExpandedScreenWidgetState
                           ),
                         ),
                       )
-                    : Container(),
+                    : SizedBox(
+                        height: 10,
+                      ),
               ],
             ),
-            EventAndContactInfoBlock(
-              title: 'Name',
-              content: ref.watch(eventNameProvider),
-            ),
-            EventAndContactInfoBlock(
-              title: 'Type',
-              content: ref.watch(eventTypeProvider),
-            ),
-            EventAndContactInfoBlock(
-              title: 'Date',
-              content: DateFormat('MM/dd/yyyy').format(
-                DateTime.parse(
-                  ref.watch(eventDateProvider),
+            Padding(
+              padding: const EdgeInsets.only(right: 8, left: 8),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: lightGrey,
+                  boxShadow: [
+                    // BoxShadow(
+                    //   color: Colors.grey.withOpacity(0.5),
+                    //   spreadRadius: 2,
+                    //   blurRadius: 3,
+                    //   offset: Offset(0, 3),
+                    // ),
+                  ],
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Column(
+                  children: [
+                    EventAndContactInfoBlock(
+                      title: 'Name',
+                      content: ref.watch(eventNameProvider),
+                    ),
+                    EventAndContactInfoBlock(
+                      title: 'Type',
+                      content: ref.watch(eventTypeProvider),
+                    ),
+                    EventAndContactInfoBlock(
+                      title: 'Date',
+                      content: DateFormat('MM/dd/yyyy').format(
+                        DateTime.parse(
+                          ref.watch(eventDateProvider),
+                        ),
+                      ),
+                    ),
+                    EventAndContactInfoBlock(
+                      title: 'Address',
+                      content: ref.watch(eventAddressProvider),
+                    ),
+                    EventAndContactInfoBlock(
+                      title: 'Mode',
+                      content: 'Coming Soon',
+                    )
+                  ],
                 ),
               ),
-            ),
-            EventAndContactInfoBlock(
-              title: 'Address',
-              content: ref.watch(eventAddressProvider),
-            ),
-            EventAndContactInfoBlock(
-              title: 'Mode',
-              content: 'Coming Soon',
             )
           ],
         ),

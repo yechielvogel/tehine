@@ -1,15 +1,15 @@
 class EventModel {
-  late final String? eventRecordID;
-  late final String eventName;
-  late final String eventDescription;
-  late final String eventType;
-  late final String eventDate;
-  late final String eventAddress;
-  late final String eventAddress2;
-  late final String eventCountry;
-  late final String eventState;
-  late final String eventZipPostalCode;
-  late final List<String>? lists;
+  String? eventRecordID;
+  String? eventName;
+  String? eventDescription;
+  String? eventType;
+  String? eventDate;
+  String? eventAddress;
+  String? eventAddress2;
+  String? eventCountry;
+  String? eventState;
+  String? eventZipPostalCode;
+  List<String>? lists;
   List? invitedList;
   List? attendingList;
   List? notAttendingList;
@@ -18,20 +18,20 @@ class EventModel {
   int? attending;
   int? pending;
   int? notAttending;
-  late final String? attachment;
+  String? attachment;
   bool? didAccept;
 
   EventModel({
     this.eventRecordID,
-    required this.eventName,
-    required this.eventDescription,
-    required this.eventType,
-    required this.eventDate,
-    required this.eventAddress,
-    required this.eventAddress2,
-    required this.eventCountry,
-    required this.eventState,
-    required this.eventZipPostalCode,
+    this.eventName,
+    this.eventDescription,
+    this.eventType,
+    this.eventDate,
+    this.eventAddress,
+    this.eventAddress2,
+    this.eventCountry,
+    this.eventState,
+    this.eventZipPostalCode,
     this.invitedList,
     this.attendingList,
     this.notAttendingList,
@@ -60,10 +60,12 @@ class EventModel {
       lists: json['lists'] != null ? List?.from(json['lists']) : [],
       invitedList:
           json['invitedList'] != null ? List?.from(json['invitedList']) : [],
-      attendingList:
-          json['attendingList'] != null ? List?.from(json['attendingList']) : [],
-      notAttendingList:
-          json['notAttendingList'] != null ? List?.from(json['notAttendingList']) : [],
+      attendingList: json['attendingList'] != null
+          ? List?.from(json['attendingList'])
+          : [],
+      notAttendingList: json['notAttendingList'] != null
+          ? List?.from(json['notAttendingList'])
+          : [],
       pendingList:
           json['pendingList'] != null ? List?.from(json['pendingList']) : [],
       invited: json['invited'] ?? 0,
@@ -75,7 +77,7 @@ class EventModel {
     );
   }
 
-  Map<String, dynamic> toJson() {   
+  Map<String, dynamic> toJson() {
     return {
       'eventRecordID': eventRecordID,
       'eventName': eventName,

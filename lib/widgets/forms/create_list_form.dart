@@ -45,7 +45,7 @@ class _CreateListFormState extends ConsumerState<CreateListForm> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
-      backgroundColor: Color(0xFFF5F5F5),
+      backgroundColor: seaSault,
       title: Center(
         child: Text(
           'Create List',
@@ -144,7 +144,7 @@ class _CreateListFormState extends ConsumerState<CreateListForm> {
         Center(
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: darkGrey,
+              backgroundColor: ashGrey,   
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0),
               ),
@@ -167,7 +167,7 @@ class _CreateListFormState extends ConsumerState<CreateListForm> {
             },
             child: Text(
               'Save',
-              style: TextStyle(color: creamWhite),
+              style: TextStyle(color: darkGrey),
             ),
           ),
         ),

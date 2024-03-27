@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../shared/style.dart';
+
 class ContactInfoBlock extends StatelessWidget {
   final String title;
   final String content;
@@ -21,7 +23,7 @@ class ContactInfoBlock extends StatelessWidget {
             ),
           ],
           borderRadius: BorderRadius.circular(20),
-          color: Color(0xFFF5F5F5),
+          color: seaSault,
         ),
         height: 80,
         child: Column(

@@ -280,37 +280,65 @@ Future<void> deleteEventFromUserAccountToAt(
 This is for inviting someone who is on the app 
 */
 
+
 Future<void> inviteTehineUserToEventToAt(
   String? eventRecordID,
-  String userRecordID,
+  List<String> userRecordIds, // Ensure userRecordIds is a List of Strings
 ) async {
   final String airtableApiKey =
       'patS6BGUI9SY8OcFJ.fd3c067a6f9874f1847fddf6a21815d8b54dac5ed1b0340dae533856d0c9437a';
   final String airtableApiEndpoint =
       'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Events/$eventRecordID';
 
-  final Map<String, dynamic> requestData = {
-    'fields': {
-      'Invited': [userRecordID],
-    },
-  };
-
-  final Uri uri = Uri.parse(airtableApiEndpoint);
-  final http.Response response = await http.patch(
-    uri,
+  // Fetch the current list of invited user IDs from the Airtable API
+  final http.Response currentResponse = await http.get(
+    Uri.parse(airtableApiEndpoint),
     headers: {
       'Authorization': 'Bearer $airtableApiKey',
-      'Content-Type': 'application/json',
     },
-    body: jsonEncode(requestData),
   );
 
-  if (response.statusCode == 200) {
-    print('Invitation sent successfully.');
-    print(response.body);
+  if (currentResponse.statusCode == 200) {
+    // Parse the current response body to extract the existing invited user IDs
+    final Map<String, dynamic> currentData = jsonDecode(currentResponse.body);
+    List<dynamic> currentInvited = currentData['fields']['Invited'] ?? [];
+
+    // Append the new user IDs to the existing list
+    currentInvited.addAll(userRecordIds);
+
+    // Filter out empty strings from the list
+    currentInvited = currentInvited.where((id) => id.isNotEmpty).toList();
+
+    print('Inviting $userRecordIds');
+    print('All record IDs $currentInvited');
+    
+    // Prepare the request data with the updated list of invited user IDs
+    final Map<String, dynamic> requestData = {
+      'fields': {
+        'Invited': currentInvited,
+      },
+    };
+
+    // Update the "Invited" field with the updated list of invited user IDs
+    final http.Response response = await http.patch(
+      Uri.parse(airtableApiEndpoint),
+      headers: {
+        'Authorization': 'Bearer $airtableApiKey',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(requestData),
+    );
+
+    if (response.statusCode == 200) {
+      print('Invitation sent successfully.');
+      print(response.body);
+    } else {
+      print('Failed to send invitation.');
+      print(response.body);
+    }
   } else {
-    print('Failed to send invitation.');
-    print(response.body);
+    print('Failed to fetch current data from Airtable.');
+    print(currentResponse.body);
   }
 }
 

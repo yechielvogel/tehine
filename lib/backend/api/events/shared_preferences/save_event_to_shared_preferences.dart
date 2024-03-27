@@ -13,7 +13,7 @@ Future<void> saveEventsToSP(List<EventModel> event) async {
   // Remove duplicates based on phone number
   Map<String, EventModel> uniqueEventMap = {};
   for (EventModel event in event) {
-    uniqueEventMap[event.eventName] = event;
+    uniqueEventMap[event.eventName.toString()] = event;
   }
 
   List<EventModel> uniqueEvent = uniqueEventMap.values.toList();

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../shared/style.dart';
+
 class EventAndContactInfoBlock extends StatelessWidget {
   final String title;
   final String content;
@@ -9,20 +11,18 @@ class EventAndContactInfoBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 8, left: 8, top: 10),
+      padding: const EdgeInsets.only(
+        right: 8,
+        left: 8,
+      ),
       child: Container(
         decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 3,
-              offset: Offset(0, 3),
-            ),
-          ],
-          borderRadius: BorderRadius.circular(20),
-          color: Color(0xFFF5F5F5),
-        ),
+            border: Border(
+          bottom: BorderSide(
+            color: seaSault,
+            width: 1,
+          ),
+        )),
         height: 80,
         child: Column(
           children: [
@@ -30,7 +30,7 @@ class EventAndContactInfoBlock extends StatelessWidget {
               padding: const EdgeInsets.only(
                 left: 12,
                 right: 12,
-                bottom: 8,
+                bottom: 12,
                 top: 12,
               ),
               child: Row(

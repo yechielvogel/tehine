@@ -8,6 +8,7 @@ import '../../../../backend/api/events/shared_preferences/save_event_to_shared_p
 import '../../../../models/event_model.dart';
 import '../../../../providers/list_providers.dart';
 import '../../../../providers/user_providers.dart';
+import '../../../../shared/style.dart';
 
 void addListToInvitationMenu(BuildContext context, WidgetRef ref) {
   EventModel event = ref.read(selectedEventProvider);
@@ -53,7 +54,7 @@ void addListToInvitationMenu(BuildContext context, WidgetRef ref) {
         borderRadius: BorderRadius.circular(10.0),
       ),
       elevation: 8,
-      color: Color(0xFFF5F5F5),
+      color: seaSault,
     ).then(
       (value) {
         if (value != null) {

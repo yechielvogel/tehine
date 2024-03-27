@@ -43,33 +43,41 @@ class _CreateEventFormState extends ConsumerState<CreateEventForm> {
     }
   }
 
-  String? addressValidator(String? val) {
-    if (val!.isEmpty) {
-      return 'Enter Address';
-    } else {
-      return null; // Validation passed
-    }
-  }
+  // String? addressValidator(String? val) {
+  //   if (val!.isEmpty) {
+  //     return 'Enter Address';
+  //   } else {
+  //     return null; // Validation passed
+  //   }
+  // }
 
-  String? countryValidator() {
-    if (ref.read(selectedCountryProvider.notifier).state == 'Select Country') {
-      return 'Select Country';
-    } else {
-      return null; // Validation passed
-    }
-  }
+  // String? countryValidator() {
+  //   if (ref.read(selectedCountryProvider.notifier).state == 'Select Country') {
+  //     return 'Select Country';
+  //   } else {
+  //     return null; // Validation passed
+  //   }
+  // }
 
-  String? stateValidator() {
-    if (ref.read(selectedStateProvider.notifier).state == 'Select State') {
-      return 'Select State';
-    } else {
-      return null; // Validation passed
-    }
-  }
+  // String? stateValidator() {
+  //   if (ref.read(selectedStateProvider.notifier).state == 'Select State') {
+  //     return 'Select State';
+  //   } else {
+  //     return null; // Validation passed
+  //   }
+  // }
 
-  String? zipPostalCodeValidator(String? val) {
-    if (val!.isEmpty) {
-      return 'Enter Zip/Postal Code';
+  // String? zipPostalCodeValidator(String? val) {
+  //   if (val!.isEmpty) {
+  //     return 'Enter Zip/Postal Code';
+  //   } else {
+  //     return null; // Validation passed
+  //   }
+  // }
+
+  String? dateValidator(String? val) {
+    if (ref.watch(selectedDateProvider) == null) {
+      return 'Enter a date';
     } else {
       return null; // Validation passed
     }
@@ -112,7 +120,7 @@ class _CreateEventFormState extends ConsumerState<CreateEventForm> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
-      backgroundColor: Color(0xFFF5F5F5),
+      backgroundColor: seaSault,
       title: Center(
         child: Text(
           'Create Event',
@@ -135,7 +143,7 @@ class _CreateEventFormState extends ConsumerState<CreateEventForm> {
                     focusedErrorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
-                            color: Colors.grey[850] ?? Colors.grey,
+                            color: Colors.grey[350] ?? Colors.grey,
                             width: 3.0)),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -175,7 +183,7 @@ class _CreateEventFormState extends ConsumerState<CreateEventForm> {
                     focusedErrorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
-                            color: Colors.grey[850] ?? Colors.grey,
+                            color: Colors.grey[350] ?? Colors.grey,
                             width: 3.0)),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -209,72 +217,83 @@ class _CreateEventFormState extends ConsumerState<CreateEventForm> {
                 ),
                 SizedBox(height: 12),
                 Container(
-                  height: 60,
-                  child: DropdownButtonFormField<String>(
-                    value: selectedName,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedName = value;
-                        ref.read(selectedEventTypeProvider.notifier).state =
-                            selectedName!;
-                      });
-                    },
-                    borderRadius: BorderRadius.circular(20),
-                    decoration: InputDecoration(
-                      isDense: true,
-                      hintText: 'Event Type',
-                      hintStyle: TextStyle(color: Colors.grey[850]),
-                      fillColor: Colors.grey[350],
-                      filled: true,
-                      enabledBorder: OutlineInputBorder(
+                  // height: 60,
+                  child: Column(
+                    children: [
+                      DropdownButtonFormField<String>(
+                        value: selectedName,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedName = value;
+                            ref.read(selectedEventTypeProvider.notifier).state =
+                                selectedName!;
+                          });
+                        },
                         borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(
-                            color: Colors.grey[350] ?? Colors.grey, width: 3.0),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(
-                            color: Colors.grey[350] ?? Colors.grey, width: 3.0),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(
-                              color: Colors.grey[350] ?? Colors.grey,
-                              width: 3.0)),
-                      errorStyle: TextStyle(
-                        color: Colors.grey[850],
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide(
-                            color: Colors.grey[350] ?? Colors.grey, width: 3.0),
-                      ),
-                    ),
-                    style: TextStyle(color: Colors.grey[850]),
-                    items: [
-                      DropdownMenuItem<String>(
-                        value: 'Birthday Party',
-                        child: Text('Birthday Party'),
-                      ),
-                      DropdownMenuItem<String>(
-                        value: 'Bar Mitzvah',
-                        child: Text('Bar Mitzvah'),
-                      ),
-                      DropdownMenuItem<String>(
-                        value: 'Engagement',
-                        child: Text('Engagement'),
-                      ),
-                      DropdownMenuItem<String>(
-                        value: 'Wedding',
-                        child: Text('Wedding'),
+                        decoration: InputDecoration(
+                          isDense: true,
+                          hintText: 'Event Type',
+                          hintStyle: TextStyle(color: Colors.grey[850]),
+                          fillColor: Colors.grey[350],
+                          filled: true,
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(
+                                color: Colors.grey[350] ?? Colors.grey,
+                                width: 3.0),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(
+                                color: Colors.grey[350] ?? Colors.grey,
+                                width: 3.0),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide(
+                                  color: Colors.grey[350] ?? Colors.grey,
+                                  width: 3.0)),
+                          errorStyle: TextStyle(
+                            color: Colors.grey[850],
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(
+                                color: Colors.grey[350] ?? Colors.grey,
+                                width: 3.0),
+                          ),
+                        ),
+                        style: TextStyle(color: Colors.grey[850]),
+                        items: [
+                          DropdownMenuItem<String>(
+                            value: 'Birthday Party',
+                            child: Text('Birthday Party'),
+                          ),
+                          DropdownMenuItem<String>(
+                            value: 'Bar Mitzvah',
+                            child: Text('Bar Mitzvah'),
+                          ),
+                          DropdownMenuItem<String>(
+                            value: 'Engagement',
+                            child: Text('Engagement'),
+                          ),
+                          DropdownMenuItem<String>(
+                            value: 'Wedding',
+                            child: Text('Wedding'),
+                          ),
+                        ],
+                        /* 
+                        need this for now because the event needs a option to upload 
+                        in order to display a icon on the tile widget.
+                        */
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Select an event type';
+                          }
+                          return null; // Validation passed
+                        },
                       ),
                     ],
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Select an event type';
-                      }
-                      return null; // Validation passed
-                    },
                   ),
                 ),
                 SizedBox(height: 12),
@@ -307,7 +326,7 @@ class _CreateEventFormState extends ConsumerState<CreateEventForm> {
                     focusedErrorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
-                            color: Colors.grey[850] ?? Colors.grey,
+                            color: Colors.grey[350] ?? Colors.grey,
                             width: 3.0)),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -333,7 +352,7 @@ class _CreateEventFormState extends ConsumerState<CreateEventForm> {
                     ),
                   ),
                   style: TextStyle(color: Colors.grey[850]),
-                  // validator: nameValidator,
+                  validator: dateValidator,
                   onChanged: (val) {
                     // newListName = val;
                   },
@@ -345,7 +364,7 @@ class _CreateEventFormState extends ConsumerState<CreateEventForm> {
                     focusedErrorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
-                            color: Colors.grey[850] ?? Colors.grey,
+                            color: Colors.grey[350] ?? Colors.grey,
                             width: 3.0)),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -371,7 +390,7 @@ class _CreateEventFormState extends ConsumerState<CreateEventForm> {
                     ),
                   ),
                   style: TextStyle(color: Colors.grey[850]),
-                  validator: addressValidator,
+                  // validator: addressValidator,
                   onChanged: (val) {
                     eventAddress = val;
                     ref.read(createEventAddressProvider.notifier).state =
@@ -385,7 +404,7 @@ class _CreateEventFormState extends ConsumerState<CreateEventForm> {
                     focusedErrorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
-                            color: Colors.grey[850] ?? Colors.grey,
+                            color: Colors.grey[350] ?? Colors.grey,
                             width: 3.0)),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -470,7 +489,7 @@ class _CreateEventFormState extends ConsumerState<CreateEventForm> {
                     ),
                   ),
                   style: TextStyle(color: Colors.grey[850]),
-                  validator: (value) => countryValidator(),
+                  // validator: (value) => countryValidator(),
                   // onChanged: (val) {
                   //   newListName = val;
                   // },
@@ -494,7 +513,7 @@ class _CreateEventFormState extends ConsumerState<CreateEventForm> {
                     focusedErrorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
-                            color: Colors.grey[850] ?? Colors.grey,
+                            color: Colors.grey[350] ?? Colors.grey,
                             width: 3.0)),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -520,7 +539,7 @@ class _CreateEventFormState extends ConsumerState<CreateEventForm> {
                     ),
                   ),
                   style: TextStyle(color: Colors.grey[850]),
-                  validator: (value) => stateValidator(),
+                  // validator: (value) => stateValidator(),
                   // onChanged: (val) {
                   //   newListName = val;
                   // },
@@ -532,7 +551,7 @@ class _CreateEventFormState extends ConsumerState<CreateEventForm> {
                     focusedErrorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide(
-                            color: Colors.grey[850] ?? Colors.grey,
+                            color: Colors.grey[350] ?? Colors.grey,
                             width: 3.0)),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -558,7 +577,7 @@ class _CreateEventFormState extends ConsumerState<CreateEventForm> {
                     ),
                   ),
                   style: TextStyle(color: Colors.grey[850]),
-                  validator: zipPostalCodeValidator,
+                  // validator: zipPostalCodeValidator,
                   onChanged: (val) {
                     zipPostalCode = val;
                     ref.read(createEventZipPostalCodeProvider.notifier).state =
@@ -574,7 +593,7 @@ class _CreateEventFormState extends ConsumerState<CreateEventForm> {
         Center(
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: darkGrey,
+              backgroundColor: ashGrey,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0),
               ),
@@ -590,7 +609,7 @@ class _CreateEventFormState extends ConsumerState<CreateEventForm> {
             },
             child: Text(
               'Save',
-              style: TextStyle(color: creamWhite),
+              style: TextStyle(color: darkGrey),
             ),
           ),
         ),
@@ -627,7 +646,6 @@ class _CreateEventFormState extends ConsumerState<CreateEventForm> {
   // }
 
   Future<void> _saveEventsToAT() async {
-    
     uploadEventsToAt(
         ref,
         ref.read(createEventNameProvider),

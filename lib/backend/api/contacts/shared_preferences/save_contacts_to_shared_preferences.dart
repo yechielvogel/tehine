@@ -7,7 +7,6 @@ import '../../../../providers/list_providers.dart';
 
 // Need to refactor all this code and move around
 
-
 // Lists
 // Save list to shared preference
 
@@ -36,7 +35,7 @@ void saveListsToSP(List<String> data) async {
 
 // Delete a list from shared preference
 
-void removeListFromSP(String item, ref) async {           
+void removeListFromSP(String item, ref) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
 
   List<String>? existingList = prefs.getStringList('Lists');
@@ -59,15 +58,16 @@ Future<void> saveContactsToSP(List<ContactModel> contacts) async {
   // Remove duplicates based on phone number
   Map<String, ContactModel> uniqueContactsMap = {};
   for (ContactModel contact in contacts) {
+    print('contact to save ${contact.firstName}');
     uniqueContactsMap[contact.phoneNumber] = contact;
   }
 
-  List<ContactModel> uniqueContacts = uniqueContactsMap.values.toList();    
+  List<ContactModel> uniqueContacts = uniqueContactsMap.values.toList();
 
   List<String> contactsJson =
       uniqueContacts.map((contact) => json.encode(contact.toJson())).toList();
 
-  prefs.setStringList('Contacts', contactsJson);    
+  prefs.setStringList('Contacts', contactsJson);
 }
 
 // Delete a contact from shared preferences

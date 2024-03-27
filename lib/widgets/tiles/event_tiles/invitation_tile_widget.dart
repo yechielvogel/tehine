@@ -83,7 +83,7 @@ class _EventInvitationTileWidgetState
           width: 380,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            color: Color(0xFFF5F5F5),
+            color: seaSault,
           ),
           child: Container(
             decoration: BoxDecoration(
@@ -96,7 +96,7 @@ class _EventInvitationTileWidgetState
                 ),
               ],
               borderRadius: BorderRadius.circular(20),
-              color: Color(0xFFF5F5F5),
+              color: seaSault,
             ),
             child: Column(
               children: [
@@ -110,7 +110,7 @@ class _EventInvitationTileWidgetState
                       ),
                       child: Container(
                         child: Text(
-                          widget.event.eventName,
+                          widget.event.eventName.toString(),
                           style: TextStyle(
                               color: Colors.grey[850],
                               fontSize: 20,
@@ -132,7 +132,7 @@ class _EventInvitationTileWidgetState
                     Padding(
                       padding:
                           const EdgeInsets.only(top: 0, left: 20, bottom: 0),
-                      child: Container(child: Text(widget.event.eventAddress)),
+                      child: Container(child: Text(widget.event.eventAddress.toString())),
                     )
                   ],
                 ),
@@ -156,61 +156,62 @@ class _EventInvitationTileWidgetState
                       children: [
                         for (int index = 0; index < chipLabels.length; index++)
                           Container(
-                            width: 83,
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                HapticFeedback.heavyImpact();
-                                setState(() {
-                                  acceptOrDeclineInvitationLogic(index);
-                                });
-                                // await updateAttendingInProvider(
-                                //     widget.event, widget.event.didAccept);
-                                ref.read(invitationsProvider);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                side: BorderSide(
-                                  color: creamWhite,
-                                  width: 1,
-                                ),
-                                elevation: 0,
-                                backgroundColor: ref
-                                            .watch(attendingChipProvider(eventIDForProvider
-                                                    .toString())
-                                                .notifier)
-                                            .state ==
-                                        index
-                                    ? Colors.grey[850]
-                                    : lightGrey,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: index == 0
-                                      ? BorderRadius.only(
-                                          topLeft: Radius.circular(20),
-                                          bottomLeft: Radius.circular(20),
-                                        ) as BorderRadiusGeometry
-                                      : (index == chipLabels.length - 1
-                                          ? BorderRadius.only(
-                                              topRight: Radius.circular(20),
-                                              bottomRight: Radius.circular(20),
-                                            ) as BorderRadiusGeometry
-                                          : BorderRadius.zero),
-                                ),
-                              ),
-                              child: Text(
-                                chipLabels[index],
-                                style: TextStyle(
-                                  color: ref
+                              width: 83,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  HapticFeedback.heavyImpact();
+                                  setState(() {
+                                    acceptOrDeclineInvitationLogic(index);
+                                  });
+                                  // await updateAttendingInProvider(
+                                  //     widget.event, widget.event.didAccept);
+                                  ref.read(invitationsProvider);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  side: BorderSide(
+                                    color: seaSault,
+                                    width: 1,
+                                  ),
+                                  elevation: 0,
+                                  backgroundColor: ref
                                               .watch(attendingChipProvider(
                                                       eventIDForProvider
                                                           .toString())
                                                   .notifier)
                                               .state ==
                                           index
-                                      ? Color(0xFFF5F5F5)
-                                      : Colors.grey[850],
+                                      ? ashGrey
+                                      : lightGrey,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: index == 0
+                                        ? BorderRadius.only(
+                                            topLeft: Radius.circular(20),
+                                            bottomLeft: Radius.circular(20),
+                                          ) as BorderRadiusGeometry
+                                        : (index == chipLabels.length - 1
+                                            ? BorderRadius.only(
+                                                topRight: Radius.circular(20),
+                                                bottomRight:
+                                                    Radius.circular(20),
+                                              ) as BorderRadiusGeometry
+                                            : BorderRadius.zero),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
+                                child: Text(
+                                  chipLabels[index],
+                                  style: TextStyle(color: darkGrey
+                                      // ref
+                                      //             .watch(attendingChipProvider(
+                                      //                     eventIDForProvider
+                                      //                         .toString())
+                                      //                 .notifier)
+                                      //             .state ==
+                                      //         index
+                                      //     ? lightGrey
+                                      //     : steelBlue,
+                                      ),
+                                ),
+                              ))
                       ],
                     ),
                   ),
@@ -227,42 +228,26 @@ class _EventInvitationTileWidgetState
     String eventIDForProvider =
         '${widget.event.eventRecordID.toString()}${ref.watch(userRecordIDProvider)}';
 
-    if (ref
-            .watch(attendingChipProvider(eventIDForProvider)
-                .notifier)
-            .state ==
+    if (ref.watch(attendingChipProvider(eventIDForProvider).notifier).state ==
         index) {
-      if (ref
-              .watch(
-                  attendingChipProvider(eventIDForProvider)
-                      .notifier)
-              .state ==
+      if (ref.watch(attendingChipProvider(eventIDForProvider).notifier).state ==
           0) {
         unAcceptInvitationToAt(
             widget.event.eventRecordID, ref.read(userRecordIDProvider));
       } else if (ref
-              .watch(
-                  attendingChipProvider(eventIDForProvider)
-                      .notifier)
+              .watch(attendingChipProvider(eventIDForProvider).notifier)
               .state ==
           1) {
         unDeclineInvitationToAt(
             widget.event.eventRecordID, ref.read(userRecordIDProvider));
       }
-      ref
-          .watch(attendingChipProvider(eventIDForProvider)
-              .notifier)
-          .state = null;
+      ref.watch(attendingChipProvider(eventIDForProvider).notifier).state =
+          null;
       widget.event.didAccept = null;
     } else
-      ref
-          .watch(attendingChipProvider(eventIDForProvider)
-              .notifier)
-          .state = index;
-    if (ref
-            .watch(attendingChipProvider(eventIDForProvider)
-                .notifier)
-            .state ==
+      ref.watch(attendingChipProvider(eventIDForProvider).notifier).state =
+          index;
+    if (ref.watch(attendingChipProvider(eventIDForProvider).notifier).state ==
         0) {
       acceptInvitationToAt(
           widget.event.eventRecordID, ref.read(userRecordIDProvider));
@@ -272,8 +257,7 @@ class _EventInvitationTileWidgetState
       // Not sure why the below was there.
       // widget.event.didAccept = null;
     } else if (ref
-            .watch(attendingChipProvider(eventIDForProvider)
-                .notifier)
+            .watch(attendingChipProvider(eventIDForProvider).notifier)
             .state ==
         1) {
       declineInvitationToAt(
@@ -301,25 +285,25 @@ class _EventInvitationTileWidgetState
     if (widget.event.eventType == 'Wedding') {
       icon = Icon(
         FontAwesomeIcons.gift,
-        color: Colors.grey[850],
+        color: grey400,
         size: 24,
       );
     } else if (widget.event.eventType == 'Birthday Party') {
       icon = Icon(
         FontAwesomeIcons.birthdayCake,
-        color: Colors.grey[850],
+        color: grey400,
         size: 24,
       );
     } else if (widget.event.eventType == 'Bar Mitzvah') {
       icon = Icon(
         FontAwesomeIcons.moneyBill,
-        color: Colors.grey[850],
+        color: grey400,
         size: 24,
       );
     } else if (widget.event.eventType == 'Engagement') {
       icon = Icon(
         FontAwesomeIcons.ring,
-        color: Colors.grey[850],
+        color: grey400,
         size: 24,
       );
     }
@@ -350,7 +334,7 @@ class _EventInvitationTileWidgetState
 //                                     index
 //                                 ? Colors.grey[850]
 //                                 : lightGrey,
-//                             // : Color(0xFFF5F5F5),
+//                             // : seaSault,
 //                             label: Text(
 //                               chipLabels[index],
 //                               style: TextStyle(
@@ -363,7 +347,7 @@ class _EventInvitationTileWidgetState
 //                                                     .notifier)
 //                                             .state ==
 //                                         index
-//                                     ? Color(0xFFF5F5F5)
+//                                     ? seaSault
 //                                     : Colors.grey[850],
 //                               ),
 //                             ),

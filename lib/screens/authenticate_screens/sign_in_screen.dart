@@ -29,9 +29,9 @@ class _SignInState extends ConsumerState<SignIn> {
     return loading
         ? Loading()
         : Scaffold(
-            backgroundColor: Color(0xFFF5F5F5),
+            backgroundColor: seaSault,
             appBar: AppBar(
-              backgroundColor: Color(0xFFF5F5F5),
+              backgroundColor: seaSault,
               elevation: 0.0,
               title: Center(
                 child: Text(
@@ -146,7 +146,25 @@ class _SignInState extends ConsumerState<SignIn> {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20),
                                     ),
-                                    backgroundColor: darkGrey),
+                                    backgroundColor: ashGrey),
+                                onPressed: () async {
+                                  widget.toggleView();
+                                  print('register');
+                                  print(email);
+                                  print(password);
+                                },
+                                child: Text(
+                                  'Register',
+                                  style: TextStyle(color: darkGrey),
+                                ),
+                              ),
+                              Spacer(),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    backgroundColor: ashGrey),
                                 onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
                                     setState(() => loading = true);
@@ -163,31 +181,13 @@ class _SignInState extends ConsumerState<SignIn> {
                                     }
                                   } else {
                                     print('couldnt sign in');
-                                    print('this email ${email}');
+                                    print('this email ${email}');    
                                     print(password);
                                   }
                                 },
                                 child: Text(
                                   'Sign in',
-                                  style: TextStyle(color: creamWhite),
-                                ),
-                              ),
-                              Spacer(),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    backgroundColor: darkGrey),
-                                onPressed: () async {
-                                  widget.toggleView();
-                                  print('register');
-                                  print(email);
-                                  print(password);
-                                },
-                                child: Text(
-                                  'Register',
-                                  style: TextStyle(color: creamWhite),
+                                  style: TextStyle(color: darkGrey),
                                 ),
                               ),
                             ],

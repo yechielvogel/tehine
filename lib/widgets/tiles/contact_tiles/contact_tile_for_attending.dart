@@ -10,6 +10,7 @@ import '../../../backend/api/contacts/shared_preferences/save_contacts_to_shared
 import '../../../providers/user_providers.dart';
 
 import '../../../screens/expanded_screens/contact_expanded_screen.dart';
+import '../../../shared/style.dart';
 
 class ContactTileForAttendingWidget extends ConsumerStatefulWidget {
   // final ContactModel contact;
@@ -44,32 +45,22 @@ class _ContactTileForAttendingWidgetState
       //     ),
       //   );
       // },
-      child: Padding(
-        padding: const EdgeInsets.only(right: 8.0, left: 8.0),
-        child: Container(
-          // width: 380,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Color(0xFFF5F5F5),
-          ),
+      child: Container(
+        // width: 380,
+        decoration: BoxDecoration(
+          color: seaSault,
+        ),
 
-          // Changed this line in dismissible.
-          // clipper: _DismissibleClipper(
-          //   axis: _directionIsXAxis ? Axis.horizontal : Axis.vertical,
-          //   moveAnimation: _moveAnimation,
-          // ),
+        // Changed this line in dismissible.
+        // clipper: _DismissibleClipper(
+        //   axis: _directionIsXAxis ? Axis.horizontal : Axis.vertical,
+        //   moveAnimation: _moveAnimation,
+        // ),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
           child: Container(
             decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 2,
-                  blurRadius: 3,
-                  offset: Offset(0, 3),
-                ),
-              ],
-              borderRadius: BorderRadius.circular(20),
-              color: Color(0xFFF5F5F5),
+              color: seaSault,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -80,6 +71,7 @@ class _ContactTileForAttendingWidgetState
                     child: const Icon(
                       Icons.account_circle_rounded,
                       size: 50,
+                      color: Color(0xFFBDBDBD),
                     ),
                   ),
                 ),
@@ -92,7 +84,6 @@ class _ContactTileForAttendingWidgetState
                         padding: const EdgeInsets.only(
                             top: 25, left: 20, bottom: 10),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
                           child: Container(
                             child: Text(
                               widget.contactName,
@@ -103,9 +94,6 @@ class _ContactTileForAttendingWidgetState
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 3,
                       ),
                       Padding(
                         padding: const EdgeInsets.only(

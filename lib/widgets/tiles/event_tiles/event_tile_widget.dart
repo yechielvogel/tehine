@@ -65,7 +65,7 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
       onTap: () async {
         print('Event ID ${widget.event.eventRecordID}');
         ref.read(selectedEventNameProvider.notifier).state =
-            widget.event.eventName;
+            widget.event.eventName.toString();
         ref.read(selectedEventProvider.notifier).state = widget.event;
         // printEventListsFromSP();
         await ref.refresh(eventListFromSharedPreferenceProvider);
@@ -91,7 +91,7 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
           width: 380,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            color: Color(0xFFF5F5F5),
+            color: seaSault,
           ),
           child: Container(
             decoration: BoxDecoration(
@@ -104,7 +104,7 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                 ),
               ],
               borderRadius: BorderRadius.circular(20),
-              color: Color(0xFFF5F5F5),
+              color: seaSault,
             ),
             child: Column(
               children: [
@@ -118,7 +118,7 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                       ),
                       child: Container(
                         child: Text(
-                          widget.event.eventName,
+                          widget.event.eventName.toString(),
                           style: TextStyle(
                               color: Colors.grey[850],
                               fontSize: 20,
@@ -140,7 +140,7 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                     Padding(
                       padding:
                           const EdgeInsets.only(top: 0, left: 20, bottom: 0),
-                      child: Container(child: Text(widget.event.eventAddress)),
+                      child: Container(child: Text(widget.event.eventAddress.toString())),
                     )
                   ],
                 ),
@@ -152,7 +152,7 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                           const EdgeInsets.only(top: 0, left: 20, bottom: 0),
                       child: Container(
                           child: Text(DateFormat('MM/dd/yyyy')
-                              .format(DateTime.parse(widget.event.eventDate)))),
+                              .format(DateTime.parse(widget.event.eventDate.toString())))),
                     )
                   ],
                 ),
@@ -166,7 +166,8 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                           GestureDetector(
                             onTap: () {
                               showModalBottomSheet(
-                                backgroundColor: creamWhite,
+                                // isScrollControlled: true,
+                                backgroundColor: seaSault,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.vertical(
                                     top: Radius.circular(20),
@@ -179,7 +180,7 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                             },
                             child: Icon(
                               Icons.mail_outline, // Envelope icon
-                              color: Colors.grey[850],
+                              color: darkGrey,
                               size: 20,
                             ),
                           ),
@@ -190,7 +191,7 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                             widget.event.invited
                                 .toString(), // Replace with your attendance count
                             style: TextStyle(
-                              color: Colors.grey[850],
+                              color: darkGrey,
                               fontSize: 14,
                             ),
                           ),
@@ -205,7 +206,7 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                           GestureDetector(
                             onTap: () {
                               showModalBottomSheet(
-                                backgroundColor: creamWhite,
+                                backgroundColor: seaSault,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.vertical(
                                     top: Radius.circular(20),
@@ -218,7 +219,7 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                             },
                             child: Icon(
                               Icons.check_circle_outline,
-                              color: Colors.grey[850],
+                              color: darkGrey,
                               size: 20,
                             ),
                           ),
@@ -226,7 +227,7 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                           Text(
                             widget.attending.toString(),
                             style: TextStyle(
-                              color: Colors.grey[850],
+                              color: darkGrey,
                               fontSize: 14,
                             ),
                           ),
@@ -241,7 +242,7 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                           GestureDetector(
                             onTap: () {
                               showModalBottomSheet(
-                                backgroundColor: creamWhite,
+                                backgroundColor: seaSault,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.vertical(
                                     top: Radius.circular(20),
@@ -254,7 +255,7 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                             },
                             child: Icon(
                               Icons.schedule, // Envelope icon
-                              color: Colors.grey[850],
+                              color: darkGrey,
                               size: 20,
                             ),
                           ),
@@ -266,7 +267,7 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                                 .toString()
                                 .toString(), // Replace with your attendance count
                             style: TextStyle(
-                              color: Colors.grey[850],
+                              color: darkGrey,
                               fontSize: 14,
                             ),
                           ),
@@ -281,7 +282,7 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                           GestureDetector(
                             onTap: () {
                               showModalBottomSheet(
-                                backgroundColor: creamWhite,
+                                backgroundColor: seaSault,
                                 // isScrollControlled: true,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.vertical(
@@ -297,7 +298,7 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                             },
                             child: Icon(
                               Icons.cancel_outlined, // Envelope icon
-                              color: Colors.grey[850],
+                              color: darkGrey,
                               size: 20,
                             ),
                           ),
@@ -308,7 +309,7 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
                             widget.notAttending
                                 .toString(), // Replace with your attendance count
                             style: TextStyle(
-                              color: Colors.grey[850],
+                              color: darkGrey,
                               fontSize: 14,
                             ),
                           ),
@@ -329,25 +330,25 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
     if (widget.event.eventType == 'Wedding') {
       icon = Icon(
         FontAwesomeIcons.gift, // Replace with the desired icon
-        color: Colors.grey[850],
+        color: grey400,
         size: 24,
       );
     } else if (widget.event.eventType == 'Birthday Party') {
       icon = Icon(
         FontAwesomeIcons.birthdayCake, // Replace with the desired icon
-        color: Colors.grey[850],
+        color: grey400,
         size: 24,
       );
     } else if (widget.event.eventType == 'Bar Mitzvah') {
       icon = Icon(
         FontAwesomeIcons.moneyBill, // Replace with the desired icon
-        color: Colors.grey[850],
+        color: grey400,
         size: 24,
       );
     } else if (widget.event.eventType == 'Engagement') {
       icon = Icon(
         FontAwesomeIcons.ring, // Replace with the desired icon
-        color: Colors.grey[850],
+        color: grey400,
         size: 24,
       );
     }
@@ -356,17 +357,17 @@ class _EventTileWidgetState extends ConsumerState<EventTileWidget> {
   Future<void> initializeProviders() async {
     ref.read(eventRecordIDProvider.notifier).state = widget.event.eventRecordID;
     // print('ref ID ${ref.read(eventRecordIDProvider)}');
-    ref.read(eventNameProvider.notifier).state = widget.event.eventName;
+    ref.read(eventNameProvider.notifier).state = widget.event.eventName.toString();
     ref.read(eventDescriptionProvider.notifier).state =
-        widget.event.eventDescription;
-    ref.read(eventTypeProvider.notifier).state = widget.event.eventType;
-    ref.read(eventDateProvider.notifier).state = widget.event.eventDate;
-    ref.read(eventAddressProvider.notifier).state = widget.event.eventAddress;
-    ref.read(eventAddress2Provider.notifier).state = widget.event.eventAddress2;
-    ref.read(eventCountryProvider.notifier).state = widget.event.eventCountry;
-    ref.read(eventStateProvider.notifier).state = widget.event.eventState;
+        widget.event.eventDescription.toString();
+    ref.read(eventTypeProvider.notifier).state = widget.event.eventType.toString();
+    ref.read(eventDateProvider.notifier).state = widget.event.eventDate.toString();
+    ref.read(eventAddressProvider.notifier).state = widget.event.eventAddress.toString();
+    ref.read(eventAddress2Provider.notifier).state = widget.event.eventAddress2.toString();
+    ref.read(eventCountryProvider.notifier).state = widget.event.eventCountry.toString();
+    ref.read(eventStateProvider.notifier).state = widget.event.eventState.toString();
     ref.read(eventZipPostalCodeProvider.notifier).state =
-        widget.event.eventZipPostalCode;
+        widget.event.eventZipPostalCode.toString();
     // ref.read(eventListsProvider.notifier).state = widget.event.lists;
     ref.read(eventInvitedProvider.notifier).state = widget.event.invited!;
     ref.read(eventAttendingProvider.notifier).state = widget.event.attending!;

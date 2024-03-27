@@ -1,3 +1,4 @@
-String version = 'Beta 0.0.2';
+String version = 'Beta 0.0.4';
 
 
+    

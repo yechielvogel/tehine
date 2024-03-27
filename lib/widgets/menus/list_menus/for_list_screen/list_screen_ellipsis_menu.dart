@@ -8,6 +8,7 @@ import '../../../../providers/contact_providers.dart';
 import '../../../../providers/list_providers.dart';
 import '../../../../backend/api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
 import '../../../../providers/user_providers.dart';
+import '../../../../shared/style.dart';
 import 'clone_list_menu.dart';
 
 // Need to refactor the code here make functions for the items at the bottom of the page.
@@ -109,7 +110,7 @@ void listScreenEllipsisMenu(BuildContext context, ref) {
       borderRadius: BorderRadius.circular(10.0),
     ),
     elevation: 8,
-    color: Color(0xFFF5F5F5),
+    color: seaSault,
   ).then((value) async {
     if (value != null) {
       if (value == 1) {
@@ -279,15 +280,15 @@ void selectableListScreenEllipsisMenu(BuildContext context, WidgetRef ref) {
         ),
         Offset.zero & overlay.size,
       ),
-      items: [
-        PopupMenuItem(
-          child: Text(
-            'Add contacts to list:',
-            style:
-                TextStyle(fontWeight: FontWeight.bold, color: Colors.grey[850]),
+      items: [    
+          PopupMenuItem(
+            child: Text(
+              'Add contacts to list:',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.grey[850]),
+            ),
+            enabled: false,
           ),
-          enabled: false,
-        ),
         ...filteredListItems.map((String listItem) {
           return PopupMenuItem(
             child: Text(listItem),
@@ -299,7 +300,7 @@ void selectableListScreenEllipsisMenu(BuildContext context, WidgetRef ref) {
         borderRadius: BorderRadius.circular(10.0),
       ),
       elevation: 8,
-      color: Color(0xFFF5F5F5),
+      color: seaSault,
     ).then((value) {
       if (value != null) {
         for (ContactModel contact in contacts) {
@@ -328,7 +329,7 @@ void selectableListScreenEllipsisMenu(BuildContext context, WidgetRef ref) {
           String listsAsString = updatedContact.lists!.join(', ');
           processedContacts = ref.read(contactsProvider);
           processedContacts.add(updatedContact);
-          saveContactsToSP(processedContacts);
+          saveContactsToSP(processedContacts);    
           if (ref.read(selectedListProvider) == 'Tehine') {
             saveContactToSavedTable(updatedContact.contactRecordID,
                 ref.read(userStreamProvider).value!.uid, listsAsString);

@@ -18,8 +18,7 @@ class AttendingInfoWidget extends ConsumerStatefulWidget {
       _AttendingInfoWidgetState();
 }
 
-class _AttendingInfoWidgetState
-    extends ConsumerState<AttendingInfoWidget> {
+class _AttendingInfoWidgetState extends ConsumerState<AttendingInfoWidget> {
   late PageController _pageController;
 
   // pages
@@ -27,7 +26,7 @@ class _AttendingInfoWidgetState
   @override
   void initState() {
     super.initState();
-   _pageController = PageController(initialPage: widget.indexNumber);
+    _pageController = PageController(initialPage: widget.indexNumber);
   }
 
   @override
@@ -43,7 +42,6 @@ class _AttendingInfoWidgetState
       physics: AlwaysScrollableScrollPhysics(),
       controller: _pageController,
       children: pages,
-      
     );
   }
 }
@@ -52,35 +50,30 @@ class _AttendingInfoWidgetState
 
 Widget pending(EventModel event) {
   List? pendingNames = event.pendingList;
-  return Container(
-    child: Column(
-      children: [
-        Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 10, top: 20, bottom: 10),
-              child: Container(
-                  child: Text(
-                'Pending',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              )),
-            ),
-          ],
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: pendingNames?.length,
-            itemBuilder: (BuildContext context, int index) {
-              String name = pendingNames?[index];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: ContactTileForAttendingWidget(contactName: name),
-              );
-            },
+  return Column(
+    children: [
+      Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 10, top: 20, bottom: 10),
+            child: Container(
+                child: Text(
+              'Pending',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            )),
           ),
+        ],
+      ),
+      Expanded(
+        child: ListView.builder(
+          itemCount: pendingNames?.length,
+          itemBuilder: (BuildContext context, int index) {
+            String name = pendingNames?[index];
+            return ContactTileForAttendingWidget(contactName: name);
+          },
         ),
-      ],
-    ),
+      ),
+    ],
   );
 }
 
@@ -90,6 +83,7 @@ Widget attending(EventModel event) {
 
   return Container(
     child: Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Row(
           children: [
@@ -108,10 +102,7 @@ Widget attending(EventModel event) {
             itemCount: attendingNames?.length,
             itemBuilder: (BuildContext context, int index) {
               String name = attendingNames?[index];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: ContactTileForAttendingWidget(contactName: name),
-              );
+              return ContactTileForAttendingWidget(contactName: name);
             },
           ),
         ),
@@ -124,35 +115,31 @@ Widget attending(EventModel event) {
 Widget invited(EventModel event) {
   List? invitedNames = event.invitedList;
 
-  return Container(
-    child: Column(
-      children: [
-        Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 10, top: 20, bottom: 10),
-              child: Container(
-                  child: Text(
-                'Invited',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              )),
-            ),
-          ],
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: invitedNames?.length,
-            itemBuilder: (BuildContext context, int index) {
-              String name = invitedNames?[index];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: ContactTileForAttendingWidget(contactName: name),
-              );
-            },
+  return Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 10, top: 20, bottom: 10),
+            child: Container(
+                child: Text(
+              'Invited',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            )),
           ),
+        ],
+      ),
+      Expanded(
+        child: ListView.builder(
+          itemCount: invitedNames?.length,
+          itemBuilder: (BuildContext context, int index) {
+            String name = invitedNames?[index];
+            return ContactTileForAttendingWidget(contactName: name);
+          },
         ),
-      ],
-    ),
+      ),
+    ],
   );
 }
 
@@ -160,34 +147,30 @@ Widget invited(EventModel event) {
 Widget notAttending(EventModel event) {
   List? notAttendingNames = event.notAttendingList;
 
-  return Container(
-    child: Column(
-      children: [
-        Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 10, top: 20, bottom: 10),
-              child: Container(
-                  child: Text(
-                'Not Attending',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              )),
-            ),
-          ],
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: notAttendingNames?.length,
-            itemBuilder: (BuildContext context, int index) {
-              String name = notAttendingNames?[index];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: ContactTileForAttendingWidget(contactName: name),
-              );
-            },
+  return Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 10, top: 20, bottom: 10),
+            child: Container(
+                child: Text(
+              'Not Attending',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            )),
           ),
+        ],
+      ),
+      Expanded(
+        child: ListView.builder(
+          itemCount: notAttendingNames?.length,
+          itemBuilder: (BuildContext context, int index) {
+            String name = notAttendingNames?[index];
+            return ContactTileForAttendingWidget(contactName: name);
+          },
         ),
-      ],
-    ),
+      ),
+    ],
   );
 }

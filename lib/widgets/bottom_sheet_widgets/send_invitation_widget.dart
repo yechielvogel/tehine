@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tehine/providers/user_providers.dart';
 // import 'package:url_launcher/url_launcher.dart';
@@ -31,6 +31,7 @@ class _SendInvitationWidgetState extends ConsumerState<SendInvitationWidget> {
   }
 
   List<String> recipients = [''];
+  List<String> recipientsUserRecordId = [''];
 
   List<String>? attachments = [];
 
@@ -50,28 +51,30 @@ class _SendInvitationWidgetState extends ConsumerState<SendInvitationWidget> {
                     style: ElevatedButton.styleFrom(
                       elevation: 0,
                       fixedSize: Size(20, 50.0),
-                      backgroundColor: darkGrey,
+                      backgroundColor: ashGrey,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                     ),
                     onPressed: () async {
                       await _getAllContactsEmail(ref);
+                      await _getAllContactsUserRecordId(ref);
                       await sendTehineInvitations(ref);
                       await _getAttachment(ref);
                       // await sendTehineInvitations(ref);
-                      // await sendEmail();
+                      await sendEmail();
                       // await sendEmail();
                     },
                     child: Icon(
-                      CupertinoIcons.mail_solid,
+                      CupertinoIcons.mail,
                       size: 35,
+                      color: darkGrey,
                     )),
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       elevation: 0,
                       fixedSize: Size(20, 50.0),
-                      backgroundColor: darkGrey,
+                      backgroundColor: ashGrey,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
@@ -83,14 +86,15 @@ class _SendInvitationWidgetState extends ConsumerState<SendInvitationWidget> {
                       await sendTehineInvitations(ref);
                     },
                     child: Icon(
-                      CupertinoIcons.chat_bubble_fill,
+                      CupertinoIcons.chat_bubble,
                       size: 35,
+                      color: darkGrey,
                     )),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     elevation: 0,
                     fixedSize: Size(20, 50.0),
-                    backgroundColor: darkGrey,
+                    backgroundColor: ashGrey,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0),
                     ),
@@ -99,13 +103,13 @@ class _SendInvitationWidgetState extends ConsumerState<SendInvitationWidget> {
                     // await _getAllContactsPhone(ref);
                     await _getAttachment(ref);
                     await sendTehineInvitations(ref);
-                    await sendTehineInvitations(ref);
 
                     // await sendWhatsApp();
                   },
                   child: ImageIcon(
                     AssetImage('lib/assets/images/whatsappIcon.webp'),
                     size: 40,
+                    color: darkGrey,
                   ),
                 ),
               ],
@@ -146,16 +150,41 @@ class _SendInvitationWidgetState extends ConsumerState<SendInvitationWidget> {
   //   text: 'Mail body.',
   // );
 
-  // Future<void> sendEmail() async {
-  //   final Email email = Email(
-  //     body: 'Please join us for the wedding of...',
-  //     subject: ref.read(eventNameProvider),
-  //     recipients: [ref.read(userEmailProvider)],
-  //     // cc: ['cc@example.com'],
-  //     bcc: recipients,
-  //     attachmentPaths: attachments,
-  //     isHTML: false,
-  //   );
+  Future<void> sendEmail() async {
+    // The email button below worked in the terminal but not yet in the email.
+
+    final String apiKey =
+        'patS6BGUI9SY8OcFJ.fd3c067a6f9874f1847fddf6a21815d8b54dac5ed1b0340dae533856d0c9437a';
+    final String? eventRecordID = ref.read(eventRecordIDProvider);
+    final String? userRecordID = recipientsUserRecordId.toString();
+
+    final String htmlContent = '''
+    <p>You've been invited to an event! Click the button below to accept the invitation:</p>
+    <p><button id="acceptButton" style="background-color: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Accept Invitation</button></p>
+    <script>
+        document.getElementById('acceptButton').addEventListener('click', function() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('PATCH', 'https://api.airtable.com/v0/appRoQJZBl8WC5KWa/Events/$eventRecordID', true);
+            xhr.setRequestHeader('Authorization', 'Bearer $apiKey');
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({ fields: { Attending: ['$userRecordID'] } }));
+            alert('Invitation accepted!');
+        });
+    </script>
+  ''';
+
+    final Email email = Email(
+      body: htmlContent,
+      subject: '${ref.read(eventNameProvider)} + ${recipientsUserRecordId}',
+      recipients: [ref.read(userEmailProvider)],
+      // cc: ['cc@example.com'],
+      bcc: recipients,
+      attachmentPaths: attachments,
+      isHTML: true,
+    );
+
+    await FlutterEmailSender.send(email);
+  }
 
   //   try {
   //     await FlutterEmailSender.send(email);
@@ -187,6 +216,21 @@ class _SendInvitationWidgetState extends ConsumerState<SendInvitationWidget> {
     }
   }
 
+  Future<void> _getAllContactsUserRecordId(ref) async {
+    List<String> refString = ref.read(eventListProvider);
+
+    List<ContactModel> contacts = ref.watch(contactsProvider);
+
+    for (ContactModel contact in contacts) {
+      if (contact.lists.any((listItem) => refString.contains(listItem))) {
+        if (contact.email.isNotEmpty) {
+          recipientsUserRecordId.add(contact.userRecordID.toString());
+          // print(recipients);
+        }
+      }
+    }
+  }
+
   Future<void> _getAllContactsPhone(ref) async {
     List<String> refString = ref.read(eventListProvider);
 
@@ -202,7 +246,7 @@ class _SendInvitationWidgetState extends ConsumerState<SendInvitationWidget> {
     }
   }
 
-  Future<void> sendTehineInvitations(ref) async {
+  Future<void> sendTehineInvitations(ref) async {     
     List<String> refString = ref.read(eventListProvider);
 
     List<ContactModel> contacts = ref.watch(contactsProvider);
@@ -210,19 +254,13 @@ class _SendInvitationWidgetState extends ConsumerState<SendInvitationWidget> {
       if (contact.lists.any((listItem) => refString.contains(listItem))) {
         if (contact.userRecordID != '') {
           recipients.add(contact.userRecordID.toString());
-          print(recipients);
         }
       }
     }
-    for (var contact in recipients) {
-      if (contact != '') {
-        inviteTehineUserToEventToAt(ref.read(eventRecordIDProvider), contact);
-        print('this should be userRecordID $contact');
-        // call a function to invite the contact
-      } else
-        (print('there are no userRecordID'));
-      print(recipients);
-    }
+
+    inviteTehineUserToEventToAt(ref.read(eventRecordIDProvider), recipients);
+
+    // call a function to invite the contact
   }
 }
 

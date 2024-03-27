@@ -32,133 +32,104 @@ class _ContactExpandedScreenWidgetState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFFF5F5F5),
+        backgroundColor: seaSault,
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.grey[850]),
-      ),
-      backgroundColor: Color(0xFFF5F5F5),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              height: 300,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('lib/assets/images/BlankImage.jpg'),
-                  fit:
-                      BoxFit.cover, // You can adjust the fit property as needed
+        iconTheme: IconThemeData(color: steelBlue),
+        title: Padding(
+          padding: const EdgeInsets.all(0.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              // SizedBox(width: 5),
+              IconButton(
+                icon: Icon(
+                  CupertinoIcons.share_solid,
+                  color: steelBlue,
+                  size: 25,
                 ),
+                onPressed: () async {},
+              ),
+
+              IconButton(
+                icon: Icon(
+                  Icons.edit,
+                  color: steelBlue,
+                  size: 25,
+                ),
+                onPressed: () async {
+                  // Function to open form to edit
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.delete,
+                  color: steelBlue,
+                  size: 25,
+                ),
+                onPressed: () async {},
+              ),
+            ],
+          ),
+        ),
+      ),
+      backgroundColor: seaSault,
+      body: SingleChildScrollView(
+        child: Column(children: [
+          Container(
+            height: 200,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('lib/assets/images/BlankImage.jpg'),
+                fit: BoxFit.cover, // You can adjust the fit property as needed
               ),
             ),
-            SizedBox(height: 10),
-            Container(
-                child: Padding(
-              padding: const EdgeInsets.only(right: 8, left: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      elevation: 0,
-                      fixedSize: Size(20, 50.0),
-                      backgroundColor: darkGrey,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: Icon(
-                      Icons.person_add_alt_1_rounded,
-                      color: creamWhite,
-                    ),
-                  ),
-                  // ElevatedButton(
-                  //   style: ElevatedButton.styleFrom(
-                  //     elevation: 0,
-                  //     fixedSize: Size(20, 50.0),
-                  //     backgroundColor: darkGrey,
-                  //     shape: RoundedRectangleBorder(
-                  //       borderRadius: BorderRadius.circular(20.0),
-                  //     ),
-                  //   ),
-                  //   onPressed: () {},
-                  //   child: Icon(
-                  //     Icons.attach_file_rounded,
-                  //     color: Colors.grey[850],
-                  //   ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10, right: 8, left: 8),
+            child: Container(
+              decoration: BoxDecoration(
+                color: lightGrey,
+                boxShadow: [
+                  // BoxShadow(
+                  //   color: Colors.grey.withOpacity(0.5),
+                  //   spreadRadius: 2,
+                  //   blurRadius: 3,
+                  //   offset: Offset(0, 3),
                   // ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      elevation: 0,
-                      fixedSize: Size(20, 50.0),
-                      backgroundColor: darkGrey,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: Icon(
-                      CupertinoIcons.share_solid,
-                      color: creamWhite,
-                    ),
+                ],
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Column(
+                children: [
+                  EventAndContactInfoBlock(
+                    title: 'Name',
+                    content: widget.contact.firstName +
+                        ' ' +
+                        widget.contact.lastName,
                   ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      elevation: 0,
-                      fixedSize: Size(20, 50.0),
-                      backgroundColor: darkGrey,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: Icon(
-                      Icons.edit,
-                      color: creamWhite,
-                    ),
+                  EventAndContactInfoBlock(
+                    title: 'Phone',
+                    content: widget.contact.phoneNumber,
                   ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      elevation: 0,
-                      fixedSize: Size(20, 50.0),
-                      backgroundColor: darkGrey,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: Icon(
-                      Icons.delete,
-                      color: creamWhite,
-                    ),
+                  EventAndContactInfoBlock(
+                    title: 'Email',
+                    content: widget.contact.email,
                   ),
+                  EventAndContactInfoBlock(
+                      title: 'Address',
+                      content:
+                          '${widget.contact.addressStreet.toString()} ${widget.contact.addressCity.toString()} ${widget.contact.addressZip.toString()}'
+                      // content: widget.contact.address,
+                      ),
+                  EventAndContactInfoBlock(
+                    title: 'Lists',
+                    content: 'Coming Soon',
+                  )
                 ],
               ),
-            )),
-            EventAndContactInfoBlock(
-              title: 'Name',
-              content: widget.contact.firstName + ' ' + widget.contact.lastName,
             ),
-            EventAndContactInfoBlock(
-              title: 'Phone',
-              content: widget.contact.phoneNumber,
-            ),
-            EventAndContactInfoBlock(
-              title: 'Email',
-              content: widget.contact.email,
-            ),
-            EventAndContactInfoBlock(
-                title: 'Address',
-                content:
-                    '${widget.contact.addressStreet.toString()} ${widget.contact.addressCity.toString()} ${widget.contact.addressZip.toString()}'
-                // content: widget.contact.address,
-                ),
-            EventAndContactInfoBlock(
-              title: 'Lists',
-              content: 'Coming Soon',
-            )
-          ],
-        ),
+          )
+        ]),
       ),
     );
   }

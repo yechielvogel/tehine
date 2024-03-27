@@ -8,6 +8,7 @@ import '../../../../providers/contact_providers.dart';
 import '../../../../providers/list_providers.dart';
 import '../../../../backend/api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
 import '../../../../providers/user_providers.dart';
+import '../../../../shared/style.dart';
 import '../../../forms/create_list_form.dart';
 
 void cloneListMenu(BuildContext context, WidgetRef ref) {
@@ -63,7 +64,7 @@ void cloneListMenu(BuildContext context, WidgetRef ref) {
         borderRadius: BorderRadius.circular(10.0),
       ),
       elevation: 8,
-      color: Color(0xFFF5F5F5),
+      color: seaSault,
     ).then((value) async {
       if (value != null && value != 2 && value != 1) {
         await cloneContactsToList(value, ref);
@@ -143,8 +144,6 @@ Future<void> cloneContactsToList(String lists, ref) async {
         updatedContact.phoneNumber,
         updatedContact.email,
         updatedContact.lists,
-
-
         ref.read(userStreamProvider).value?.uid,
       );
     });

@@ -58,7 +58,7 @@ Future<void> uploadUserInfoToAt(
     user.lastName = lastName;
     user.email = email;
     user.phoneNumber = phoneNumber;
-    saveUserToSP(user);
+    await saveUserToSP(user);
     Users? userInfo = await loadUserFromSP();
 
     await createUserContactToAt(
@@ -69,7 +69,7 @@ Future<void> uploadUserInfoToAt(
         userInfo?.email,
         userInfo?.phoneNumber);
   } else {
-    print('Failed to upload data. Status code: ${response.statusCode}');
+    print('Failed to upload data. Status code:: ${response.statusCode}');
     print(response.body);
   }
 }
@@ -97,7 +97,7 @@ Future<void> createUserContactToAt(
     'Email': email,
     'Added By User': uid,
     'Users Link': [userRecordID],
-    'Status': ['On App'],
+    // 'Status': ['On App'],
 
     // 'Location': location,
   };
@@ -118,7 +118,7 @@ Future<void> createUserContactToAt(
     print('Data uploaded successfully');
     print(response.body);
   } else {
-    print('Failed to upload data. Status code: ${response.statusCode}');
+    print('Failed to upload data. Status code::: ${response.statusCode}');
     print(response.body);
   }
 }

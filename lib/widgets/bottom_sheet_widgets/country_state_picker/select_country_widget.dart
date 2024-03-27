@@ -48,7 +48,7 @@ class _SelectCountryWidgetState extends ConsumerState<SelectCountryWidget> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-          color: Color(0xFFF5F5F5),
+          color: seaSault,
         ),
         child: Column(
           children: [
@@ -63,39 +63,36 @@ class _SelectCountryWidgetState extends ConsumerState<SelectCountryWidget> {
             ),
             const SizedBox(height: 10),
             Padding(
-              padding: const EdgeInsets.only(right: 12.0, left: 12.0, bottom: 10),
+              padding:
+                  const EdgeInsets.only(right: 12.0, left: 12.0, bottom: 10),
               child: TextFormField(
                 cursorColor: Colors.grey[850],
-                    decoration: InputDecoration(
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                  borderSide: BorderSide(
-                                      color: Colors.grey[350] ?? Colors.grey,
-                                      width: 3)),
-                              hintText: 'Search',
-                              hintStyle: TextStyle(color: Colors.grey[850]),
-                              fillColor: Colors.grey[350] ?? Colors.grey,
-                              filled: true,
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                  borderSide: BorderSide(
-                                      color: Colors.grey[350] ?? Colors.grey,
-                                      width: 3.0)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                  borderSide: BorderSide(
-                                      color: Colors.grey[350] ?? Colors.grey,
-                                      width: 3.0)),
-                              errorStyle: TextStyle(
-                                color: Colors.grey[850],
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
-                                    color: Colors.grey[350] ?? Colors.grey,
-                                    width: 3.0),
-                              ),
-                            ),
+                decoration: InputDecoration(
+                  focusedErrorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide(
+                          color: Colors.grey[350] ?? Colors.grey, width: 3)),
+                  hintText: 'Search',
+                  hintStyle: TextStyle(color: Colors.grey[850]),
+                  fillColor: Colors.grey[350] ?? Colors.grey,
+                  filled: true,
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide(
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide(
+                          color: Colors.grey[350] ?? Colors.grey, width: 3.0)),
+                  errorStyle: TextStyle(
+                    color: Colors.grey[850],
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(
+                        color: Colors.grey[350] ?? Colors.grey, width: 3.0),
+                  ),
+                ),
                 style: TextStyle(color: Colors.grey[850]),
                 onChanged: (value) {
                   _filterCountries(value);
@@ -103,8 +100,9 @@ class _SelectCountryWidgetState extends ConsumerState<SelectCountryWidget> {
               ),
             ),
             Expanded(
-              child: ListView.builder(    
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+              child: ListView.builder(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                 itemCount: _countrySubList.length,
                 physics: const ClampingScrollPhysics(),
                 itemBuilder: (context, index) {
@@ -123,8 +121,8 @@ class _SelectCountryWidgetState extends ConsumerState<SelectCountryWidget> {
                       padding: const EdgeInsets.only(
                           bottom: 20.0, left: 10.0, right: 10.0),
                       child: Text(_countrySubList[index].name,
-                          style:
-                              TextStyle(color: Colors.grey[850], fontSize: 16.0)),
+                          style: TextStyle(
+                              color: Colors.grey[850], fontSize: 16.0)),
                     ),
                   );
                 },
@@ -146,7 +144,7 @@ class _SelectCountryWidgetState extends ConsumerState<SelectCountryWidget> {
                 },
                 child: Text(
                   'Close',
-                  style: TextStyle(color: creamWhite),
+                  style: TextStyle(color: seaSault),
                 ),
               ),
             ),

@@ -36,9 +36,9 @@ class _RegisterState extends ConsumerState<Register> {
     return loading
         ? Loading()
         : Scaffold(
-            backgroundColor: Color(0xFFF5F5F5),
+            backgroundColor: seaSault,
             appBar: AppBar(
-              backgroundColor: Color(0xFFF5F5F5),
+              backgroundColor: seaSault,
               elevation: 0.0,
               title: Center(
                 child: Text(
@@ -60,7 +60,7 @@ class _RegisterState extends ConsumerState<Register> {
                           ),
                           TextFormField(
                             cursorColor: Colors.grey[850],
-                                 decoration: InputDecoration(
+                            decoration: InputDecoration(
                               focusedErrorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                   borderSide: BorderSide(
@@ -95,12 +95,9 @@ class _RegisterState extends ConsumerState<Register> {
                             validator: (val) =>
                                 val!.isEmpty ? 'Enter First Name' : null,
                             onChanged: (val) {
-                            
-
                               {
                                 setState(() => firstName = val);
-                                setState(() {
-                                });
+                                setState(() {});
                               }
                             },
                           ),
@@ -109,7 +106,7 @@ class _RegisterState extends ConsumerState<Register> {
                           ),
                           TextFormField(
                             cursorColor: Colors.grey[850],
-                                 decoration: InputDecoration(
+                            decoration: InputDecoration(
                               focusedErrorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                   borderSide: BorderSide(
@@ -144,11 +141,9 @@ class _RegisterState extends ConsumerState<Register> {
                             validator: (val) =>
                                 val!.isEmpty ? 'Enter Last Name' : null,
                             onChanged: (val) {
-                             
                               {
                                 setState(() => lastName = val);
-                                setState(() {
-                                });
+                                setState(() {});
                               }
                             },
                           ),
@@ -202,7 +197,7 @@ class _RegisterState extends ConsumerState<Register> {
                           TextFormField(
                             keyboardType: TextInputType.phone,
                             cursorColor: Colors.grey[850],
-                               decoration: InputDecoration(
+                            decoration: InputDecoration(
                               focusedErrorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                   borderSide: BorderSide(
@@ -239,8 +234,7 @@ class _RegisterState extends ConsumerState<Register> {
                             onChanged: (val) {
                               {
                                 setState(() => phoneNumber = val);
-                                setState(() {
-                                });
+                                setState(() {});
                               }
                             },
                           ),
@@ -249,7 +243,7 @@ class _RegisterState extends ConsumerState<Register> {
                           ),
                           TextFormField(
                             cursorColor: Colors.grey[850],
-                                 decoration: InputDecoration(
+                            decoration: InputDecoration(
                               focusedErrorBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                   borderSide: BorderSide(
@@ -275,7 +269,7 @@ class _RegisterState extends ConsumerState<Register> {
                               errorBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: BorderSide(
-                                    color: Colors.grey[350] ?? Colors.grey,
+                                    color: Colors.grey[350] ?? Colors.grey,    
                                     width: 3.0),
                               ),
                             ),
@@ -298,10 +292,26 @@ class _RegisterState extends ConsumerState<Register> {
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          20), 
+                                      borderRadius: BorderRadius.circular(20),
                                     ),
-                                    backgroundColor: darkGrey),
+                                    backgroundColor: ashGrey),
+                                onPressed: () async {
+                                  widget.toggleView();
+                                  print(email);
+                                  print(password);
+                                },
+                                child: Text(
+                                  'Sign in',
+                                  style: TextStyle(color: darkGrey),
+                                ),
+                              ),
+                              Spacer(),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    backgroundColor: ashGrey),
                                 onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
                                     setState(() => loading = true);
@@ -312,7 +322,7 @@ class _RegisterState extends ConsumerState<Register> {
                                           '${firstName.capitalizeFirstLetter()} ${lastName.capitalizeFirstLetter()}';
                                     } else {
                                       displayName = firstName + ' ' + lastName;
-                                    }   
+                                    }
 
                                     dynamic result = await _auth
                                         .registerWithEmailAndPassword(
@@ -346,24 +356,7 @@ class _RegisterState extends ConsumerState<Register> {
                                 },
                                 child: Text(
                                   'Register',
-                                  style: TextStyle(color: creamWhite),
-                                ),
-                              ),
-                              Spacer(),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    backgroundColor: darkGrey),
-                                onPressed: () async {
-                                  widget.toggleView();
-                                  print(email);
-                                  print(password);
-                                },
-                                child: Text(
-                                  'Sign in',
-                                  style: TextStyle(color: creamWhite),
+                                  style: TextStyle(color: darkGrey),
                                 ),
                               ),
                             ],

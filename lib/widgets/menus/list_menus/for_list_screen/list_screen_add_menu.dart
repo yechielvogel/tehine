@@ -7,7 +7,8 @@ import '../../../../providers/contact_providers.dart';
 import '../../../../providers/list_providers.dart';
 import '../../../../providers/user_providers.dart';
 import '../../../../shared/style.dart';
-import '../../../bottom_sheet_widgets/country_state_picker/add_contact.dart';
+import '../../../bottom_sheet_widgets/add_contacts_to_list_widget.dart';
+import '../../../bottom_sheet_widgets/add_contact_to_all_widget.dart';
 import '../../../forms/create_list_form.dart';
 
 void listScreenAddMenu(BuildContext context, WidgetRef ref) {
@@ -31,7 +32,7 @@ void listScreenAddMenu(BuildContext context, WidgetRef ref) {
       borderRadius: BorderRadius.circular(10.0),
     ),
     elevation: 8,
-    color: Color(0xFFF5F5F5),
+    color: seaSault,
   ).then((value) async {
     if (value != null) {
       // print('Selected Option: $value');
@@ -55,7 +56,7 @@ void listScreenAddMenu(BuildContext context, WidgetRef ref) {
       if (!status.isDenied) {
         await uploadContactsFromDevice(null, ref, false);
         showModalBottomSheet(
-            backgroundColor: creamWhite,
+            backgroundColor: seaSault,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(
                 top: Radius.circular(20),
@@ -65,7 +66,7 @@ void listScreenAddMenu(BuildContext context, WidgetRef ref) {
             builder: (context) => Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    AddContactWidget(),
+                    AddContactsToAllWidget(),
                   ],
                 ));
         /* 
@@ -86,9 +87,27 @@ void listScreenAddMenu(BuildContext context, WidgetRef ref) {
             ref.read(userStreamProvider).value?.uid, ref, true);
         await ref.refresh(contactsFromSharedPrefProvider);
         await ref.read(contactsProvider);
-        await ref.read(selectedListProvider);
+        await ref.read(selectedListProvider);     
       }
       ;
+    }
+    if (value == 5) {
+       showModalBottomSheet(
+            backgroundColor: seaSault,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
+            ),
+            context: context,
+            builder: (context) => Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    AddContactsToListWidget(),
+                  ],
+                ));
+      
+      print('going to show here the widget to add contacts');
     }
   });
 }

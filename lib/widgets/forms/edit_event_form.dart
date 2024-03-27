@@ -76,7 +76,7 @@ class _EditEventFormState extends ConsumerState<EditEventForm> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
-      backgroundColor: Color(0xFFF5F5F5),
+      backgroundColor: seaSault,
       title: Center(
         child: Text(
           'Edit Event',
@@ -595,7 +595,7 @@ class _EditEventFormState extends ConsumerState<EditEventForm> {
             },
             child: Text(
               'Save',
-              style: TextStyle(color: creamWhite),
+              style: TextStyle(color: seaSault),
             ),
           ),
         ),

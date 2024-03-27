@@ -42,7 +42,7 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: creamWhite,
+      backgroundColor: seaSault,
       body: SingleChildScrollView(
         controller: _scrollController,
         child: Column(
@@ -73,7 +73,10 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
                 onFieldSubmitted: (query) => performSearch(query, ref),
                 // cursorColor: Theme.of(context).colorScheme.background,
                 cursorColor: darkGrey,
+
                 decoration: InputDecoration(
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   focusedErrorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                     borderSide: BorderSide(
@@ -83,29 +86,29 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
                   ),
                   hintText: 'Search ${ref.read(selectedListProvider)}',
                   hintStyle: TextStyle(color: darkGrey),
-                  fillColor: lightGrey,
+                  fillColor: seaSault,
                   filled: true,
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                     borderSide: BorderSide(
-                      color: lightGrey,
+                      color: Color(0xFFBDBDBD),
                       width: 3.0,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                     borderSide: BorderSide(
-                      color: lightGrey,
+                      color: grey400,
                       width: 3.0,
                     ),
                   ),
                   errorStyle: TextStyle(
-                    color: lightGrey,
+                    color: grey400,
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                     borderSide: BorderSide(
-                      color: lightGrey,
+                      color: grey400,
                       width: 3.0,
                     ),
                   ),
@@ -126,25 +129,25 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
                       Padding(
                         padding: const EdgeInsets.only(right: 5),
                         child: ChoiceChip(
-                          selectedColor: darkGrey,
+                          selectedColor: ashGrey,
                           // selectedColor: Color(0xFFE6D3B3),
                           backgroundColor: ref.watch(selectedListProvider) ==
                                   ref.watch(listProvider)[index]
-                              ? darkGrey
+                              ? ashGrey
                               : lightGrey,
-                          // : creamWhite,
+                          // : seaSault,
                           // ? Color(0xFFE6D3B3)
-                          // : Color(0xFFF5F5F5),
+                          // : seaSault,
                           label: Text(
                             ref.watch(listProvider)[index],
-                            style: TextStyle(
-                              color: ref.watch(selectedListProvider) ==
-                                      ref.watch(listProvider)[index]
-                                  ? creamWhite
-                                  : darkGrey,
-                              // ? Colors.grey[850]
-                              // : Colors.grey[850],
-                            ),
+                            style: TextStyle(color: darkGrey
+                                // ref.watch(selectedListProvider) ==
+                                //         ref.watch(listProvider)[index]
+                                //     ? lightGrey
+                                //     : steelBlue,
+                                // ? Colors.grey[850]
+                                // : Colors.grey[850],
+                                ),
                           ),
                           selected: ref.watch(selectedListProvider) ==
                               (ref.watch(listProvider)[index] == -1
@@ -193,9 +196,9 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
 
           contactWidgets.add(Padding(
             padding: const EdgeInsets.only(
-              top: 6,
-              bottom: 6,
-            ),
+                // top: 3,
+                // bottom: 3,
+                ),
             child: contactWidget,
           ));
         }
@@ -222,8 +225,6 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
       },
     );
   }
-
-  
 
 // Function for search
   Future<void> performSearch(String query, ref) async {
@@ -303,8 +304,8 @@ class _ListsScreenState extends ConsumerState<ListsScreen> {
     ref.read(filteredContactsProvider);
 
     if (selected) {
-      ref.read(selectedListProvider.notifier).state =    
-      ref.watch(listProvider)[index];
+      ref.read(selectedListProvider.notifier).state =
+          ref.watch(listProvider)[index];
       ref.watch(selectedListScreenChipIndexProvider.state).state = index;
       print(ref.read(selectedListProvider));
     }

@@ -46,7 +46,7 @@ class _SelectStateWidgetState extends ConsumerState<SelectStateWidget> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-          color: Color(0xFFF5F5F5),
+          color: seaSault,
         ),
         child: Column(
           children: [
@@ -142,7 +142,7 @@ class _SelectStateWidgetState extends ConsumerState<SelectStateWidget> {
                 },
                 child: Text(
                   'Close',
-                  style: TextStyle(color: creamWhite),
+                  style: TextStyle(color: seaSault),
                 ),
               ),
             ),

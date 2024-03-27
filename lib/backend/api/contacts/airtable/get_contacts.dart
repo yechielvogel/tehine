@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import '../../../../shared/secrets.dart' as secrets;
 
 import '../../../../models/contact_model.dart';
 import '../../../../providers/contact_providers.dart';
@@ -13,6 +14,16 @@ import '../../events/airtable/get_events.dart';
 import '../shared_preferences/save_contacts_to_shared_preferences.dart';
 import '../../../../providers/user_providers.dart';
 
+String airtableTehineApiKey = secrets.airtableTehineApiKey;
+String airtableTehineBaseApiEndpoint = secrets.airtableTehineBaseApiEndpoint;
+String contactsTableKey = secrets.contactsTableKey;
+String savedContactsKey = secrets.savedContactsKey;
+String contactsEndpoint =
+    '/${airtableTehineBaseApiEndpoint}/' + '${contactsTableKey}';
+String savedContactsEndpoint =
+    '/${airtableTehineBaseApiEndpoint}/' + '${savedContactsKey}';
+
+    
 // This function will get all contacts from the Tehine data base
 
 final String airtableApiKey =

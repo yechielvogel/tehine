@@ -37,7 +37,6 @@ class _HomeState extends ConsumerState<InvitationsScreen> {
 
   bool _invitationsLoaded = false;
 
-
 // Should refactor this to clean up
   @override
   Widget build(BuildContext context) {
@@ -61,10 +60,9 @@ class _HomeState extends ConsumerState<InvitationsScreen> {
         }(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Loading(); 
+            return Loading();
           } else if (snapshot.hasError) {
-            return Text(
-                'Error: ${snapshot.error}'); 
+            return Text('Error: ${snapshot.error}');
           } else {
             return buildScaffold(events, selectedChipIndex);
           }
@@ -79,119 +77,132 @@ class _HomeState extends ConsumerState<InvitationsScreen> {
 
   Widget buildScaffold(List<EventModel> events, int selectedChipIndex) {
     return Scaffold(
-      backgroundColor: Color(0xFFF5F5F5),
+      backgroundColor: seaSault,
       body: Consumer(
         builder: (context, watch, child) {
           List<Widget> contactWidgets = [];
 
-          return SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                widget.showSearchBar
-                    ? TextFormField(
-                        cursorColor: Colors.grey[850],
-                        decoration: InputDecoration(
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(
-                              color: Colors.grey[350] ?? Colors.grey,
-                              width: 3,
-                            ),
-                          ),
-                          hintText: 'Search',
-                          hintStyle: TextStyle(color: Colors.grey[850]),
-                          fillColor: Colors.grey[350] ?? Colors.grey,
-                          filled: true,
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(
-                              color: Colors.grey[350] ?? Colors.grey,
-                              width: 3.0,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(
-                              color: Colors.grey[350] ?? Colors.grey,
-                              width: 3.0,
-                            ),
-                          ),
-                          errorStyle: TextStyle(color: Colors.grey[850]),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(
-                              color: Colors.grey[350] ?? Colors.grey,
-                              width: 3.0,
-                            ),
-                          ),
-                        ),
-                        style: TextStyle(color: Colors.grey[850]),
-                      )
-                    : Container(),
-                Padding(
-                  padding: const EdgeInsets.only(left: 5.0),
-                  child: SingleChildScrollView(
-                    clipBehavior: Clip.none,
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        for (int index = 0; index < chipLabels.length; index++)
-                          Padding(
-                            padding: const EdgeInsets.only(right: 5),
-                            child: ChoiceChip(
-                              selectedColor: Colors.grey[850],
-                              backgroundColor: selectedChipIndex == index
-                                  ? Colors.grey[850]
-                                  : lightGrey,
-                              // : Color(0xFFF5F5F5),
-                              label: Text(
-                                chipLabels[index],
-                                style: TextStyle(
-                                  color: selectedChipIndex == index
-                                      ? Color(0xFFF5F5F5)
-                                      : Colors.grey[850],
+          return RefreshIndicator(
+            color: steelBlue,
+            backgroundColor: seaSault,
+            onRefresh: () async {
+              await loadInvitationsFromAT(ref, ref.read(userRecordIDProvider));
+              await Future.delayed(Duration(seconds: 2));
+            },
+            child: ListView(
+              physics: AlwaysScrollableScrollPhysics(),
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    widget.showSearchBar
+                        ? TextFormField(
+                            cursorColor: Colors.grey[850],
+                            decoration: InputDecoration(
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: BorderSide(
+                                  color: Colors.grey[350] ?? Colors.grey,
+                                  width: 3,
                                 ),
                               ),
-                              selected: selectedChipIndex == index,
-                              onSelected: (selected) async {
-                                if (selected) {
-                                  ref
-                                      .read(
-                                          selectedInvitationScreenChipIndexProvider
-                                              .state)
-                                      .state = index;
-                                }
-                                await filterInvitations(index);
-                                ref.watch(invitationsProvider);
-                                ref.watch(filteredInvitationsProvider);
-                              },
+                              hintText: 'Search',
+                              hintStyle: TextStyle(color: Colors.grey[850]),
+                              fillColor: Colors.grey[350] ?? Colors.grey,
+                              filled: true,
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: BorderSide(
+                                  color: Colors.grey[350] ?? Colors.grey,
+                                  width: 3.0,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: BorderSide(
+                                  color: Colors.grey[350] ?? Colors.grey,
+                                  width: 3.0,
+                                ),
+                              ),
+                              errorStyle: TextStyle(color: Colors.grey[850]),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: BorderSide(
+                                  color: Colors.grey[350] ?? Colors.grey,
+                                  width: 3.0,
+                                ),
+                              ),
                             ),
-                          ),
-                        SizedBox(width: 7),
-                      ],
+                            style: TextStyle(color: Colors.grey[850]),
+                          )
+                        : Container(),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5.0),
+                      child: SingleChildScrollView(
+                        clipBehavior: Clip.none,
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            for (int index = 0;
+                                index < chipLabels.length;
+                                index++)
+                              Padding(
+                                padding: const EdgeInsets.only(right: 5),
+                                child: ChoiceChip(
+                                  selectedColor: ashGrey,
+                                  backgroundColor: selectedChipIndex == index
+                                      ? ashGrey
+                                      : lightGrey,
+                                  // : seaSault,
+                                  label: Text(
+                                    chipLabels[index],
+                                    style: TextStyle(color: darkGrey
+                                        // selectedChipIndex == index
+                                        //     ? lightGrey
+                                        //     : ashGrey,
+                                        ),
+                                  ),
+                                  selected: selectedChipIndex == index,
+                                  onSelected: (selected) async {
+                                    if (selected) {
+                                      ref
+                                          .read(
+                                              selectedInvitationScreenChipIndexProvider
+                                                  .state)
+                                          .state = index;
+                                    }
+                                    await filterInvitations(index);
+                                    ref.watch(invitationsProvider);
+                                    ref.watch(filteredInvitationsProvider);
+                                  },
+                                ),
+                              ),
+                            SizedBox(width: 7),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                SizedBox(height: 10),
-                ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: events.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    EventModel event = events[index];
-                    return EventInvitationTileWidget(
-                      event: event,
-                      invited: event.invited,
-                      attending: event.attending,
-                      pending: event.pending,
-                      notAttending: event.notAttending,
-                      // didAccept: event.didAccept,
-                    );
-                  },
-                ),
-                SizedBox(height: 10),       
+                    SizedBox(height: 10),
+                    ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: events.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        EventModel event = events[index];
+                        return EventInvitationTileWidget(
+                          event: event,
+                          invited: event.invited,
+                          attending: event.attending,
+                          pending: event.pending,
+                          notAttending: event.notAttending,
+                          // didAccept: event.didAccept,
+                        );
+                      },
+                    ),
+                    SizedBox(height: 10),
+                  ],
+                )
               ],
             ),
           );
@@ -209,7 +220,8 @@ class _HomeState extends ConsumerState<InvitationsScreen> {
     if (index == 0) {
       ref.watch(filteredInvitationsProvider.notifier).state =
           _invitations.where((invitation) {
-        DateTime invitationDate = DateTime.parse(invitation.eventDate);
+        DateTime invitationDate =
+            DateTime.parse(invitation.eventDate.toString());
         return invitationDate.year == currentDate.year &&
             invitationDate.month == currentDate.month &&
             invitationDate.day == currentDate.day;
@@ -227,7 +239,8 @@ class _HomeState extends ConsumerState<InvitationsScreen> {
     } else if (index == 3) {
       ref.watch(filteredInvitationsProvider.notifier).state =
           _invitations.where((invitation) {
-        DateTime invitationDate = DateTime.parse(invitation.eventDate);
+        DateTime invitationDate =
+            DateTime.parse(invitation.eventDate.toString());
         DateTime currentDate = DateTime.now();
         return invitationDate.isBefore(currentDate);
       }).toList();
@@ -235,7 +248,8 @@ class _HomeState extends ConsumerState<InvitationsScreen> {
     } else if (index == 4) {
       ref.watch(filteredInvitationsProvider.notifier).state =
           _invitations.where((invitation) {
-        DateTime invitationDate = DateTime.parse(invitation.eventDate);
+        DateTime invitationDate =
+            DateTime.parse(invitation.eventDate.toString());
         DateTime currentDate = DateTime.now();
         return !invitationDate.isBefore(currentDate);
       }).toList();
@@ -267,8 +281,7 @@ class _HomeState extends ConsumerState<InvitationsScreen> {
     if (getFilteredInvitations.isEmpty && index == 1) {
       invitations = getInitialInvitations;
     } else {
-      for (EventModel invitations in getFilteredInvitations) {
-      }
+      for (EventModel invitations in getFilteredInvitations) {}
       invitations = getFilteredInvitations;
     }
     return invitations;

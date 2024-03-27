@@ -16,18 +16,17 @@ import '../shared_preferences/save_event_to_shared_preferences.dart';
 /* This function will check if there is any data on device if no will 
 will call the next function that will check airtable and if yes will bring all 
 the data down 
-*/   
+*/
 
 Future<void> getAllEventsDataFromAtOnStart(BuildContext context) async {
-  final ref = ProviderScope.containerOf(context);    
-  ref.refresh(eventsFromSharedPrefProvider);   
+  final ref = ProviderScope.containerOf(context);
+  ref.refresh(eventsFromSharedPrefProvider);
   bool isThereAnyDataOnDevice = false;
   final events = ref.read(eventsProvider);
   if (events.isNotEmpty) {
     isThereAnyDataOnDevice = true;
   }
   if (!isThereAnyDataOnDevice) {
-    
     // search airtable
     try {
       // should put this back when finished making invitations
@@ -288,8 +287,7 @@ Future<List<EventModel>> loadEventAttendingFromAT(
           }
         }
 
-
-        final EventModel event = EventModel(   
+        final EventModel event = EventModel(
           eventRecordID: eventData['id'],
           eventName: fields['Event Name'] ?? '',
           eventDescription: fields['Event Description'] ?? '',
@@ -391,7 +389,7 @@ Future<List<String>> loadInvitationsFromAT(ref, String? userRecordID) async {
           }
         }
       }
-
+      print('got invitations');
       await getInvitationsData(ref, eventInvitations, userRecordID);
     } else {
       print('Failed to fetch data. Status code: ${response.statusCode}');

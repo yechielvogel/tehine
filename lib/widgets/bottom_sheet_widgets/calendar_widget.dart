@@ -59,47 +59,44 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-          color: Color(0xFFF5F5F5)),
+          color: seaSault),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           TableCalendar(
               rowHeight: 60,
               daysOfWeekStyle: DaysOfWeekStyle(
-                  weekendStyle: TextStyle(color: Colors.grey[850]),
-                  weekdayStyle: TextStyle(color: Colors.grey[850])),
+                  weekendStyle: TextStyle(color: darkGrey),
+                  weekdayStyle: TextStyle(color: darkGrey)),
               headerStyle: HeaderStyle(
                 formatButtonVisible: false,
                 titleCentered: true,
                 titleTextStyle: TextStyle(
-                    color: Colors.grey[850],
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-                leftChevronIcon:
-                    Icon(Icons.arrow_back_ios, color: Colors.grey[850]),
+                    color: darkGrey, fontSize: 20, fontWeight: FontWeight.bold),
+                leftChevronIcon: Icon(Icons.arrow_back_ios, color: steelBlue),
                 rightChevronIcon:
-                    Icon(Icons.arrow_forward_ios, color: Colors.grey[850]),
+                    Icon(Icons.arrow_forward_ios, color: steelBlue),
               ),
               availableGestures: AvailableGestures.all,
               selectedDayPredicate: (day) => isSameDay(day, focusedDate),
               focusedDay: ref.watch(selectedEnglishDateProvider.notifier).state,
               calendarStyle: CalendarStyle(
-                  weekendTextStyle: TextStyle(color: Colors.grey[850]),
+                  weekendTextStyle: TextStyle(color: darkGrey),
                   outsideDaysVisible: false,
                   defaultTextStyle: TextStyle(
                     fontSize: 16.0,
-                    color: Colors.grey[850],
+                    color: darkGrey,
                   ),
                   todayDecoration: BoxDecoration(
-                    color: Color(0xFFE6D3B3),
+                    color: ashGrey,
                     shape: BoxShape.circle,
                   ),
-                  todayTextStyle: TextStyle(color: Colors.grey[850]),
+                  todayTextStyle: TextStyle(color: darkGrey),
                   selectedDecoration: BoxDecoration(
-                    color: Colors.grey[850],
+                    color: ashGrey,
                     shape: BoxShape.circle,
                   ),
-                  selectedTextStyle: TextStyle(color: Color(0xFFF5F5F5))),
+                  selectedTextStyle: TextStyle(color: darkGrey)),
               firstDay: DateTime.utc(2023, 07, 7),
               lastDay: DateTime.utc(2033, 07, 7),
               onDaySelected: _onDaySelected,
@@ -121,8 +118,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                         alignment: Alignment.center,
                         child: Text(
                           '${jewishDate.getGregorianDayOfMonth()}',
-                          style:
-                              TextStyle(fontSize: 16, color: Colors.grey[850]),
+                          style: TextStyle(fontSize: 16, color: darkGrey),
                         ),
                       ),
                       Container(
@@ -132,8 +128,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                           (jewishDate.getJewishDayOfMonth() == 1)
                               ? '${hebrewMonth.toString()}'
                               : '${jewishDate.getJewishDayOfMonth()}',
-                          style:
-                              TextStyle(fontSize: 8, color: Colors.grey[850]),
+                          style: TextStyle(fontSize: 8, color: darkGrey),
                         ),
                       ),
                     ],
@@ -155,7 +150,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                     height: 50,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(50),
-                      color: darkGrey,
+                      color: ashGrey,
                     ),
                     child: Column(
                       children: [
@@ -164,7 +159,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                           alignment: Alignment.topCenter,
                           child: Text(
                             '${gregorianDate.day}',
-                            style: TextStyle(fontSize: 16, color: creamWhite),
+                            style: TextStyle(fontSize: 16, color: darkGrey),
                           ),
                         ),
                         Container(
@@ -176,7 +171,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                                 : '${jewishDate.getJewishDayOfMonth()}',
                             style: TextStyle(
                               fontSize: 8,
-                              color: creamWhite,
+                              color: darkGrey,
                             ),
                           ),
                         ),
@@ -208,8 +203,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                           alignment: Alignment.topCenter,
                           child: Text(
                             '${gregorianDate.day}',
-                            style: TextStyle(
-                                fontSize: 16, color: Colors.grey[850]),
+                            style: TextStyle(fontSize: 16, color: darkGrey),
                           ),
                         ),
                         Container(
@@ -221,7 +215,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                                 : '${jewishDate.getJewishDayOfMonth()}',
                             style: TextStyle(
                               fontSize: 8,
-                              color: Colors.grey[850],
+                              color: darkGrey,
                             ),
                           ),
                         ),
@@ -243,7 +237,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.grey[850]),
+                          color: darkGrey),
                     ),
                   );
                 },

@@ -29,6 +29,15 @@ final selectedContacts = StateProvider<List<ContactModel>>(
   (ref) => [],
 );
 
+final filteredForAddingContacts = StateProvider<List<ContactModel>>((ref) {
+  List<ContactModel> allContacts = ref.watch(contactsProvider);
+  List<ContactModel> filteredContacts = allContacts
+      .where(
+          (contact) => !contact.lists.contains(ref.read(selectedListProvider)))
+      .toList();
+  return filteredContacts;
+});
+
 final filteredContactsProvider = StateProvider<List<ContactModel>>((ref) {
   // ref.refresh(contactsFromSharedPrefProvider);
   final selectedList = ref.watch(selectedListProvider);
@@ -50,7 +59,7 @@ final filteredContactsProvider = StateProvider<List<ContactModel>>((ref) {
   return filteredContacts;
 });
 
-// This is to display all contacts for adding a contact.    
+// This is to display all contacts for adding a contact.
 
 final allContactsForAddingProvider = StateProvider<List<ContactModel>>(
   (ref) => [],

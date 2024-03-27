@@ -6,6 +6,7 @@ import '../../backend/api/events/airtable/get_events.dart';
 import '../../models/event_model.dart';
 import '../../providers/event_providers.dart';
 import '../../shared/loading.dart';
+import '../../shared/style.dart';
 import '../../widgets/forms/create_event_form.dart';
 import '../../widgets/tiles/event_tiles/event_tile_widget.dart';
 
@@ -21,13 +22,12 @@ class MyEventsScreen extends ConsumerStatefulWidget {
 class _MyEventsScreenState extends ConsumerState<MyEventsScreen> {
   @override
   void initState() {
-    super.initState();      
+    super.initState();
     /*
     The following is called to check if there is any contacts on device
     if not it will call a function to check airtable and download contacts
     */
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      
       if (ref.watch(eventsProviderCheck).isEmpty) {
         initializeData();
         // await getAllEventsDataFromAtOnStart(context);
@@ -47,7 +47,7 @@ class _MyEventsScreenState extends ConsumerState<MyEventsScreen> {
     final events = ref.watch(eventsProvider);
     // print(events.length);
     return Scaffold(
-      backgroundColor: Color(0xFFF5F5F5),   
+      backgroundColor: seaSault,
       body: Consumer(
         builder: (context, watch, child) {
           List<Widget> contactWidgets = [];
@@ -78,7 +78,7 @@ class _MyEventsScreenState extends ConsumerState<MyEventsScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.grey[850],
+        backgroundColor: ashGrey,
         onPressed: () async {
           await ref.refresh(eventsFromSharedPrefProvider);
           List<EventModel> events = ref.watch(eventsProvider);
@@ -97,7 +97,7 @@ class _MyEventsScreenState extends ConsumerState<MyEventsScreen> {
         },
         child: Icon(
           Icons.add,
-          color: Color(0xFFF5F5F5),
+          color: darkGrey,
         ),
       ),
     );
@@ -123,7 +123,7 @@ class _MyEventsScreenState extends ConsumerState<MyEventsScreen> {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (BuildContext context) {    
+        builder: (BuildContext context) {
           return Center(
             child: LoadingTransparent(),
           );

@@ -52,14 +52,14 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
     final List<AppBar> appBars = [
       AppBar(
         elevation: 0.0,
-        backgroundColor: Color(0xFFF5F5F5), // Cream
+        backgroundColor: seaSault, // Cream
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               'Invitations',
               style: TextStyle(
-                color: Colors.grey[850],
+                color: darkGrey,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -69,7 +69,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                   icon: Icon(
                     CupertinoIcons.calendar,
                   ),
-                  color: Colors.grey[850],
+                  color: steelBlue,
                   splashColor: Colors.transparent,
                   hoverColor: Colors.transparent,
                   highlightColor: Colors.transparent,
@@ -94,7 +94,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                   icon: Icon(
                     CupertinoIcons.search,
                   ),
-                  color: Colors.grey[850],
+                  color: steelBlue,
                   splashColor: Colors.transparent,
                   hoverColor: Colors.transparent,
                   highlightColor: Colors.transparent,
@@ -118,14 +118,13 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
 
       AppBar(
         elevation: 0.0,
-        backgroundColor: Color(0xFFF5F5F5),
+        backgroundColor: seaSault,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               'My Events',
-              style: TextStyle(
-                  color: Colors.grey[850], fontWeight: FontWeight.bold),
+              style: TextStyle(color: darkGrey, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -137,8 +136,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
           children: [
             Text(
               "Lists",
-              style: TextStyle(
-                  color: Colors.grey[850], fontWeight: FontWeight.bold),
+              style: TextStyle(color: darkGrey, fontWeight: FontWeight.bold),
             ),
             Padding(
               padding: const EdgeInsets.all(0.0),
@@ -149,7 +147,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                           height: 32,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20.0),
-                              color: Colors.grey[850]),
+                              color: steelBlue),
                           child: TextButton(
                             onPressed: () async {
                               ref.read(selectedContacts.notifier).state = [];
@@ -157,73 +155,44 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
                             },
                             child: Text(
                               'Done',
-                              style: TextStyle(color: Color(0xFFF5F5F5)),
+                              style: TextStyle(color: seaSault),
                             ),
                           ),
                         )
-                      : SizedBox(
-                          width: 30,
-                          height: 30,
-                          child: InkWell(
-                            onTap: () {},
-                            borderRadius: BorderRadius.circular(12),
-                            child: Container(
-                              width: 25,
-                              height: 25,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.grey[850],
-                              ),
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.add,
-                                  color: Colors.white,
-                                  size: 15,
-                                ),
-                                onPressed: () async {
-                                  listScreenAddMenu(context, ref);
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                  SizedBox(width: 5),
-                  SizedBox(
-                    width: 30,
-                    height: 30,
-                    child: InkWell(
-                      onTap: () {},
-                      child: Container(
-                        width: 25,
-                        height: 25,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.grey[850],
-                        ),
-                        child: IconButton(
+                      : IconButton(
                           icon: Icon(
-                            CupertinoIcons.ellipsis,
-                            color: Colors.white,
-                            size: 15,
+                            Icons.add,
+                            color: steelBlue,
+                            size: 25,
                           ),
+
+                          // padding: EdgeInsets.all(0),
                           onPressed: () async {
-                            // ref
-                            //     .read(contactsProvider)
-                            //     .where((contact) => contact.lists
-                            //         .contains("Shmuel's Bar Mitzvah"))
-                            //     .forEach((contact) => print(contact.firstName));
-                            listScreenEllipsisMenu(context, ref);
+                            listScreenAddMenu(context, ref);
                           },
                         ),
-                      ),
+                  // SizedBox(width: 5),
+                  IconButton(
+                    icon: Icon(
+                      CupertinoIcons.ellipsis,
+                      color: steelBlue,
+                      size: 25,
                     ),
+                    onPressed: () async {
+                      // ref
+                      //     .read(contactsProvider)
+                      //     .where((contact) => contact.lists
+                      //       Color.fromARGB(255, 190, 154, 154)"Shmuel's Bar Mitzvah"))
+                      //     .forEach((contact) => print(contact.firstName));
+                      listScreenEllipsisMenu(context, ref);
+                    },
                   ),
                 ],
               ),
             ),
           ],
         ),
-        backgroundColor: Color(0xFFF5F5F5),
+        backgroundColor: seaSault,
       ),
       AppBar(
         elevation: 0.0,
@@ -237,7 +206,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
             ),
           ],
         ),
-        backgroundColor: Color(0xFFF5F5F5),
+        backgroundColor: seaSault,
       ),
     ];
     return Scaffold(
@@ -260,9 +229,9 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
         buildBottomNavigationBarItem(Icons.person, "Lists", 2),
         buildBottomNavigationBarItem(Icons.settings, 'Settings', 3),
       ],
-      selectedItemColor: creamWhite,
-      backgroundColor: Color(0xFFF5F5F5),
-      unselectedItemColor: Colors.grey[850],
+      selectedItemColor: darkGrey,
+      backgroundColor: seaSault,
+      unselectedItemColor: darkGrey,
       showSelectedLabels: false,
       showUnselectedLabels: false,
       selectedFontSize: 10,
@@ -317,12 +286,12 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
         height: 61,
         padding: EdgeInsets.all(8.0),
         decoration: BoxDecoration(
-          color: currentIndex == itemIndex ? darkGrey : creamWhite,
+          color: currentIndex == itemIndex ? ashGrey : seaSault,
           // : Color(0xFFE6D3B3),
-          border: Border.all(
-              color: currentIndex == itemIndex ? darkGrey : Color(0xFFF5F5F5)
-              // : Color(0xFFE6D3B3),
-              ),
+          border:
+              Border.all(color: currentIndex == itemIndex ? seaSault : seaSault
+                  // : Color(0xFFE6D3B3),
+                  ),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
@@ -336,7 +305,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
             Text(label,
                 style: TextStyle(
                     fontSize: 12.0,
-                    color: currentIndex == itemIndex ? creamWhite : darkGrey)),
+                    color: currentIndex == itemIndex ? darkGrey : darkGrey)),
           ],
         ),
       ),
@@ -396,7 +365,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
 //     final List<AppBar> appBars = [
 //       AppBar(
 //         elevation: 0.0,
-//         backgroundColor: Color(0xFFF5F5F5), // cream
+//         backgroundColor: seaSault, // cream
 //         // backgroundColor: Theme.of(context).colorScheme.background,
 //         title: Row(
 //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -492,7 +461,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
 
 //       AppBar(
 //         elevation: 0.0,
-//         backgroundColor: Color(0xFFF5F5F5),
+//         backgroundColor: seaSault,
 //         title: Row(
 //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //           children: [
@@ -531,7 +500,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
 //                             },
 //                             child: Text(
 //                               'Cancel',
-//                               style: TextStyle(color: Color(0xFFF5F5F5)),
+//                               style: TextStyle(color: seaSault),
 //                             ),
 //                           ),
 //                         )
@@ -597,7 +566,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
 //             ),
 //           ],
 //         ),
-//         backgroundColor: Color(0xFFF5F5F5),
+//         backgroundColor: seaSault,
 //       ),
 //       AppBar(
 //         elevation: 0.0,
@@ -611,7 +580,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
 //             ),
 //           ],
 //         ),
-//         backgroundColor: Color(0xFFF5F5F5),
+//         backgroundColor: seaSault,
 //       ),
 //     ];
 //     return Scaffold(
@@ -639,7 +608,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
 //         alignment: Alignment.center,
 //         decoration: BoxDecoration(
 //           color:
-//               currentIndex == itemIndex ? Colors.grey[850] : Color(0xFFF5F5F5),
+//               currentIndex == itemIndex ? Colors.grey[850] : seaSault,
 //           borderRadius: BorderRadius.circular(20),
 //         ),
 //         child: Column(
@@ -655,7 +624,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
 //               style: TextStyle(
 //                 fontSize: 12.0,
 //                 color: currentIndex == itemIndex
-//                     ? Color(0xFFF5F5F5)
+//                     ? seaSault
 //                     : Colors.grey[850],
 //               ),
 //             ),
@@ -695,8 +664,8 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
 //             buildBottomNavigationBarItem(Icons.person, "Lists", 2),
 //             buildBottomNavigationBarItem(Icons.settings, 'Settings', 3),
 //           ],
-//           selectedItemColor: Color(0xFFF5F5F5),
-//           backgroundColor: Color(0xFFF5F5F5),
+//           selectedItemColor: seaSault,
+//           backgroundColor: seaSault,
 //           unselectedItemColor: Colors.grey[850],
 //           showSelectedLabels: false,
 //           showUnselectedLabels: false,
@@ -734,11 +703,11 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
 //         padding: EdgeInsets.all(8.0),
 //         decoration: BoxDecoration(
 //           color:
-//               currentIndex == itemIndex ? Colors.grey[850] : Color(0xFFF5F5F5),
+//               currentIndex == itemIndex ? Colors.grey[850] : seaSault,
 //           border: Border.all(
 //             color: currentIndex == itemIndex
 //                 ? Colors.grey[850] ?? Colors.grey
-//                 : Color(0xFFF5F5F5),
+//                 : seaSault,
 //           ),
 //           borderRadius: BorderRadius.circular(20),
 //         ),
@@ -753,7 +722,7 @@ class _NavigationScreenState extends ConsumerState<NavigationScreen> {
 //               style: TextStyle(
 //                 fontSize: 12.0,
 //                 color: currentIndex == itemIndex
-//                     ? Color(0xFFF5F5F5)
+//                     ? seaSault
 //                     : Colors.grey[850] ?? Colors.grey,
 //               ),
 //             ),

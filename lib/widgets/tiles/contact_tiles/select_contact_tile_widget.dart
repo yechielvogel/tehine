@@ -8,6 +8,7 @@ import '../../../providers/contact_providers.dart';
 
 import '../../../backend/api/contacts/shared_preferences/save_contacts_to_shared_preferences.dart';
 import '../../../providers/user_providers.dart';
+import '../../../shared/style.dart';
 
 class SelectContactTileWidget extends ConsumerStatefulWidget {
   final ContactModel contact;
@@ -56,25 +57,28 @@ class _SelectContactTileWidgetState
         });
       },
       child: Row(children: [
-        Checkbox(
-          shape: CircleBorder(),
-          checkColor: Color(0xFFF5F5F5),
-          fillColor: MaterialStateProperty.resolveWith(getColor),
-          value: ref.read(selectedContacts).contains(widget.contact),
-          onChanged: (bool? value) {
-            setState(() {
-              if (value!) {
-                // If checkbox is checked, add contact to the list
-                ref.read(selectedContacts).add(widget.contact);
-                print(ref.read(selectedContacts).length);
-              } else {
-                // If checkbox is unchecked, remove contact from the list
-                ref.read(selectedContacts).remove(widget.contact);
-              }
-              ref.read(selectedContact.notifier).state =
-                  widget.contact.phoneNumber;
-            });
-          },
+        Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: Checkbox(
+            shape: CircleBorder(),
+            checkColor: seaSault,
+            fillColor: MaterialStateProperty.resolveWith(getColor),
+            value: ref.read(selectedContacts).contains(widget.contact),
+            onChanged: (bool? value) {
+              setState(() {
+                if (value!) {
+                  // If checkbox is checked, add contact to the list
+                  ref.read(selectedContacts).add(widget.contact);
+                  print(ref.read(selectedContacts).length);
+                } else {
+                  // If checkbox is unchecked, remove contact from the list
+                  ref.read(selectedContacts).remove(widget.contact);
+                }
+                ref.read(selectedContact.notifier).state =
+                    widget.contact.phoneNumber;
+              });
+            },
+          ),
         ),
         Expanded(
           // Wrap the Container with Expanded
@@ -84,9 +88,8 @@ class _SelectContactTileWidgetState
               // contactTileEllipsisMenu(context, ref, widget.contact);
             },
             child: Padding(
-              padding: const EdgeInsets.only(right: 8.0, left: 8),
+              padding: const EdgeInsets.only(top: 8, right: 8, left: 8),
               child: Container(
-                // width: 338.5,
                 decoration: BoxDecoration(
                   boxShadow: [
                     // BoxShadow(
@@ -96,8 +99,7 @@ class _SelectContactTileWidgetState
                     //   offset: Offset(0, 4),
                     // ),
                   ],
-                  borderRadius: BorderRadius.circular(20),
-                  color: Color(0xFFF5F5F5),
+                  color: seaSault,
                 ),
 
                 // Changed this line in dismissible.
@@ -107,16 +109,15 @@ class _SelectContactTileWidgetState
                 // ),
                 child: Container(
                   decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 3,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                    borderRadius: BorderRadius.circular(20),
-                    color: Color(0xFFF5F5F5),
+                    // boxShadow: [
+                    //   BoxShadow(
+                    //     color: Colors.grey.withOpacity(0.5),
+                    //     spreadRadius: 2,
+                    //     blurRadius: 3,
+                    //     offset: Offset(0, 3),
+                    //   ),
+                    // ],
+                    color: seaSault,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -124,10 +125,8 @@ class _SelectContactTileWidgetState
                       Padding(
                         padding: const EdgeInsets.only(left: 5),
                         child: Container(
-                          child: const Icon(
-                            Icons.account_circle_rounded,
-                            size: 50,
-                          ),
+                          child: const Icon(Icons.account_circle_rounded,
+                              size: 50, color: Color(0xFFBDBDBD)),
                         ),
                       ),
                       Expanded(
@@ -137,7 +136,8 @@ class _SelectContactTileWidgetState
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(
-                                  top: 10, left: 20, bottom: 3),
+                                left: 20,
+                              ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
                                 child: Container(
@@ -153,16 +153,15 @@ class _SelectContactTileWidgetState
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              height: 3,
-                            ),
+                            // SizedBox(
+                            //   height: 3,
+                            // ),
                             Padding(
-                              padding: const EdgeInsets.only(   
-                                bottom: 12,
+                              padding: const EdgeInsets.only(
+                                // bottom: 12,
                                 left: 20,
                               ),
                               child: Container(
-                                height: 15,
                                 child: widget.contact.addressStreet != null
                                     ? Text(
                                         widget.contact.addressStreet!,
@@ -201,7 +200,7 @@ class _SelectContactTileWidgetState
                             //   child: IconButton(
                             //     icon: Icon(
                             //       CupertinoIcons.ellipsis,
-                            //       color: Color(0xFFF5F5F5),
+                            //       color: seaSault,
                             //       size: 15,
                             //     ),
                             //     onPressed: () async {
